@@ -1,0 +1,22 @@
+[
+  {
+    "id": "msg_1794536471996_qdax0",
+    "createdAt": "2026-11-13T02:21:11.996Z",
+    "name": "Ahmet Yılmaz",
+    "email": "ahmet@example.com",
+    "phone": null,
+    "role": null,
+    "message": "Otonom yapay zeka ajanı sistemleri üzerine birlikte çalışmak isteriz.",
+    "read": false
+  },
+  {
+    "id": "msg_1794535803683_7mm0t",
+    "createdAt": "2026-11-13T02:10:03.683Z",
+    "name": "K",
+    "email": "kk@gmail.com",
+    "phone": null,
+    "role": "Otonom AI & Ajanlar",
+    "message": "khkhlkhlk",
+    "read": false
+  }
+]
