@@ -3,14 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowUpRight,
-  ArrowLeft,
-  Check,
-  Mail,
-  FileText,
-  Sparkles,
-} from "lucide-react";
+import { ArrowUpRight, ArrowLeft, Check, Mail } from "lucide-react";
 import {
   GithubIcon,
   TwitterXIcon,
@@ -24,143 +17,143 @@ import {
   FacebookIcon,
 } from "@/components/Icons";
 
-interface LinkItem {
+interface LinkBanner {
   id: string;
   title: string;
   handle: string;
   url: string;
+  image: string;
   icon: React.ReactNode;
   badge?: string;
-  accent?: string;
 }
 
-const MIZAH_ANIMASYON_LINKS: LinkItem[] = [
-  {
-    id: "youtube",
-    title: "YouTube",
-    handle: "@kursatsi • Stüdyo & Animasyonlar",
-    url: "https://www.youtube.com/@kursatsi",
-    icon: <YouTubeIcon className="w-5 h-5 fill-current" />,
-    badge: "YAYIN",
-    accent: "text-red-400 bg-red-500/10 border-red-500/20",
-  },
-  {
-    id: "tiktok",
-    title: "TikTok",
-    handle: "@kursat.yz • Animasyon & Sokak Mizahı",
-    url: "https://www.tiktok.com/@kursat.yz",
-    icon: <TikTokIcon className="w-4 h-4 fill-current" />,
-    badge: "VİRAL",
-    accent: "text-white bg-white/10 border-white/20",
-  },
-  {
-    id: "instagram-mizah",
-    title: "Instagram",
-    handle: "@kursatsi • Karakterler, Kesitler & Mizah",
-    url: "https://www.instagram.com/kursatsi/",
-    icon: <InstagramIcon className="w-4 h-4 fill-current" />,
-    badge: "REELS",
-    accent: "text-pink-400 bg-pink-500/10 border-pink-500/20",
-  },
-  {
-    id: "spotify",
-    title: "Spotify",
-    handle: "Kürşat Yılmaz • Sanatçı Profili & Sesler",
-    url: "https://open.spotify.com/intl-tr/artist/5NQc0XkMOuLmfSrgNaz3YP",
-    icon: <SpotifyIcon className="w-4 h-4 fill-current" />,
-    badge: "AUDIO",
-    accent: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-  },
-  {
-    id: "twitter-mizah",
-    title: "X (Twitter)",
-    handle: "@kursatsi • Duyurular & Video Kesitleri",
-    url: "https://x.com/kursatsi",
-    icon: <TwitterXIcon className="w-4 h-4 fill-current" />,
-    accent: "text-zinc-200 bg-white/5 border-white/15",
-  },
-  {
-    id: "facebook",
-    title: "Facebook",
-    handle: "kursatsi • Topluluk Sayfası",
-    url: "https://www.facebook.com/kursatsi",
-    icon: <FacebookIcon className="w-4 h-4 fill-current" />,
-    accent: "text-blue-400 bg-blue-500/10 border-blue-500/20",
-  },
-];
-
-const KISISEL_TECH_LINKS: LinkItem[] = [
+const KISISEL_LINKS: LinkBanner[] = [
   {
     id: "itibar",
     title: "İtibar",
     handle: "itibar.app • Yapay Zeka Dijital İtibar Motoru",
     url: "https://itibar.app",
+    image: "/projects/itibar.jpg",
     icon: <span className="font-black text-sm font-archivo">İ</span>,
-    badge: "PRODUCT",
-    accent: "text-white bg-white/10 border-white/20",
+    badge: "AI PRODUCT",
   },
   {
     id: "unutma",
     title: "Unutma.",
     handle: "unutma.itibar.app • Otonom Hafıza & Asistan",
     url: "https://unutma.itibar.app",
+    image: "/projects/unutma.jpg",
     icon: <span className="font-black text-sm font-archivo">U</span>,
-    badge: "AI APP",
-    accent: "text-white bg-white/10 border-white/20",
+    badge: "APP",
   },
   {
     id: "cv",
     title: "Özgeçmiş / CV",
     handle: "devkursat.github.io/cv • Lead AI Product Developer",
     url: "https://devkursat.github.io/cv/",
-    icon: <FileText className="w-4 h-4" />,
-    badge: "CV",
-    accent: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+    image: "/blog/ai-bumerangi-muhendislerin-donusu.png",
+    icon: <span className="font-mono text-xs font-bold">CV</span>,
+    badge: "RESUME",
   },
   {
     id: "github",
     title: "GitHub",
-    handle: "github.com/DevKursat • Açık Kaynak Mimariler",
+    handle: "github.com/DevKursat • Açık Kaynak & Mimariler",
     url: "https://github.com/DevKursat",
+    image: "/projects/aetheris.jpg",
     icon: <GithubIcon className="w-4 h-4 fill-current" />,
-    accent: "text-white bg-white/5 border-white/15",
   },
   {
     id: "linkedin",
     title: "LinkedIn",
     handle: "linkedin.com/in/kürşatyılmaz",
     url: "https://www.linkedin.com/in/kürşatyılmaz/",
+    image: "/blog/geo.jpg",
     icon: <LinkedinIcon className="w-4 h-4 fill-current" />,
-    accent: "text-blue-400 bg-blue-500/10 border-blue-500/20",
   },
   {
     id: "twitter-kisisel",
-    title: "X (Twitter) Kişisel",
-    handle: "@DevKursat • Yapay Zeka & Sistem Mühendisliği",
+    title: "X (Twitter)",
+    handle: "@DevKursat • AI, Sistemler & Vizyon",
     url: "https://x.com/DevKursat",
+    image: "/blog/swarm.jpg",
     icon: <TwitterXIcon className="w-4 h-4 fill-current" />,
-    accent: "text-zinc-200 bg-white/5 border-white/15",
   },
   {
     id: "instagram-kisisel",
-    title: "Instagram Kişisel",
+    title: "Instagram",
     handle: "@kursat.yz • Kişisel Profil",
     url: "https://www.instagram.com/kursat.yz/",
+    image: "/blog/latency.jpg",
     icon: <InstagramIcon className="w-4 h-4 fill-current" />,
-    accent: "text-pink-400 bg-pink-500/10 border-pink-500/20",
   },
   {
     id: "devto",
     title: "DEV.to",
-    handle: "dev.to/devkursat • Derin Teknik Analizler",
+    handle: "dev.to/devkursat • Teknik Makaleler",
     url: "https://dev.to/devkursat",
+    image: "/blog/meta-muhendisi-yapay-zeka-kod-itirafi-ve-kirilgan-mimari.png",
     icon: <DevtoIcon className="w-4 h-4 fill-current" />,
-    accent: "text-white bg-white/5 border-white/15",
+  },
+];
+
+const ANIMASYON_LINKS: LinkBanner[] = [
+  {
+    id: "youtube",
+    title: "YouTube",
+    handle: "@kursatsi • Stüdyo, Podcast & Animasyon",
+    url: "https://www.youtube.com/@kursatsi",
+    image: "/images/bocek-podcast.jpg",
+    icon: <YouTubeIcon className="w-5 h-5 fill-current" />,
+    badge: "YAYIN",
+  },
+  {
+    id: "tiktok",
+    title: "TikTok",
+    handle: "@kursat.yz • Animasyon & Sokak Mizahı",
+    url: "https://www.tiktok.com/@kursat.yz",
+    image: "/blog/meta-muhendisi-yapay-zeka-kod-itirafi-ve-kirilgan-mimari.png",
+    icon: <TikTokIcon className="w-4 h-4 fill-current" />,
+    badge: "VİRAL",
+  },
+  {
+    id: "instagram-mizah",
+    title: "Instagram",
+    handle: "@kursatsi • Karakterler & Mizah Klipleri",
+    url: "https://www.instagram.com/kursatsi/",
+    image: "/blog/qwen-acik-kaynak-silikon-vadisi.png",
+    icon: <InstagramIcon className="w-4 h-4 fill-current" />,
+    badge: "REELS",
+  },
+  {
+    id: "spotify",
+    title: "Spotify",
+    handle: "Kürşat Yılmaz • Sanatçı Profili & Sesler",
+    url: "https://open.spotify.com/intl-tr/artist/5NQc0XkMOuLmfSrgNaz3YP",
+    image: "/blog/latency.jpg",
+    icon: <SpotifyIcon className="w-4 h-4 fill-current" />,
+    badge: "AUDIO",
+  },
+  {
+    id: "twitter-mizah",
+    title: "X (Twitter)",
+    handle: "@kursatsi • Duyurular & Video Kesitleri",
+    url: "https://x.com/kursatsi",
+    image: "/blog/swarm.jpg",
+    icon: <TwitterXIcon className="w-4 h-4 fill-current" />,
+  },
+  {
+    id: "facebook",
+    title: "Facebook",
+    handle: "kursatsi • Topluluk Sayfası",
+    url: "https://www.facebook.com/kursatsi",
+    image: "/blog/openai-1-2-milyon-dolarlik-linux-exploit-skandali.png",
+    icon: <FacebookIcon className="w-4 h-4 fill-current" />,
   },
 ];
 
 export default function LinksPage() {
-  const [activeTab, setActiveTab] = useState<"mizah" | "kisisel">("mizah");
+  const [activeTab, setActiveTab] = useState<"kisisel" | "animasyon">("kisisel");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   const handleCopy = (key: string, text: string) => {
@@ -169,165 +162,168 @@ export default function LinksPage() {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const currentLinks = activeTab === "mizah" ? MIZAH_ANIMASYON_LINKS : KISISEL_TECH_LINKS;
+  const currentLinks = activeTab === "kisisel" ? KISISEL_LINKS : ANIMASYON_LINKS;
 
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased">
-      {/* Back to Home Button */}
-      <div className="fixed top-5 left-5 z-50">
+      {/* Back to Home floating pill */}
+      <div className="fixed top-6 left-6 z-50">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-xl border border-white/15 hover:border-white/30 text-xs text-zinc-300 hover:text-white transition-all active:scale-95 shadow-xl"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-xl border border-white/15 hover:border-white/30 text-xs text-zinc-300 hover:text-white transition-all active:scale-95 shadow-2xl"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span className="font-mono">kursat.itibar.app</span>
         </Link>
       </div>
 
-      {/* AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
-      <div className="min-h-screen grid grid-cols-1 lg:grid-cols-12 lg:h-screen lg:overflow-hidden">
+      {/* AWWWARDS EXACT SPLIT LAYOUT: FULL-BLEED MONOLITH ON LEFT, SCROLLING BANNERS ON RIGHT */}
+      <div className="min-h-screen flex flex-col lg:flex-row">
         {/* ============================================================ */}
-        {/* LEFT COLUMN: THE MONOLITH SLAB (IMMERSIVE, NO BOX BORDERS)   */}
+        {/* LEFT: FULL-BLEED MONOLITH (ZERO BOX PADDING, OCCUPIES 100% OF HALF) */}
         {/* ============================================================ */}
-        <aside className="lg:col-span-5 h-[280px] sm:h-[360px] lg:h-full relative flex items-center justify-center bg-[#000000] lg:border-r border-white/5 overflow-hidden">
-          <div className="relative w-full h-full max-w-lg lg:max-h-[90vh] mx-auto p-4 sm:p-6 lg:p-8 flex items-center justify-center">
-            <div className="relative w-full h-full rounded-2xl lg:rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.95)]">
-              <Image
-                src="/images/ky-monolith.jpg"
-                alt="Kürşat Yılmaz Brutalist Monolith"
-                fill
-                priority
-                className="object-cover object-center scale-102 hover:scale-105 transition-transform duration-1000 ease-out"
-              />
-              {/* Cinematic ambient fades */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent lg:hidden" />
-              <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60" />
+        <div className="w-full lg:w-1/2 lg:fixed lg:inset-y-0 lg:left-0 h-[48vh] sm:h-[55vh] lg:h-screen relative overflow-hidden bg-black select-none pointer-events-none lg:pointer-events-auto">
+          <Image
+            src="/images/ky-monolith.jpg"
+            alt="Kürşat Yılmaz Brutalist Monolith"
+            fill
+            priority
+            className="object-cover object-center scale-100 lg:scale-105 hover:scale-108 transition-transform duration-1000 ease-out"
+          />
 
-              {/* Minimalist monolithic watermark */}
-              <div className="absolute bottom-6 left-6 z-10 hidden lg:block">
-                <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-zinc-500">
-                  MONOLITH ARCHIVE • 2026
-                </span>
-              </div>
-            </div>
+          {/* Luxury ambient vignettes seamlessly melting edges into black */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent lg:hidden" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/80 hidden lg:block" />
+          <div className="absolute inset-0 bg-black/20" />
+
+          {/* Desktop Left Watermark */}
+          <div className="absolute bottom-8 left-8 z-10 hidden lg:block">
+            <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-zinc-400/80">
+              KÜRŞAT YILMAZ • 2026
+            </span>
           </div>
-        </aside>
+        </div>
+
+        {/* Spacer for desktop fixed left side */}
+        <div className="hidden lg:block lg:w-1/2" />
 
         {/* ============================================================ */}
-        {/* RIGHT COLUMN: KURSAT. links + CATEGORY TOGGLE + CARDS        */}
+        {/* RIGHT: KURSAT. links + TOGGLE + WIDE AWWWARDS BANNER CARDS   */}
         {/* ============================================================ */}
-        <section className="lg:col-span-7 lg:h-full lg:overflow-y-auto px-5 sm:px-10 lg:px-16 py-10 sm:py-14 lg:py-16 flex flex-col justify-between">
+        <div className="w-full lg:w-1/2 min-h-screen px-5 sm:px-10 lg:px-14 xl:px-16 py-10 sm:py-16 lg:py-20 flex flex-col justify-between relative z-10 bg-[#000000] lg:bg-transparent">
           <div className="space-y-8 max-w-xl mx-auto w-full">
-            {/* 1. EXACT AWWWARDS HEADER: KURSAT. links */}
+            {/* Header: Exact Awwwards Style "KURSAT. links" */}
             <div className="space-y-4">
               <div className="flex items-baseline justify-between border-b border-white/10 pb-4">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase font-archivo">
                   KURSAT<span className="text-zinc-500 font-light lowercase">. links</span>
                 </h1>
                 <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
-                  OFFICIAL DIRECTORY
+                  DOĞRULANMIŞ HESAPLAR
                 </span>
               </div>
 
-              {/* 2. CATEGORY TOGGLE (MİZAH & ANİMASYON vs KİŞİSEL & PROJELER) */}
+              {/* TOGGLE SWITCH: KİŞİSEL (1.) vs ANİMASYON (2.) */}
               <div className="flex items-center justify-between gap-4 pt-1">
                 <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
                   <button
-                    onClick={() => setActiveTab("mizah")}
-                    className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
-                      activeTab === "mizah"
-                        ? "bg-white text-black font-semibold shadow-lg scale-100"
+                    onClick={() => setActiveTab("kisisel")}
+                    className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
+                      activeTab === "kisisel"
+                        ? "bg-white text-black font-bold shadow-lg"
                         : "text-zinc-400 hover:text-white"
                     }`}
                   >
-                    MİZAH & ANİMASYON
+                    KİŞİSEL
                   </button>
 
                   <button
-                    onClick={() => setActiveTab("kisisel")}
-                    className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
-                      activeTab === "kisisel"
-                        ? "bg-white text-black font-semibold shadow-lg scale-100"
+                    onClick={() => setActiveTab("animasyon")}
+                    className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
+                      activeTab === "animasyon"
+                        ? "bg-white text-black font-bold shadow-lg"
                         : "text-zinc-400 hover:text-white"
                     }`}
                   >
-                    KİŞİSEL & PROJELER
+                    ANİMASYON
                   </button>
                 </div>
 
-                <span className="hidden sm:inline-block text-[11px] font-mono text-zinc-500">
-                  {currentLinks.length} HESAP
+                <span className="text-[11px] font-mono text-zinc-500">
+                  {currentLinks.length} BAĞLANTI
                 </span>
               </div>
             </div>
 
-            {/* 3. TACTILE GLASS LINK CARDS (5-8 FOCUSED ITEMS BASED ON TAB) */}
-            <div className="space-y-3">
+            {/* WIDE CINEMATIC AWWWARDS BANNER CARDS */}
+            <div className="space-y-3.5">
               {currentLinks.map((item) => (
                 <a
                   key={item.id}
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between p-4 sm:p-4.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99] shadow-sm"
+                  className="group relative block w-full aspect-[22/8] sm:aspect-[24/7] rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-xl active:scale-[0.99]"
                 >
-                  <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-200 group-hover:scale-105 ${
-                        item.accent || "text-white bg-white/5 border-white/10"
-                      }`}
-                    >
-                      {item.icon}
-                    </div>
+                  {/* Atmospheric Background Image */}
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                  />
 
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-base font-semibold text-white group-hover:text-white transition-colors truncate">
-                          {item.title}
-                        </span>
-                        {item.badge && (
-                          <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-white/10 text-zinc-300 border border-white/10">
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-zinc-400 font-mono truncate mt-0.5">
-                        {item.handle}
-                      </p>
-                    </div>
+                  {/* Dark Contrast Glass Overlay */}
+                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-black/70 group-hover:via-black/25 transition-colors duration-500" />
+
+                  {/* Card Content: Centered Title + Subtitle */}
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 py-4">
+                    {item.badge && (
+                      <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-emerald-400/90 mb-1 drop-shadow">
+                        {item.badge}
+                      </span>
+                    )}
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white uppercase font-archivo group-hover:tracking-wider transition-all duration-300 drop-shadow-lg">
+                      {item.title}
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-zinc-300/85 font-mono mt-0.5 group-hover:text-white transition-colors drop-shadow">
+                      {item.handle}
+                    </p>
                   </div>
 
-                  <div className="w-8 h-8 rounded-full bg-white/0 group-hover:bg-white/10 flex items-center justify-center transition-all shrink-0">
-                    <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  {/* Top-Right Arrow Indicator */}
+                  <div className="absolute top-3.5 right-3.5 z-10 w-7 h-7 rounded-full bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:border-white/30 group-hover:scale-110 transition-all">
+                    <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </div>
                 </a>
               ))}
             </div>
 
-            {/* 4. QUICK DIRECT CONTACT BAR (WHATSAPP & EMAIL) */}
-            <div className="pt-2 flex items-center gap-2.5">
+            {/* Quick Contact Bar */}
+            <div className="pt-2 flex items-center gap-3">
               <a
                 href="https://wa.me/kursat.yz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
               >
-                <WhatsappIcon className="w-3.5 h-3.5 fill-current text-emerald-400" />
+                <WhatsappIcon className="w-4 h-4 fill-current text-emerald-400" />
                 <span>WhatsApp: @kursat.yz</span>
               </a>
 
               <button
                 onClick={() => handleCopy("email", "kursat@itibar.app")}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
               >
                 {copiedKey === "email" ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <Check className="w-4 h-4 text-emerald-400" />
                     <span className="text-emerald-300">Kopyalandı</span>
                   </>
                 ) : (
                   <>
-                    <Mail className="w-3.5 h-3.5 text-zinc-400" />
+                    <Mail className="w-4 h-4 text-zinc-400" />
                     <span>kursat@itibar.app</span>
                   </>
                 )}
@@ -335,9 +331,9 @@ export default function LinksPage() {
             </div>
           </div>
 
-          {/* 5. AWWWARDS MINIMALIST FOOTER */}
-          <footer className="pt-10 pb-4 max-w-xl mx-auto w-full border-t border-white/10 space-y-1.5 text-left">
-            <p className="text-xs text-zinc-400 font-light">
+          {/* Minimalist Awwwards Footer */}
+          <footer className="pt-12 pb-4 max-w-xl mx-auto w-full border-t border-white/10 space-y-1.5 text-left">
+            <p className="text-xs text-zinc-400 font-light leading-relaxed">
               Yapay Zeka Mimarisi, Otonom Sistemler ve Sokak Çizgisi.
             </p>
             <div className="flex items-center gap-2 font-mono text-xs text-zinc-500">
@@ -346,7 +342,7 @@ export default function LinksPage() {
               <span>2026</span>
             </div>
           </footer>
-        </section>
+        </div>
       </div>
     </main>
   );
