@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, ArrowLeft, Check, Mail, FileText } from "lucide-react";
+import { ArrowUpRight, Check, Mail, FileText, Sparkles } from "lucide-react";
 import CustomCursor from "@/components/CustomCursor";
 import {
   GithubIcon,
@@ -206,18 +206,7 @@ export default function LinksPage() {
       {/* 1. ORIGINAL SITE CUSTOM FLUID CURSOR */}
       <CustomCursor />
 
-      {/* 2. BACK TO HOME FLOATING PILL */}
-      <div className="fixed top-6 left-6 z-50">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-xl border border-white/15 hover:border-white/30 text-xs text-zinc-300 hover:text-white transition-all active:scale-95 shadow-2xl"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span className="font-mono">kursat.itibar.app</span>
-        </Link>
-      </div>
-
-      {/* 3. AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
+      {/* 2. AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
       <div className="min-h-screen flex flex-col lg:flex-row">
         {/* ============================================================ */}
         {/* LEFT: FULL-BLEED MONOLITH (EDGE-TO-EDGE, ZERO BOX CONSTRAINTS) */}
@@ -248,11 +237,11 @@ export default function LinksPage() {
         <div className="hidden lg:block lg:w-1/2" />
 
         {/* ============================================================ */}
-        {/* RIGHT: KURSAT. links + TOGGLE + CINEMATIC CARDS              */}
+        {/* RIGHT: KURSAT. links + TOGGLE BAR + CARDS                    */}
         {/* ============================================================ */}
         <div className="w-full lg:w-1/2 min-h-screen px-5 sm:px-10 lg:px-14 xl:px-16 py-10 sm:py-16 lg:py-20 flex flex-col justify-between relative z-10 bg-[#000000] lg:bg-transparent">
           <div className="space-y-8 max-w-xl mx-auto w-full">
-            {/* Header: Exact Awwwards Style "KURSAT. links" */}
+            {/* Header Area */}
             <div className="space-y-4">
               <div className="flex items-baseline justify-between border-b border-white/10 pb-4">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase font-archivo">
@@ -263,8 +252,9 @@ export default function LinksPage() {
                 </span>
               </div>
 
-              {/* TOGGLE SWITCH: KİŞİSEL (1.) vs ANİMASYON (2.) WITH HASH ROUTING */}
-              <div className="flex items-center justify-between gap-4 pt-1">
+              {/* UNIFIED TOOLBAR: TOGGLE + KINETIC MOTION REDIRECT BUTTON */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                {/* Segmented Switch: KİŞİSEL vs ANİMASYON */}
                 <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
                   <button
                     onClick={() => switchTab("kisisel")}
@@ -289,9 +279,26 @@ export default function LinksPage() {
                   </button>
                 </div>
 
-                <span className="text-[11px] font-mono text-zinc-500">
-                  {currentLinks.length} BAĞLANTI
-                </span>
+                {/* DİNAMİK MOTION PORTFOLYO BUTONU (SİTE ADI YAZMAZ, KİNETİK GLOW & RADAR) */}
+                <Link
+                  href="/"
+                  className="relative group inline-flex items-center justify-center gap-2 px-5 py-2 rounded-xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-white/[0.04] to-emerald-500/10 hover:border-emerald-400/60 transition-all duration-300 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] shrink-0 overflow-hidden"
+                >
+                  {/* Subtle animated shimmer background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+
+                  {/* Pulsing radar dot */}
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+
+                  <span className="text-xs font-mono uppercase tracking-widest text-zinc-200 group-hover:text-white font-semibold transition-colors">
+                    ANA SAHNE
+                  </span>
+
+                  <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </Link>
               </div>
             </div>
 
@@ -305,7 +312,7 @@ export default function LinksPage() {
                   rel="noopener noreferrer"
                   className="group relative block w-full aspect-[22/8] sm:aspect-[24/7] rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-xl active:scale-[0.99] bg-zinc-950/70"
                 >
-                  {/* ARKA PLAN: İtibar/Unutma/YouTube İçin Görsel, Diğerleri İçin Sağ Alttan Taşmalı Netleşen Watermark */}
+                  {/* ARKA PLAN: İtibar/Unutma/YouTube İçin Görsel, Diğerleri İçin Sağ Altta Netleşen Dev Watermark Logo */}
                   {item.image ? (
                     <>
                       <Image
@@ -324,9 +331,9 @@ export default function LinksPage() {
                         className={`absolute inset-0 bg-gradient-to-r ${item.glow || "from-white/5"} via-transparent to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-500`}
                       />
 
-                      {/* SAĞ ALTTA KISMEN KIRPIK & HOVER'DA NETLEŞEN DEV LOGO */}
+                      {/* SAĞ ALTTAN TAŞMALI & HOVER'DA KESKİNCE NETLEŞEN WATERMARK LOGO */}
                       <div className="absolute -bottom-6 -right-6 sm:-bottom-8 sm:-right-8 pointer-events-none select-none overflow-hidden">
-                        <div className="w-36 h-36 sm:w-44 sm:h-44 text-white opacity-[0.07] blur-[2.5px] group-hover:opacity-[0.24] group-hover:blur-0 group-hover:scale-110 group-hover:-translate-x-2 group-hover:-translate-y-2 transition-all duration-500 ease-out">
+                        <div className="w-36 h-36 sm:w-44 sm:h-44 text-white opacity-[0.06] blur-[2px] group-hover:opacity-[0.38] group-hover:blur-0 group-hover:scale-108 group-hover:-translate-x-2 group-hover:-translate-y-2 transition-all duration-400 ease-out">
                           {item.watermark}
                         </div>
                       </div>
@@ -359,13 +366,13 @@ export default function LinksPage() {
               ))}
             </div>
 
-            {/* QUICK CONTACT BAR: CLEAN WHATSAPP BUTTON + EMAIL COPY BUTTON */}
-            <div className="pt-3 pb-8 flex items-center gap-3">
+            {/* QUICK CONTACT BAR: GENEROUS SPACING + CLEAN BUTTONS */}
+            <div className="pt-6 pb-12 flex flex-col sm:flex-row items-center gap-4">
               <a
                 href="https://wa.me/kursat.yz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
+                className="w-full sm:flex-1 inline-flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-200 hover:text-white transition-all active:scale-95 shadow-sm"
               >
                 <WhatsappIcon className="w-4 h-4 fill-current text-emerald-400" />
                 <span>WhatsApp</span>
@@ -373,12 +380,12 @@ export default function LinksPage() {
 
               <button
                 onClick={() => handleCopy("email", "kursat@itibar.app")}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
+                className="w-full sm:flex-1 inline-flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-200 hover:text-white transition-all active:scale-95 shadow-sm"
               >
                 {copiedKey === "email" ? (
                   <>
                     <Check className="w-4 h-4 text-emerald-400" />
-                    <span className="text-emerald-300">Kopyalandı</span>
+                    <span className="text-emerald-300 font-semibold">Kopyalandı</span>
                   </>
                 ) : (
                   <>
