@@ -51,7 +51,40 @@ body {
   font-family: var(--font-instrument);
 }
 
-/* Fluid Flame & Neon Fire Keyframes */
+/* Paper Crumple & Gravity Drop Keyframes */
+@keyframes paperCrumpleAndFall {
+  0% {
+    transform: perspective(1200px) scale(1) translate3d(0, 0, 0) rotate(0deg);
+    border-radius: 0px;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  20% {
+    /* Kağıt kendi içine katlanmaya ve büzüşmeye başlıyor */
+    transform: perspective(1200px) scale(0.94) translate3d(-15px, 25px, -60px) rotate(-3.5deg) skew(-5deg, 3.5deg);
+    border-radius: 16px;
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9);
+  }
+  45% {
+    /* İyice buruşup kırışmış kağıt bloğu */
+    transform: perspective(1200px) scale(0.8) translate3d(25px, 120px, -160px) rotate(8deg) skew(9deg, -7deg);
+    border-radius: 32px;
+    box-shadow: 0 45px 80px -20px rgba(0, 0, 0, 0.95);
+  }
+  100% {
+    /* Aşağıya akış ve sahneden tamamen düşüş */
+    transform: perspective(1200px) scale(0.55) translate3d(-35px, 150vh, -300px) rotate(26deg) skew(-14deg, 9deg);
+    border-radius: 48px;
+    opacity: 0.85;
+    box-shadow: 0 60px 100px -25px rgba(0, 0, 0, 1);
+  }
+}
+
+.animate-paper-crumple-fall {
+  animation: paperCrumpleAndFall 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-origin: center 30%;
+  pointer-events: none;
+  will-change: transform, border-radius, box-shadow;
+}
 @keyframes flameSpin {
   0% {
     transform: rotate(0deg);

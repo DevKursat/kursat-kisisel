@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Check, Mail, FileText, Sparkles, Flame } from "lucide-react";
+import { ArrowUpRight, Check, Mail, FileText, Sparkles, RotateCcw } from "lucide-react";
 import CustomCursor from "@/components/CustomCursor";
 import {
   GithubIcon,
@@ -169,6 +169,18 @@ const ANIMASYON_LINKS: LinkBanner[] = [
 export default function LinksPage() {
   const [activeTab, setActiveTab] = useState<"kisisel" | "animasyon">("kisisel");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [isCrumpling, setIsCrumpling] = useState(false);
+
+  // Return to Origin (Özüne Dön): Buruşturulmuş Kağıt Akışı & Ana Sayfa Geçişi
+  const handleReturnToOrigin = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isCrumpling) return;
+    setIsCrumpling(true);
+    // Kağıt buruşup aşağı aktıktan sonra ana sayfaya pürüzsüz geç
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
+  };
 
   // Hash Routing support (#kisisel and #animasyon)
   useEffect(() => {
@@ -202,117 +214,188 @@ export default function LinksPage() {
   const currentLinks = activeTab === "kisisel" ? KISISEL_LINKS : ANIMASYON_LINKS;
 
   return (
-    <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased">
+    <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased overflow-x-hidden relative">
       {/* 1. ORIGINAL SITE CUSTOM FLUID CURSOR */}
       <CustomCursor />
 
-      {/* 2. AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
-      <div className="min-h-screen flex flex-col lg:flex-row">
-        {/* ============================================================ */}
-        {/* LEFT: FULL-BLEED MONOLITH (EDGE-TO-EDGE, ZERO BOX CONSTRAINTS) */}
-        {/* ============================================================ */}
-        <div className="w-full lg:w-1/2 lg:fixed lg:inset-y-0 lg:left-0 h-[48vh] sm:h-[55vh] lg:h-screen relative overflow-hidden bg-black select-none pointer-events-none lg:pointer-events-auto">
-          <Image
-            src="/images/ky-monolith.jpg"
-            alt="Kürşat Yılmaz Brutalist Monolith"
-            fill
-            priority
-            className="object-cover object-center scale-100 lg:scale-105 hover:scale-108 transition-transform duration-1000 ease-out"
-          />
+      {/* 2. SVG FILTER: BURUŞTURULMUŞ KAĞIT DEFORMASYONU (TURBULENCE & DISPLACEMENT) */}
+      <svg className="fixed top-0 left-0 w-0 h-0 pointer-events-none opacity-0" aria-hidden="true">
+        <filter id="paper-crumple" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isCrumpling ? 45 : 0} xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
 
-          {/* Ambient gradients */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent lg:hidden" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/80 hidden lg:block" />
-          <div className="absolute inset-0 bg-black/20" />
+      {/* 3. ARKA PLANDA BELİREN YENİ ANA SAYFA (KAĞIT AKARKEN ARKADAN GELEN SAHNE) */}
+      <div
+        className={`fixed inset-0 z-0 bg-[#000000] text-white flex flex-col justify-between p-6 sm:p-12 lg:p-16 transition-opacity duration-300 pointer-events-none ${
+          isCrumpling ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {/* Ambient Radial Spotlight & Grid */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,_rgba(255,255,255,0.08),_transparent_70%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem]" />
 
-          {/* Desktop Left Watermark */}
-          <div className="absolute bottom-8 left-8 z-10 hidden lg:block">
-            <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-zinc-400/80">
-              KÜRŞAT YILMAZ • 2026
+        {/* Minimalist Reveal Header */}
+        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-6">
+          <div className="flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span className="font-archivo text-xl sm:text-2xl font-black tracking-widest uppercase">
+              KÜRŞAT YILMAZ
             </span>
           </div>
+          <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest hidden sm:inline-block">
+            PORTFOLYO // 2026
+          </span>
         </div>
 
-        {/* Desktop Spacer for Fixed Left Side */}
-        <div className="hidden lg:block lg:w-1/2" />
+        {/* Center Reveal Monolith Hero */}
+        <div className="relative z-10 my-auto space-y-4 max-w-4xl py-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[11px] font-mono tracking-widest uppercase text-zinc-300">
+            <RotateCcw className="w-3 h-3 text-emerald-400" />
+            <span>ÖZÜNE DÖNÜLDÜ • ANA SAHNE</span>
+          </div>
+          <h2 className="text-5xl sm:text-7xl lg:text-8xl font-black font-archivo tracking-tight uppercase leading-[0.9]">
+            CREATIVE<br />
+            <span className="text-zinc-500">ARCHITECT.</span>
+          </h2>
+          <p className="text-sm sm:text-base font-mono text-zinc-400 max-w-lg pt-2">
+            Yapay zeka mimarisi, yüksek performanslı sistemler ve sinematik dijital deneyimler.
+          </p>
+        </div>
 
-        {/* ============================================================ */}
-        {/* RIGHT: KURSAT. links + TOGGLE BAR + CARDS                    */}
-        {/* ============================================================ */}
-        <div className="w-full lg:w-1/2 min-h-screen px-5 sm:px-10 lg:px-14 xl:px-16 py-10 sm:py-16 lg:py-20 flex flex-col justify-between relative z-10 bg-[#000000] lg:bg-transparent">
-          <div className="space-y-8 max-w-xl mx-auto w-full">
-            {/* Header Area */}
-            <div className="space-y-4">
-              <div className="flex items-baseline justify-between border-b border-white/10 pb-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase font-archivo">
-                  KURSAT<span className="text-zinc-500 font-light lowercase">. links</span>
-                </h1>
-                <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
-                  DOĞRULANMIŞ HESAPLAR
-                </span>
-              </div>
+        {/* Bottom Reveal Status */}
+        <div className="relative z-10 flex items-center justify-between text-xs font-mono text-zinc-500 border-t border-white/10 pt-4">
+          <span>İSTANBUL, TR</span>
+          <span className="text-emerald-400/90 font-semibold">SAHNE AÇILIYOR...</span>
+        </div>
+      </div>
 
-              {/* UNIFIED TOOLBAR: TOGGLE + KINETIC MOTION REDIRECT BUTTON */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                {/* Segmented Switch: KİŞİSEL vs ANİMASYON */}
-                <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
-                  <button
-                    onClick={() => switchTab("kisisel")}
-                    className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
-                      activeTab === "kisisel"
-                        ? "bg-white text-black font-bold shadow-lg"
-                        : "text-zinc-400 hover:text-white"
-                    }`}
-                  >
-                    KİŞİSEL
-                  </button>
+      {/* 4. BURUŞTURULUP AŞAĞIYA AKAN KAĞIT KATMANI (MEVCUT /LINKS SAYFASI) */}
+      <div
+        className={`min-h-screen relative z-10 bg-[#000000] origin-top transition-all ${
+          isCrumpling ? "animate-paper-crumple-fall shadow-2xl" : ""
+        }`}
+        style={{
+          filter: isCrumpling ? "url(#paper-crumple)" : undefined,
+        }}
+      >
+        {/* Kağıt Buruşma ve Kırışıklık Işık/Gölge Çizgileri Overlay */}
+        {isCrumpling && (
+          <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-90 transition-opacity duration-200">
+            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="crease1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="48%" stopColor="#000" stopOpacity="0.85" />
+                  <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
+                  <stop offset="52%" stopColor="#000" stopOpacity="0.85" />
+                </linearGradient>
+                <linearGradient id="crease2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="49%" stopColor="#000" stopOpacity="0.9" />
+                  <stop offset="50%" stopColor="#fff" stopOpacity="0.85" />
+                  <stop offset="51%" stopColor="#000" stopOpacity="0.9" />
+                </linearGradient>
+              </defs>
+              <line x1="0%" y1="18%" x2="100%" y2="82%" stroke="url(#crease1)" strokeWidth="7" />
+              <line x1="0%" y1="72%" x2="100%" y2="28%" stroke="url(#crease2)" strokeWidth="6" />
+              <line x1="38%" y1="0%" x2="62%" y2="100%" stroke="url(#crease1)" strokeWidth="8" />
+              <line x1="78%" y1="0%" x2="18%" y2="100%" stroke="url(#crease2)" strokeWidth="5" />
+              <polygon points="60,90 340,190 180,440" fill="rgba(0,0,0,0.4)" />
+              <polygon points="460,130 800,370 440,600" fill="rgba(255,255,255,0.08)" />
+              <polygon points="200,580 600,780 140,900" fill="rgba(0,0,0,0.48)" />
+            </svg>
+          </div>
+        )}
 
-                  <button
-                    onClick={() => switchTab("animasyon")}
-                    className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
-                      activeTab === "animasyon"
-                        ? "bg-white text-black font-bold shadow-lg"
-                        : "text-zinc-400 hover:text-white"
-                    }`}
-                  >
-                    ANİMASYON
-                  </button>
+        {/* AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
+        <div className="min-h-screen flex flex-col lg:flex-row">
+          {/* ============================================================ */}
+          {/* LEFT: FULL-BLEED MONOLITH (EDGE-TO-EDGE, ZERO BOX CONSTRAINTS) */}
+          {/* ============================================================ */}
+          <div className="w-full lg:w-1/2 lg:fixed lg:inset-y-0 lg:left-0 h-[48vh] sm:h-[55vh] lg:h-screen relative overflow-hidden bg-black select-none pointer-events-none lg:pointer-events-auto">
+            <Image
+              src="/images/ky-monolith.jpg"
+              alt="Kürşat Yılmaz Brutalist Monolith"
+              fill
+              priority
+              className="object-cover object-center scale-100 lg:scale-105 hover:scale-108 transition-transform duration-1000 ease-out"
+            />
+
+            {/* Ambient gradients */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent lg:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/80 hidden lg:block" />
+            <div className="absolute inset-0 bg-black/20" />
+
+            {/* Desktop Left Watermark */}
+            <div className="absolute bottom-8 left-8 z-10 hidden lg:block">
+              <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-zinc-400/80">
+                KÜRŞAT YILMAZ • 2026
+              </span>
+            </div>
+          </div>
+
+          {/* Desktop Spacer for Fixed Left Side */}
+          <div className="hidden lg:block lg:w-1/2" />
+
+          {/* ============================================================ */}
+          {/* RIGHT: KURSAT. links + TOGGLE BAR + CARDS                    */}
+          {/* ============================================================ */}
+          <div className="w-full lg:w-1/2 min-h-screen px-5 sm:px-10 lg:px-14 xl:px-16 py-10 sm:py-16 lg:py-20 flex flex-col justify-between relative z-10 bg-[#000000] lg:bg-transparent">
+            <div className="space-y-8 max-w-xl mx-auto w-full">
+              {/* Header Area */}
+              <div className="space-y-4">
+                <div className="flex items-baseline justify-between border-b border-white/10 pb-4">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase font-archivo">
+                    KURSAT<span className="text-zinc-500 font-light lowercase">. links</span>
+                  </h1>
+                  <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
+                    DOĞRULANMIŞ HESAPLAR
+                  </span>
                 </div>
 
-                {/* DİNAMİK ALEVLİ VE PARILTILI MOTION ANA SAHNE BUTONU */}
-                <Link
-                  href="/"
-                  className="relative group inline-flex shrink-0 p-[2px] rounded-xl overflow-visible active:scale-95 transition-transform duration-200"
-                >
-                  {/* Katman 1: Dış Alev & Yoğun Neon Kor Işıltısı (Ambient Flame Halo) */}
-                  <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-red-600 via-orange-500 to-amber-400 opacity-80 blur-md group-hover:opacity-100 group-hover:blur-xl transition-all duration-500 animate-flame-pulse pointer-events-none" />
+                {/* UNIFIED TOOLBAR: TOGGLE + 3D TAKTİL "ÖZÜNE DÖN" BUTONU */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                  {/* Segmented Switch: KİŞİSEL vs ANİMASYON */}
+                  <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
+                    <button
+                      onClick={() => switchTab("kisisel")}
+                      className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
+                        activeTab === "kisisel"
+                          ? "bg-white text-black font-bold shadow-lg"
+                          : "text-zinc-400 hover:text-white"
+                      }`}
+                    >
+                      KİŞİSEL
+                    </button>
 
-                  {/* Katman 2: Dönen Akışkan Plazma / Magma Ateş Çerçevesi */}
-                  <div className="relative rounded-[11px] overflow-hidden p-[1.5px] w-full flex items-center justify-center">
-                    <div className="absolute -inset-[250%] animate-flame-spin bg-[conic-gradient(from_0deg_at_50%_50%,#ff1a00_0deg,#ff6a00_50deg,#ffb700_100deg,#ffffff_130deg,#ffb700_160deg,#ff3c00_220deg,#ff0055_280deg,#ff1a00_360deg)] pointer-events-none" />
-
-                    {/* Katman 3: Yükselen Kıvılcım & Kor Parçacıkları (Embers) */}
-                    <span className="absolute bottom-1 left-3 w-1 h-1 rounded-full bg-amber-300 animate-ember-1 pointer-events-none" />
-                    <span className="absolute bottom-0.5 right-6 w-1 h-1 rounded-full bg-orange-400 animate-ember-2 pointer-events-none" />
-                    <span className="absolute bottom-1 left-1/2 w-0.5 h-0.5 rounded-full bg-yellow-100 animate-ember-3 pointer-events-none" />
-
-                    {/* Katman 4: İç Kömür / Obsidyen Cam Zemin & İç Alev Aydınlatması */}
-                    <div className="relative z-10 flex items-center justify-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-[9.5px] bg-[#0c0705] border border-orange-500/20 shadow-[inset_0_-10px_16px_rgba(255,80,0,0.25),inset_0_1px_1px_rgba(255,200,120,0.4)] transition-all duration-300 group-hover:bg-[#150a06]">
-                      {/* Titreyen Alev İkonu */}
-                      <Flame className="w-4 h-4 text-orange-400 group-hover:text-amber-300 animate-flame-flicker transition-colors shrink-0" />
-
-                      {/* Alev Gradient Tipografi */}
-                      <span className="text-xs font-mono uppercase tracking-[0.2em] font-extrabold bg-gradient-to-r from-amber-200 via-orange-400 to-amber-100 bg-clip-text text-transparent group-hover:from-white group-hover:via-amber-200 group-hover:to-orange-300 transition-all">
-                        ANA SAHNE
-                      </span>
-
-                      {/* Ok İkonu */}
-                      <ArrowUpRight className="w-3.5 h-3.5 text-orange-400 group-hover:text-amber-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0" />
-                    </div>
+                    <button
+                      onClick={() => switchTab("animasyon")}
+                      className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
+                        activeTab === "animasyon"
+                          ? "bg-white text-black font-bold shadow-lg"
+                          : "text-zinc-400 hover:text-white"
+                      }`}
+                    >
+                      ANİMASYON
+                    </button>
                   </div>
-                </Link>
+
+                  {/* 3D TAKTİL MEKANİK "ÖZÜNE DÖN" BUTONU */}
+                  <button
+                    onClick={handleReturnToOrigin}
+                    disabled={isCrumpling}
+                    title="Özüne Dön - Sayfayı Buruşturup Ana Sahneye Geç"
+                    className="relative group inline-flex shrink-0 items-stretch rounded-xl p-[2px] bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border border-white/10 shadow-[0_6px_0_#121214,0_12px_22px_rgba(0,0,0,0.8)] hover:shadow-[0_8px_0_#121214,0_16px_28px_rgba(0,0,0,0.95)] active:shadow-[0_1px_0_#121214,0_4px_10px_rgba(0,0,0,0.6)] -translate-y-1 hover:-translate-y-1.5 active:translate-y-1 transition-all duration-150 cursor-pointer select-none active:scale-[0.98]"
+                  >
+                    <div className="relative flex items-center justify-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-[10px] bg-gradient-to-b from-zinc-800 via-zinc-900 to-black border-t border-white/25 border-b border-black/80 shadow-[inset_0_1px_2px_rgba(255,255,255,0.2)]">
+                      <RotateCcw className="w-3.5 h-3.5 text-zinc-300 group-hover:text-white group-hover:-rotate-90 transition-transform duration-300 shrink-0" />
+                      <span className="text-xs font-mono uppercase tracking-[0.2em] font-extrabold bg-gradient-to-b from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent group-hover:from-white group-hover:to-zinc-100 transition-colors">
+                        ÖZÜNE DÖN
+                      </span>
+                    </div>
+                  </button>
+                </div>
               </div>
-            </div>
 
             {/* WIDE CINEMATIC CARDS */}
             <div className="space-y-3.5">
@@ -408,6 +491,7 @@ export default function LinksPage() {
               </button>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </main>
