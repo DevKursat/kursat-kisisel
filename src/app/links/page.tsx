@@ -170,12 +170,19 @@ export default function LinksPage() {
   const [activeTab, setActiveTab] = useState<"kisisel" | "animasyon">("kisisel");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [isCrumpling, setIsCrumpling] = useState(false);
+  const [isDropping, setIsDropping] = useState(false);
 
   // Return to Origin (Özüne Dön): Buruşturulmuş Kağıt Kepenk Akışı & Ana Sayfa Geçişi
   const handleReturnToOrigin = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isCrumpling) return;
     setIsCrumpling(true);
+    
+    // 80ms sonra tüm sayfayı kepenk gibi yavaşça aşağı akıt
+    setTimeout(() => {
+      setIsDropping(true);
+    }, 80);
+
     // Yavaşça kepenk gibi dikey aşağı indikten sonra ana sayfaya geç
     setTimeout(() => {
       window.location.href = "/";
@@ -222,65 +229,32 @@ export default function LinksPage() {
       <svg className="fixed top-0 left-0 w-0 h-0 pointer-events-none opacity-0" aria-hidden="true">
         <filter id="paper-crumple" x="-10%" y="-10%" width="120%" height="120%">
           <feTurbulence type="fractalNoise" baseFrequency="0.012 0.035" numOctaves="4" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isCrumpling ? 28 : 0} xChannelSelector="R" yChannelSelector="G" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isCrumpling ? 24 : 0} xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
 
-      {/* 3. ARKA PLANDA HAZIR AÇIK BEKLEYEN YENİ ANA SAYFA (KEPENK İNERKEN AÇIĞA ÇIKAN SAHNE) */}
-      <div
-        className="fixed inset-0 z-0 bg-[#000000] text-white flex flex-col justify-between p-6 sm:p-12 lg:p-16 pointer-events-none select-none"
-      >
-        {/* Ambient Radial Spotlight & Grid */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,_rgba(255,255,255,0.08),_transparent_70%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-
-        {/* Minimalist Reveal Header */}
-        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-6">
-          <div className="flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span className="font-archivo text-xl sm:text-2xl font-black tracking-widest uppercase">
-              KÜRŞAT YILMAZ
-            </span>
-          </div>
-          <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest hidden sm:inline-block">
-            PORTFOLYO // 2026
-          </span>
-        </div>
-
-        {/* Center Reveal Monolith Hero */}
-        <div className="relative z-10 my-auto space-y-4 max-w-4xl py-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[11px] font-mono tracking-widest uppercase text-zinc-300">
-            <RotateCcw className="w-3 h-3 text-emerald-400" />
-            <span>ÖZÜNE DÖNÜLDÜ • ANA SAHNE</span>
-          </div>
-          <h2 className="text-5xl sm:text-7xl lg:text-8xl font-black font-archivo tracking-tight uppercase leading-[0.9]">
-            CREATIVE<br />
-            <span className="text-zinc-500">ARCHITECT.</span>
-          </h2>
-          <p className="text-sm sm:text-base font-mono text-zinc-400 max-w-lg pt-2">
-            Yapay zeka mimarisi, yüksek performanslı sistemler ve sinematik dijital deneyimler.
-          </p>
-        </div>
-
-        {/* Bottom Reveal Status */}
-        <div className="relative z-10 flex items-center justify-between text-xs font-mono text-zinc-500 border-t border-white/10 pt-4">
-          <span>İSTANBUL, TR</span>
-          <span className="text-emerald-400/90 font-semibold">SAHNE AÇILIYOR...</span>
-        </div>
+      {/* 3. ARKA PLANDA HAZIR AÇIK BEKLEYEN GERÇEK ANA SAYFA (KEPENK İNERKEN BİREBİR AÇIĞA ÇIKAN SAHNE) */}
+      <div className="fixed inset-0 z-0 bg-[#000000] overflow-hidden pointer-events-none select-none">
+        <iframe
+          src="/"
+          title="Ana Sayfa Önizleme"
+          className="w-full h-full border-0 select-none pointer-events-none opacity-100"
+        />
       </div>
 
       {/* 4. DİKEY BURUŞTURULUP KEPENK GİBİ AŞAĞIYA AKAN KAĞIT KATMANI (MEVCUT /LINKS SAYFASI) */}
       <div
-        className={`min-h-screen relative z-10 bg-[#000000] w-full transition-all ${
-          isCrumpling ? "animate-wrinkled-shutter-drop shadow-[0_-30px_90px_rgba(0,0,0,0.98)]" : ""
-        }`}
+        className="fixed inset-0 z-10 w-full h-full overflow-y-auto bg-[#000000]"
         style={{
-          filter: isCrumpling ? "url(#paper-crumple)" : undefined,
+          transform: isDropping ? "translate3d(0, 105vh, 0)" : "translate3d(0, 0, 0)",
+          transition: isDropping ? "transform 2s cubic-bezier(0.35, 0, 0.15, 1)" : "none",
+          boxShadow: isDropping ? "0 -40px 100px rgba(0,0,0,0.98)" : "none",
+          willChange: "transform",
         }}
       >
         {/* Dikey Buruşuk Kepenk Katlanma Çizgileri Overlay */}
         {isCrumpling && (
-          <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-85 transition-opacity duration-300">
+          <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-90 transition-opacity duration-300">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="crease1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -294,9 +268,9 @@ export default function LinksPage() {
                   <stop offset="51%" stopColor="#000" stopOpacity="0.85" />
                 </linearGradient>
                 <pattern id="shutterRibs" width="100%" height="48" patternUnits="userSpaceOnUse">
-                  <line x1="0" y1="0" x2="100%" y2="0" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+                  <line x1="0" y1="0" x2="100%" y2="0" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
                   <line x1="0" y1="2" x2="100%" y2="2" stroke="rgba(0,0,0,0.6)" strokeWidth="2" />
-                  <line x1="0" y1="24" x2="100%" y2="24" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+                  <line x1="0" y1="24" x2="100%" y2="24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
                   <line x1="0" y1="26" x2="100%" y2="26" stroke="rgba(0,0,0,0.5)" strokeWidth="2" />
                 </pattern>
               </defs>
