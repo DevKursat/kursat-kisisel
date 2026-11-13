@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Check, Mail, FileText, Sparkles, RotateCcw } from "lucide-react";
 import CustomCursor from "@/components/CustomCursor";
 import {
@@ -170,23 +171,12 @@ export default function LinksPage() {
   const [activeTab, setActiveTab] = useState<"kisisel" | "animasyon">("kisisel");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [isCrumpling, setIsCrumpling] = useState(false);
-  const [isDropping, setIsDropping] = useState(false);
 
-  // Return to Origin (Özüne Dön): Buruşturulmuş Kağıt Kepenk Akışı & Ana Sayfa Geçişi
+  // Return to Origin (Özüne Dön): Framer Motion 3D Kağıt Buruşması & Kepenk Akışı
   const handleReturnToOrigin = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isCrumpling) return;
     setIsCrumpling(true);
-    
-    // 120ms sonra kağıt dokusuyla birlikte dikey kepenk düşüşünü başlat
-    setTimeout(() => {
-      setIsDropping(true);
-    }, 120);
-
-    // Yavaşça kepenk gibi dikey aşağı indikten sonra ana sayfaya geç
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 2300);
   };
 
   // Hash Routing support (#kisisel and #animasyon)
@@ -225,10 +215,10 @@ export default function LinksPage() {
       {/* 1. ORIGINAL SITE CUSTOM FLUID CURSOR */}
       <CustomCursor />
 
-      {/* 2. ARKA PLANDA HAZIR AÇIK BEKLEYEN GERÇEK ANA SAYFA (KEPENK İNERKEN AÇIĞA ÇIKAN SAHNE) */}
+      {/* 2. ARKA PLANDA HAZIR AÇIK BEKLEYEN GERÇEK ANA SAYFA (KEPENK İNERKEN AÇIĞA ÇIKAN CANLI SAHNE) */}
       <div
         className={`fixed inset-0 z-0 bg-[#000000] overflow-hidden pointer-events-none select-none transition-opacity duration-300 ${
-          isCrumpling ? "opacity-100" : "opacity-0 pointer-events-none"
+          isCrumpling ? "opacity-100" : "opacity-0"
         }`}
       >
         <iframe
@@ -238,40 +228,92 @@ export default function LinksPage() {
         />
       </div>
 
-      {/* 3. DİKEY BURUŞTURULUP KEPENK GİBİ AŞAĞIYA AKAN KAĞIT KATMANI (NORMALDE SERBESTÇE KAYDIRILABİLİR) */}
-      <div
-        className={`min-h-screen relative z-10 w-full bg-[#000000] ${
-          isCrumpling ? "fixed inset-0 overflow-hidden" : ""
-        }`}
-        style={{
-          transform: isDropping
-            ? "translate3d(0, 115vh, 0) rotate(1.2deg)"
-            : isCrumpling
-            ? "perspective(1200px) rotateX(4deg) scale(0.99)"
-            : "none",
-          transition: isDropping
-            ? "transform 2.2s cubic-bezier(0.35, 0, 0.15, 1)"
-            : isCrumpling
-            ? "transform 0.12s ease-out"
-            : "none",
-          boxShadow: isDropping ? "0 -40px 100px rgba(0,0,0,0.98)" : "none",
-          willChange: isCrumpling ? "transform" : "auto",
+      {/* 3. FRAMER MOTION: FİZİKSEL 3D KAĞIT BURUŞMASI VE AŞAĞI AKIŞ KATMANI */}
+      <motion.div
+        animate={
+          isCrumpling
+            ? {
+                y: ["0vh", "3vh", "115vh"],
+                rotateX: [0, 10, 22],
+                rotateZ: [0, -2, 3],
+                skewX: [0, 4, -5],
+                skewY: [0, -2, 2.5],
+                scaleX: [1, 0.96, 0.91],
+                scaleY: [1, 0.95, 0.88],
+                filter: [
+                  "contrast(1) brightness(1)",
+                  "contrast(1.3) brightness(0.9)",
+                  "contrast(1.4) brightness(0.85)",
+                ],
+              }
+            : {
+                y: "0vh",
+                rotateX: 0,
+                rotateZ: 0,
+                skewX: 0,
+                skewY: 0,
+                scaleX: 1,
+                scaleY: 1,
+                filter: "contrast(1) brightness(1)",
+              }
+        }
+        transition={{
+          duration: 2.2,
+          times: [0, 0.12, 1],
+          ease: [0.33, 1, 0.68, 1],
         }}
+        onAnimationComplete={() => {
+          if (isCrumpling) {
+            window.location.href = "/";
+          }
+        }}
+        style={{
+          transformOrigin: "center 15%",
+          perspective: 1200,
+        }}
+        className={`min-h-screen relative z-10 w-full bg-[#000000] ${
+          isCrumpling ? "fixed inset-0 overflow-hidden shadow-[0_-50px_120px_rgba(0,0,0,0.99)]" : ""
+        }`}
       >
-        {/* GERÇEK BURUŞUK KAĞIT DOKUSU OVERLAY (YÜKSEK KONTRASTLI, KIRIŞIKLIKLARI NET GÖZÜKEN DOĞAL DOKU) */}
+        {/* FİZİKSEL KAĞIT KIRIKLARI VE BURUŞUKLUK IŞIK/GÖLGE GEOMETRİSİ */}
         {isCrumpling && (
-          <div className="fixed inset-0 pointer-events-none z-50">
-            {/* Katman 1: Beyaz kırışıklık çizgileri & kabartma (mix-blend-screen sayesinde siyah üzerinde apaçık parlar) */}
-            <Image
-              src="/images/crumpled-paper.jpg"
-              alt="Buruşuk Kağıt Dokusu"
-              fill
-              priority
-              className="object-cover object-center w-full h-full invert contrast-[2.8] brightness-125 mix-blend-screen opacity-90"
-            />
-            {/* Katman 2: Organik kağıt bükülme gölgeleri */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 mix-blend-multiply" />
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.12 }}
+            className="fixed inset-0 pointer-events-none z-50 overflow-hidden"
+          >
+            {/* SVG 3D Poligonal Kağıt Kırışıklıkları & Işık Kırılmaları */}
+            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="creaseHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="47%" stopColor="#000" stopOpacity="0.85" />
+                  <stop offset="50%" stopColor="#fff" stopOpacity="0.85" />
+                  <stop offset="53%" stopColor="#000" stopOpacity="0.85" />
+                </linearGradient>
+                <linearGradient id="creaseShadow" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="48%" stopColor="#000" stopOpacity="0.9" />
+                  <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
+                  <stop offset="52%" stopColor="#000" stopOpacity="0.9" />
+                </linearGradient>
+              </defs>
+
+              {/* Ana Kağıt Kırışıklık Çizgileri */}
+              <line x1="0%" y1="14%" x2="100%" y2="76%" stroke="url(#creaseHighlight)" strokeWidth="8" />
+              <line x1="0%" y1="68%" x2="100%" y2="24%" stroke="url(#creaseShadow)" strokeWidth="7" />
+              <line x1="34%" y1="0%" x2="66%" y2="100%" stroke="url(#creaseHighlight)" strokeWidth="8" />
+              <line x1="74%" y1="0%" x2="16%" y2="100%" stroke="url(#creaseShadow)" strokeWidth="6" />
+              <line x1="10%" y1="88%" x2="90%" y2="38%" stroke="url(#creaseHighlight)" strokeWidth="6" />
+              <line x1="6%" y1="38%" x2="94%" y2="88%" stroke="url(#creaseShadow)" strokeWidth="6" />
+
+              {/* Kağıt Katlanma Gölgeli Fasetleri */}
+              <polygon points="50,90 340,190 180,440" fill="rgba(0,0,0,0.55)" />
+              <polygon points="480,130 800,360 440,600" fill="rgba(255,255,255,0.08)" />
+              <polygon points="190,560 600,770 130,900" fill="rgba(0,0,0,0.6)" />
+              <polygon points="640,410 970,660 520,810" fill="rgba(0,0,0,0.45)" />
+              <polygon points="260,160 540,390 310,510" fill="rgba(255,255,255,0.07)" />
+            </svg>
+          </motion.div>
         )}
 
         {/* AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
@@ -460,7 +502,7 @@ export default function LinksPage() {
           </div>
         </div>
         </div>
-      </div>
+      </motion.div>
     </main>
   );
 }
