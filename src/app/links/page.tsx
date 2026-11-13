@@ -228,92 +228,57 @@ export default function LinksPage() {
         />
       </div>
 
-      {/* 3. FRAMER MOTION: FİZİKSEL 3D KAĞIT BURUŞMASI VE AŞAĞI AKIŞ KATMANI */}
+      {/* 3. GERÇEK KAĞIT DOKUSU VE AKICI KEPENK İNİŞ KATMANI */}
       <motion.div
         animate={
           isCrumpling
             ? {
-                y: ["0vh", "3vh", "115vh"],
-                rotateX: [0, 10, 22],
-                rotateZ: [0, -2, 3],
-                skewX: [0, 4, -5],
-                skewY: [0, -2, 2.5],
-                scaleX: [1, 0.96, 0.91],
-                scaleY: [1, 0.95, 0.88],
-                filter: [
-                  "contrast(1) brightness(1)",
-                  "contrast(1.3) brightness(0.9)",
-                  "contrast(1.4) brightness(0.85)",
-                ],
+                y: ["0%", "3%", "108%"],
+                rotateZ: [0, -0.6, 1.2],
+                scale: [1, 0.99, 0.97],
               }
             : {
-                y: "0vh",
-                rotateX: 0,
+                y: "0%",
                 rotateZ: 0,
-                skewX: 0,
-                skewY: 0,
-                scaleX: 1,
-                scaleY: 1,
-                filter: "contrast(1) brightness(1)",
+                scale: 1,
               }
         }
         transition={{
           duration: 2.2,
-          times: [0, 0.12, 1],
-          ease: [0.33, 1, 0.68, 1],
+          times: [0, 0.1, 1],
+          ease: [0.32, 0.72, 0, 1],
         }}
         onAnimationComplete={() => {
           if (isCrumpling) {
             window.location.href = "/";
           }
         }}
-        style={{
-          transformOrigin: "center 15%",
-          perspective: 1200,
-        }}
-        className={`min-h-screen relative z-10 w-full bg-[#000000] ${
-          isCrumpling ? "fixed inset-0 overflow-hidden shadow-[0_-50px_120px_rgba(0,0,0,0.99)]" : ""
+        className={`min-h-screen relative z-10 w-full bg-[#000000] origin-top ${
+          isCrumpling ? "fixed inset-0 overflow-hidden shadow-[0_-30px_90px_rgba(0,0,0,0.95)]" : ""
         }`}
       >
-        {/* FİZİKSEL KAĞIT KIRIKLARI VE BURUŞUKLUK IŞIK/GÖLGE GEOMETRİSİ */}
+        {/* DOĞAL BURUŞUK KAĞIT DOKUSU (KULLANICININ İLETTİĞİ BEYAZ KAĞIT DOKUSUYLA BİREBİR AYNI) */}
         {isCrumpling && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.12 }}
-            className="fixed inset-0 pointer-events-none z-50 overflow-hidden"
-          >
-            {/* SVG 3D Poligonal Kağıt Kırışıklıkları & Işık Kırılmaları */}
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="creaseHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="47%" stopColor="#000" stopOpacity="0.85" />
-                  <stop offset="50%" stopColor="#fff" stopOpacity="0.85" />
-                  <stop offset="53%" stopColor="#000" stopOpacity="0.85" />
-                </linearGradient>
-                <linearGradient id="creaseShadow" x1="100%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="48%" stopColor="#000" stopOpacity="0.9" />
-                  <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
-                  <stop offset="52%" stopColor="#000" stopOpacity="0.9" />
-                </linearGradient>
-              </defs>
-
-              {/* Ana Kağıt Kırışıklık Çizgileri */}
-              <line x1="0%" y1="14%" x2="100%" y2="76%" stroke="url(#creaseHighlight)" strokeWidth="8" />
-              <line x1="0%" y1="68%" x2="100%" y2="24%" stroke="url(#creaseShadow)" strokeWidth="7" />
-              <line x1="34%" y1="0%" x2="66%" y2="100%" stroke="url(#creaseHighlight)" strokeWidth="8" />
-              <line x1="74%" y1="0%" x2="16%" y2="100%" stroke="url(#creaseShadow)" strokeWidth="6" />
-              <line x1="10%" y1="88%" x2="90%" y2="38%" stroke="url(#creaseHighlight)" strokeWidth="6" />
-              <line x1="6%" y1="38%" x2="94%" y2="88%" stroke="url(#creaseShadow)" strokeWidth="6" />
-
-              {/* Kağıt Katlanma Gölgeli Fasetleri */}
-              <polygon points="50,90 340,190 180,440" fill="rgba(0,0,0,0.55)" />
-              <polygon points="480,130 800,360 440,600" fill="rgba(255,255,255,0.08)" />
-              <polygon points="190,560 600,770 130,900" fill="rgba(0,0,0,0.6)" />
-              <polygon points="640,410 970,660 520,810" fill="rgba(0,0,0,0.45)" />
-              <polygon points="260,160 540,390 310,510" fill="rgba(255,255,255,0.07)" />
-            </svg>
-          </motion.div>
+          <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+            {/* Katman 1: Beyaz Kağıt Kırışıklıkları & Işık Kırılmaları */}
+            <Image
+              src="/images/crumpled-paper.jpg"
+              alt="Buruşuk Kağıt Dokusu"
+              fill
+              priority
+              className="object-cover object-center w-full h-full mix-blend-color-dodge opacity-65 contrast-150 brightness-110"
+            />
+            {/* Katman 2: Derin Kağıt Katlanma Gölgeleri */}
+            <Image
+              src="/images/crumpled-paper.jpg"
+              alt="Buruşuk Kağıt Gölgeleri"
+              fill
+              priority
+              className="object-cover object-center w-full h-full mix-blend-multiply opacity-75 contrast-200"
+            />
+            {/* Alt Kenar Kağıt Bitiş Gölgesi */}
+            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/80 to-transparent" />
+          </div>
         )}
 
         {/* AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
