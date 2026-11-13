@@ -37,7 +37,7 @@ export default function LinksPage() {
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased relative">
       {/* 1. TOP NAV BAR */}
-      <header className="relative z-20 max-w-lg mx-auto px-5 pt-8 pb-4 flex items-center justify-between">
+      <header className="relative z-20 max-w-md mx-auto px-5 pt-8 pb-4 flex items-center justify-between">
         <Link
           href="/"
           className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.12] backdrop-blur-xl border border-white/10 hover:border-white/20 text-xs text-zinc-300 hover:text-white transition-all active:scale-95"
@@ -47,7 +47,7 @@ export default function LinksPage() {
         </Link>
       </header>
 
-      {/* 2. EDITORIAL HERO (CLEAN, NO AVATAR) */}
+      {/* 2. EDITORIAL HERO (CLEAN & MINIMAL) */}
       <div className="relative z-10 max-w-md mx-auto px-4 pt-6 pb-4 text-center">
         <div className="space-y-1.5">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white uppercase font-archivo">
@@ -89,7 +89,7 @@ export default function LinksPage() {
           </button>
         </div>
 
-        {/* 3. TACTILE GLASS LINK DIRECTORY (BEĞENİLEN ŞEFFAF KARTLAR) */}
+        {/* 3. TACTILE GLASS LINK DIRECTORY */}
         <div className="mt-8 space-y-7 text-left">
           {/* Section: Animasyon & Medya */}
           <div>
@@ -391,38 +391,32 @@ export default function LinksPage() {
         </div>
       </div>
 
-      {/* 4. NATURAL ATMOSPHERIC PODCAST FINALE (FOTOĞRAFIN ÜST KISMI SİTEYE ŞEFFAFLAŞARAK ERİR, ALT KISIM CANLI & DOĞAL) */}
-      <section className="relative w-full max-w-xl mx-auto mt-20 pb-16 px-4">
-        {/* The photo with smooth top fade into site's pure black */}
-        <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden shadow-2xl">
+      {/* 4. NATURAL ATMOSPHERIC PODCAST BLEED (SIFIR KUTU, SIFIR ÇERÇEVE, ÜSTTEN DOĞAL ERİME) */}
+      <section className="relative w-full mt-20 pb-16">
+        {/* Fotoğraf: Sıfır border-radius, sıfır çerçeve, üstten karanlığa şeffaflaşarak eriyen saf görsel */}
+        <div 
+          className="relative w-full h-[320px] sm:h-[440px] pointer-events-none select-none"
+          style={{
+            maskImage: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 35%, black 85%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 35%, black 85%, transparent 100%)",
+          }}
+        >
           <Image
             src="/images/bocek-podcast.jpg"
-            alt="Kürşat & Böcek Podcast"
+            alt="Kürşat & Böcek"
             fill
             className="object-cover object-bottom"
           />
-          {/* Top fade gradient - melts smoothly into site black background */}
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-black/30 to-[#000000]" />
-          {/* Side soft fade */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
-
-          {/* On-air badge */}
-          <div className="absolute top-4 left-4 z-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[10px] font-mono tracking-wider text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>STÜDYO • ON-AIR</span>
-            </span>
-          </div>
         </div>
 
-        {/* Podcast Dialogue & Narration */}
-        <div className="mt-5 space-y-3 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
-          <div className="space-y-1">
-            <div className="text-base font-bold text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
+        {/* Podcast Dialogue & Narration (Kürşat & Böcek odaklı diyalog alanı) */}
+        <div className="max-w-md mx-auto px-5 pt-4 text-center space-y-4">
+          <div className="space-y-1.5">
+            <div className="text-base font-bold text-white tracking-tight flex items-center justify-center gap-2">
               <Mic className="w-4 h-4 text-emerald-400" />
               <span>Kürşat & Böcek</span>
             </div>
-            <p className="text-xs text-zinc-400 font-light leading-relaxed max-w-sm">
+            <p className="text-xs text-zinc-400 font-light leading-relaxed max-w-sm mx-auto">
               “Koda dökülen mantık, mikrofonda yaşayan absürtlük. Sokak simülasyonları ve gecenin nabzı.”
             </p>
           </div>
@@ -431,7 +425,7 @@ export default function LinksPage() {
             href="https://www.youtube.com/@kursatsi"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0 active:scale-95"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 hover:bg-white hover:text-black text-xs font-medium text-white transition-all active:scale-95"
           >
             <Headphones className="w-3.5 h-3.5" />
             <span>Yayını Dinle</span>
