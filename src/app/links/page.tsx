@@ -215,7 +215,15 @@ export default function LinksPage() {
       {/* 1. ORIGINAL SITE CUSTOM FLUID CURSOR */}
       <CustomCursor />
 
-      {/* 2. ARKA PLANDA HAZIR AÇIK BEKLEYEN GERÇEK ANA SAYFA (KEPENK İNERKEN AÇIĞA ÇIKAN CANLI SAHNE) */}
+      {/* 2. SVG FİLTRESİ: BURUŞTURULMUŞ KAĞIT DEFORMASYONU (TURBULENCE & DISPLACEMENT) */}
+      <svg className="fixed top-0 left-0 w-0 h-0 pointer-events-none opacity-0" aria-hidden="true">
+        <filter id="paper-crumple" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isCrumpling ? 35 : 0} xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
+
+      {/* 3. ARKA PLANDA HAZIR AÇIK BEKLEYEN GERÇEK CANLI ANA SAYFA (KEPENK İNERKEN AÇIĞA ÇIKAN SAHNE) */}
       <div
         className={`fixed inset-0 z-0 bg-[#000000] overflow-hidden pointer-events-none select-none transition-opacity duration-300 ${
           isCrumpling ? "opacity-100" : "opacity-0"
@@ -228,56 +236,67 @@ export default function LinksPage() {
         />
       </div>
 
-      {/* 3. GERÇEK KAĞIT DOKUSU VE AKICI KEPENK İNİŞ KATMANI */}
+      {/* 4. BURUŞAN VE KEPENK GİBİ AŞAĞI KAYAN KAĞIT KATMANI */}
       <motion.div
         animate={
           isCrumpling
             ? {
-                y: ["0%", "3%", "108%"],
-                rotateZ: [0, -0.6, 1.2],
-                scale: [1, 0.99, 0.97],
+                y: ["0%", "3%", "112%"],
+                rotateZ: [0, -1.8, 2.5],
+                skewX: [0, 3.5, -3],
+                scale: [1, 0.96, 0.92],
+                borderRadius: ["0px", "16px", "28px"],
               }
             : {
                 y: "0%",
                 rotateZ: 0,
+                skewX: 0,
                 scale: 1,
+                borderRadius: "0px",
               }
         }
         transition={{
           duration: 2.2,
-          times: [0, 0.1, 1],
-          ease: [0.32, 0.72, 0, 1],
+          times: [0, 0.15, 1],
+          ease: [0.33, 1, 0.68, 1],
         }}
         onAnimationComplete={() => {
           if (isCrumpling) {
             window.location.href = "/";
           }
         }}
-        className={`min-h-screen relative z-10 w-full bg-[#000000] origin-top ${
-          isCrumpling ? "fixed inset-0 overflow-hidden shadow-[0_-30px_90px_rgba(0,0,0,0.95)]" : ""
+        style={{
+          filter: isCrumpling ? "url(#paper-crumple)" : undefined,
+          transformOrigin: "center 20%",
+        }}
+        className={`min-h-screen relative z-10 w-full bg-[#000000] ${
+          isCrumpling ? "fixed inset-0 overflow-hidden shadow-[0_-40px_100px_rgba(0,0,0,0.98)]" : ""
         }`}
       >
-        {/* DOĞAL BURUŞUK KAĞIT DOKUSU (KULLANICININ İLETTİĞİ BEYAZ KAĞIT DOKUSUYLA BİREBİR AYNI) */}
+        {/* DOĞAL BURUŞUK KAĞIT KIRIŞIKLIKLARI VE GÖLGE OVERLAY'İ */}
         {isCrumpling && (
-          <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-            {/* Katman 1: Beyaz Kağıt Kırışıklıkları & Işık Kırılmaları */}
-            <Image
-              src="/images/crumpled-paper.jpg"
-              alt="Buruşuk Kağıt Dokusu"
-              fill
-              priority
-              className="object-cover object-center w-full h-full mix-blend-color-dodge opacity-65 contrast-150 brightness-110"
-            />
-            {/* Katman 2: Derin Kağıt Katlanma Gölgeleri */}
-            <Image
-              src="/images/crumpled-paper.jpg"
-              alt="Buruşuk Kağıt Gölgeleri"
-              fill
-              priority
-              className="object-cover object-center w-full h-full mix-blend-multiply opacity-75 contrast-200"
-            />
-            {/* Alt Kenar Kağıt Bitiş Gölgesi */}
-            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/80 to-transparent" />
+          <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-90 transition-opacity duration-200">
+            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="crease1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="48%" stopColor="#000" stopOpacity="0.85" />
+                  <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
+                  <stop offset="52%" stopColor="#000" stopOpacity="0.85" />
+                </linearGradient>
+                <linearGradient id="crease2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="49%" stopColor="#000" stopOpacity="0.9" />
+                  <stop offset="50%" stopColor="#fff" stopOpacity="0.85" />
+                  <stop offset="51%" stopColor="#000" stopOpacity="0.9" />
+                </linearGradient>
+              </defs>
+              <line x1="0%" y1="18%" x2="100%" y2="82%" stroke="url(#crease1)" strokeWidth="7" />
+              <line x1="0%" y1="72%" x2="100%" y2="28%" stroke="url(#crease2)" strokeWidth="6" />
+              <line x1="38%" y1="0%" x2="62%" y2="100%" stroke="url(#crease1)" strokeWidth="8" />
+              <line x1="78%" y1="0%" x2="18%" y2="100%" stroke="url(#crease2)" strokeWidth="5" />
+              <polygon points="60,90 340,190 180,440" fill="rgba(0,0,0,0.4)" />
+              <polygon points="460,130 800,370 440,600" fill="rgba(255,255,255,0.08)" />
+              <polygon points="200,580 600,780 140,900" fill="rgba(0,0,0,0.48)" />
+            </svg>
           </div>
         )}
 
