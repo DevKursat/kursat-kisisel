@@ -1,8 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, ArrowLeft } from "lucide-react";
+import {
+  ArrowUpRight,
+  ArrowLeft,
+  Check,
+  Mail,
+  FileText,
+  Sparkles,
+} from "lucide-react";
 import {
   GithubIcon,
   TwitterXIcon,
@@ -16,77 +24,18 @@ import {
   FacebookIcon,
 } from "@/components/Icons";
 
-interface LinkBannerItem {
-  title: string;
-  subtitle: string;
-  url: string;
-  image: string;
-  badge?: string;
-}
-
-const LINK_BANNERS: LinkBannerItem[] = [
-  {
-    title: "YouTube",
-    subtitle: "@kursatsi • Stüdyo & Animasyon",
-    url: "https://www.youtube.com/@kursatsi",
-    image: "/images/bocek-podcast.jpg",
-    badge: "ON-AIR",
-  },
-  {
-    title: "TikTok",
-    subtitle: "@kursat.yz • Animasyon Yayını",
-    url: "https://www.tiktok.com/@kursat.yz",
-    image: "/blog/meta-muhendisi-yapay-zeka-kod-itirafi-ve-kirilgan-mimari.png",
-    badge: "VİRAL",
-  },
-  {
-    title: "İtibar",
-    subtitle: "itibar.app • Dijital İtibar & Yapay Zeka",
-    url: "https://itibar.app",
-    image: "/projects/itibar.jpg",
-    badge: "PRODUCT",
-  },
-  {
-    title: "Unutma.",
-    subtitle: "unutma.itibar.app • Akıllı Not & Hafıza",
-    url: "https://unutma.itibar.app",
-    image: "/projects/unutma.jpg",
-    badge: "APP",
-  },
-  {
-    title: "Spotify",
-    subtitle: "Sanatçı Profili • Kürşat Yılmaz",
-    url: "https://open.spotify.com/intl-tr/artist/5NQc0XkMOuLmfSrgNaz3YP",
-    image: "/blog/latency.jpg",
-    badge: "MUSIC",
-  },
-  {
-    title: "Blog & Yazılar",
-    subtitle: "Yapay Zeka Mimarisi & Teardown",
-    url: "/blog",
-    image: "/blog/ollama-performans-vergisi-vllm.png",
-    badge: "WRITING",
-  },
-  {
-    title: "Özgeçmiş / CV",
-    subtitle: "Lead AI Product Developer",
-    url: "/cv.pdf",
-    image: "/blog/ai-bumerangi-muhendislerin-donusu.png",
-    badge: "CV",
-  },
-  {
-    title: "GitHub",
-    subtitle: "github.com/DevKursat",
-    url: "https://github.com/DevKursat",
-    image: "/projects/aetheris.jpg",
-    badge: "CODE",
-  },
-];
-
 export default function LinksPage() {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const handleCopy = (key: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
+
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased">
-      {/* Back button */}
+      {/* Back to main site link */}
       <div className="fixed top-6 left-6 z-50">
         <Link
           href="/"
@@ -97,152 +46,398 @@ export default function LinksPage() {
         </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 px-5 sm:px-8 py-16 sm:py-20 lg:py-16 items-start">
-        {/* LEFT COLUMN: THE MONOLITH (STICKY ON DESKTOP, VISUAL ANCHOR ON MOBILE) */}
-        <aside className="lg:col-span-5 lg:sticky lg:top-16 flex flex-col justify-between space-y-8">
-          <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] lg:aspect-[9/14] rounded-2xl overflow-hidden border border-white/10 bg-zinc-950 shadow-2xl group">
+      <div className="max-w-7xl mx-auto min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 px-5 sm:px-8 py-16 sm:py-20 lg:py-16 items-start">
+        {/* ============================================================ */}
+        {/* SOL SÜTUN: KY MONOLİT (DESKTOPTA SABİT STICKY, MOBİLDE GÖRSEL ÇAPA) */}
+        {/* ============================================================ */}
+        <aside className="lg:col-span-5 lg:sticky lg:top-16 flex flex-col justify-between space-y-6">
+          <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] lg:aspect-[9/13] rounded-2xl overflow-hidden border border-white/10 bg-zinc-950 shadow-2xl group">
             <Image
               src="/images/ky-monolith.jpg"
-              alt="Kürşat Yılmaz Monolith"
+              alt="Kürşat Yılmaz Brutalist Monolith"
               fill
               priority
-              className="object-cover object-center group-hover:scale-105 transition-transform duration-1000 ease-out"
+              className="object-cover object-center group-hover:scale-103 transition-transform duration-1000 ease-out"
             />
-            {/* Dark luxury atmospheric vignette */}
+            {/* Subtle luxury ambient vignette */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent" />
 
-            {/* Monolith Overlay Title */}
-            <div className="absolute bottom-6 left-6 right-6 z-10 space-y-1">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-emerald-400">
-                CREATIVE AI & ANIMATION
+            {/* Monolith Overlay Narrative */}
+            <div className="absolute bottom-6 left-6 right-6 z-10 space-y-1.5">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[10px] font-mono tracking-wider text-emerald-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>OFFICIAL HUB</span>
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-white font-archivo">
                 KÜRŞAT YILMAZ
               </h2>
-              <p className="text-xs text-zinc-400 font-light max-w-xs">
-                Koda dökülen mantık, mikrofonda yaşayan absürtlük. Sokak simülasyonları ve gecenin nabzı.
+              <p className="text-xs text-zinc-400 font-light leading-relaxed max-w-xs">
+                Yapay zeka mimarisi, animasyon ve dijital varlıkların resmi merkezi.
               </p>
             </div>
           </div>
 
-          {/* Quick Social Icons Strip on Left */}
-          <div className="flex items-center justify-center lg:justify-start gap-3 pt-2">
+          {/* Hızlı İletişim / Direkt Butonlar */}
+          <div className="flex items-center gap-2.5">
             <a
               href="https://wa.me/kursat.yz"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="WhatsApp"
-              className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/20 flex items-center justify-center text-zinc-300 hover:text-white transition-all active:scale-95"
+              className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 hover:border-white/20 text-xs font-medium text-zinc-200 hover:text-white transition-all active:scale-95"
             >
-              <WhatsappIcon className="w-4 h-4 fill-current" />
+              <WhatsappIcon className="w-4 h-4 fill-current text-emerald-400" />
+              <span>WhatsApp: @kursat.yz</span>
             </a>
-            <a
-              href="https://www.instagram.com/kursat.yz/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/20 flex items-center justify-center text-zinc-300 hover:text-white transition-all active:scale-95"
+
+            <button
+              onClick={() => handleCopy("email", "kursat@itibar.app")}
+              className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 hover:border-white/20 text-xs font-medium text-zinc-200 hover:text-white transition-all active:scale-95"
             >
-              <InstagramIcon className="w-4 h-4 fill-current" />
-            </a>
-            <a
-              href="https://x.com/kursatsi"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X Twitter"
-              className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/20 flex items-center justify-center text-zinc-300 hover:text-white transition-all active:scale-95"
-            >
-              <TwitterXIcon className="w-4 h-4 fill-current" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/kürşatyılmaz/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/20 flex items-center justify-center text-zinc-300 hover:text-white transition-all active:scale-95"
-            >
-              <LinkedinIcon className="w-4 h-4 fill-current" />
-            </a>
-            <a
-              href="https://github.com/DevKursat"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/20 flex items-center justify-center text-zinc-300 hover:text-white transition-all active:scale-95"
-            >
-              <GithubIcon className="w-4 h-4 fill-current" />
-            </a>
-            <a
-              href="https://www.facebook.com/kursatsi"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/20 flex items-center justify-center text-zinc-300 hover:text-white transition-all active:scale-95"
-            >
-              <FacebookIcon className="w-4 h-4 fill-current" />
-            </a>
+              {copiedKey === "email" ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  <span className="text-emerald-300">Kopyalandı</span>
+                </>
+              ) : (
+                <>
+                  <Mail className="w-4 h-4 text-zinc-400" />
+                  <span>kursat@itibar.app</span>
+                </>
+              )}
+            </button>
           </div>
         </aside>
 
-        {/* RIGHT COLUMN: THE CINEMATIC AWWWARDS-STYLE LINK BANNERS */}
-        <section className="lg:col-span-7 space-y-6">
-          {/* Header matching Awwwards typography */}
-          <div className="pb-2 border-b border-white/10 flex items-baseline justify-between">
+        {/* ============================================================ */}
+        {/* SAĞ SÜTUN: SOSYAL MEDYA, ANİMASYON VE KİŞİSEL PLATFORMLAR */}
+        {/* ============================================================ */}
+        <section className="lg:col-span-7 space-y-8">
+          {/* Awwwards Header */}
+          <div className="pb-3 border-b border-white/10 flex items-baseline justify-between">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white uppercase font-archivo">
               kürşat yılmaz<span className="text-zinc-500 font-light lowercase">. LINKS</span>
             </h1>
             <span className="text-xs font-mono text-zinc-500">
-              {LINK_BANNERS.length} BAĞLANTI
+              DOĞRULANMIŞ HESAPLAR
             </span>
           </div>
 
-          {/* Wide Letterbox Visual Banners */}
-          <div className="space-y-4">
-            {LINK_BANNERS.map((item, idx) => (
+          {/* 1. KATEGORİ: ANİMASYON, MEDYA & MİZAH */}
+          <div className="space-y-3">
+            <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 px-1 flex items-center justify-between">
+              <span>Animasyon, Medya & Mizah</span>
+              <span className="text-[10px] text-zinc-600">@kursatsi • @kursat.yz</span>
+            </div>
+
+            <div className="space-y-2.5">
+              {/* YouTube */}
               <a
-                key={idx}
-                href={item.url}
-                target={item.url.startsWith("http") ? "_blank" : undefined}
-                rel={item.url.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="group relative block w-full aspect-[21/8] sm:aspect-[24/8] rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-lg active:scale-[0.99]"
+                href="https://www.youtube.com/@kursatsi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
               >
-                {/* Background Image */}
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
-                />
-
-                {/* Dark Contrast Glass Overlay */}
-                <div className="absolute inset-0 bg-black/55 group-hover:bg-black/35 transition-colors duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/60 group-hover:via-black/25 transition-colors duration-500" />
-
-                {/* Card Content (Centered Title + Subtitle) */}
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center p-4">
-                  {item.badge && (
-                    <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-emerald-400/90 mb-1">
-                      {item.badge}
-                    </span>
-                  )}
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white uppercase font-archivo group-hover:tracking-wider transition-all duration-300 drop-shadow-md">
-                    {item.title}
-                  </h3>
-                  <p className="text-[11px] sm:text-xs text-zinc-300/80 font-mono mt-0.5 group-hover:text-white transition-colors">
-                    {item.subtitle}
-                  </p>
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 shrink-0">
+                    <YouTubeIcon className="w-5 h-5 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      YouTube
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">@kursatsi • Kanal & Animasyonlar</div>
+                  </div>
                 </div>
-
-                {/* Top-Right Arrow Indicator */}
-                <div className="absolute top-3.5 right-3.5 z-10 w-7 h-7 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:border-white/30 group-hover:scale-110 transition-all">
-                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
               </a>
-            ))}
+
+              {/* TikTok */}
+              <a
+                href="https://www.tiktok.com/@kursat.yz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/15 flex items-center justify-center text-white shrink-0">
+                    <TikTokIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      TikTok
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">@kursat.yz • Animasyon & Sokak Mizahı</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* Instagram (Animasyon/Mizah) */}
+              <a
+                href="https://www.instagram.com/kursatsi/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 shrink-0">
+                    <InstagramIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      Instagram (Animasyon & Mizah)
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">@kursatsi • Karakterler & Klipler</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* Spotify Artist */}
+              <a
+                href="https://open.spotify.com/intl-tr/artist/5NQc0XkMOuLmfSrgNaz3YP"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                    <SpotifyIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      Spotify Sanatçı Profili
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">Kürşat Yılmaz • Müzik & Sesler</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* X / Twitter (Animasyon) */}
+              <a
+                href="https://x.com/kursatsi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/15 flex items-center justify-center text-white shrink-0">
+                    <TwitterXIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      X (Twitter) Animasyon
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">@kursatsi • Duyurular & Kesitler</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* Facebook */}
+              <a
+                href="https://www.facebook.com/kursatsi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-600/20 flex items-center justify-center text-blue-400 shrink-0">
+                    <FacebookIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      Facebook
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">kursatsi • Topluluk Sayfası</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+            </div>
           </div>
 
-          {/* Minimalist Awwwards-style Footer */}
+          {/* 2. KATEGORİ: KİŞİSEL PROFİLLER, SİTELER & PROJELER */}
+          <div className="space-y-3 pt-2">
+            <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 px-1 flex items-center justify-between">
+              <span>Kişisel Siteler, Projeler & Mühendislik</span>
+              <span className="text-[10px] text-zinc-600">Kürşat Yılmaz</span>
+            </div>
+
+            <div className="space-y-2.5">
+              {/* İtibar */}
+              <a
+                href="https://itibar.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/15 flex items-center justify-center text-white shrink-0 font-extrabold text-sm font-archivo">
+                    İ
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      İtibar
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">itibar.app • Yapay Zeka Dijital İtibar Motoru</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* Unutma. */}
+              <a
+                href="https://unutma.itibar.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/15 flex items-center justify-center text-white shrink-0 font-extrabold text-sm font-archivo">
+                    U
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      Unutma.
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">unutma.itibar.app • Otonom Hafıza & Asistan</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* Özgeçmiş / CV */}
+              <a
+                href="https://devkursat.github.io/cv/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      Özgeçmiş / CV
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">devkursat.github.io/cv • Lead AI Product Developer</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* GitHub */}
+              <a
+                href="https://github.com/DevKursat"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/15 flex items-center justify-center text-white shrink-0">
+                    <GithubIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      GitHub
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">github.com/DevKursat • Açık Kaynak & Sistemler</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* LinkedIn */}
+              <a
+                href="https://www.linkedin.com/in/kürşatyılmaz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                    <LinkedinIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      LinkedIn
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">linkedin.com/in/kürşatyılmaz</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* X / Twitter (Kişisel) */}
+              <a
+                href="https://x.com/DevKursat"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/15 flex items-center justify-center text-white shrink-0">
+                    <TwitterXIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      X (Twitter) Kişisel
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">@DevKursat • Yapay Zeka & Mühendislik</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* Instagram (Kişisel) */}
+              <a
+                href="https://www.instagram.com/kursat.yz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 shrink-0">
+                    <InstagramIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      Instagram Kişisel
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">@kursat.yz • Kişisel Profil</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* DEV.to */}
+              <a
+                href="https://dev.to/devkursat"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/15 flex items-center justify-center text-white shrink-0">
+                    <DevtoIcon className="w-4 h-4 fill-current" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-white">
+                      DEV.to
+                    </div>
+                    <div className="text-xs text-zinc-400 font-mono">dev.to/devkursat • Teknik Makaleler</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+            </div>
+          </div>
+
+          {/* Awwwards Minimalist Footer */}
           <footer className="pt-8 border-t border-white/10 space-y-2 text-left">
             <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
               Yapay Zeka Mimarisi, Otonom Sistemler ve Sokak Çizgisi.
