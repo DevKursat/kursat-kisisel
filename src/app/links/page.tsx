@@ -178,15 +178,15 @@ export default function LinksPage() {
     if (isCrumpling) return;
     setIsCrumpling(true);
     
-    // 80ms sonra tüm sayfayı kepenk gibi yavaşça aşağı akıt
+    // 120ms sonra kağıt dokusuyla birlikte dikey kepenk düşüşünü başlat
     setTimeout(() => {
       setIsDropping(true);
-    }, 80);
+    }, 120);
 
     // Yavaşça kepenk gibi dikey aşağı indikten sonra ana sayfaya geç
     setTimeout(() => {
       window.location.href = "/";
-    }, 2200);
+    }, 2300);
   };
 
   // Hash Routing support (#kisisel and #animasyon)
@@ -225,58 +225,53 @@ export default function LinksPage() {
       {/* 1. ORIGINAL SITE CUSTOM FLUID CURSOR */}
       <CustomCursor />
 
-      {/* 2. SVG FILTER: DİKEY BURUŞTURULMUŞ KAĞIT & KEPENK DOKUSU */}
-      <svg className="fixed top-0 left-0 w-0 h-0 pointer-events-none opacity-0" aria-hidden="true">
-        <filter id="paper-crumple" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.035" numOctaves="4" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isCrumpling ? 24 : 0} xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </svg>
-
-      {/* 3. ARKA PLANDA HAZIR AÇIK BEKLEYEN GERÇEK ANA SAYFA (KEPENK İNERKEN BİREBİR AÇIĞA ÇIKAN SAHNE) */}
-      <div className="fixed inset-0 z-0 bg-[#000000] overflow-hidden pointer-events-none select-none">
+      {/* 2. ARKA PLANDA HAZIR AÇIK BEKLEYEN GERÇEK ANA SAYFA (KEPENK İNERKEN AÇIĞA ÇIKAN SAHNE) */}
+      <div
+        className={`fixed inset-0 z-0 bg-[#000000] overflow-hidden pointer-events-none select-none transition-opacity duration-300 ${
+          isCrumpling ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
         <iframe
           src="/"
           title="Ana Sayfa Önizleme"
-          className="w-full h-full border-0 select-none pointer-events-none opacity-100"
+          className="w-full h-full border-0 select-none pointer-events-none"
         />
       </div>
 
-      {/* 4. DİKEY BURUŞTURULUP KEPENK GİBİ AŞAĞIYA AKAN KAĞIT KATMANI (MEVCUT /LINKS SAYFASI) */}
+      {/* 3. DİKEY BURUŞTURULUP KEPENK GİBİ AŞAĞIYA AKAN KAĞIT KATMANI (NORMALDE SERBESTÇE KAYDIRILABİLİR) */}
       <div
-        className="fixed inset-0 z-10 w-full h-full overflow-y-auto bg-[#000000]"
+        className={`min-h-screen relative z-10 w-full bg-[#000000] ${
+          isCrumpling ? "fixed inset-0 overflow-hidden" : ""
+        }`}
         style={{
-          transform: isDropping ? "translate3d(0, 105vh, 0)" : "translate3d(0, 0, 0)",
-          transition: isDropping ? "transform 2s cubic-bezier(0.35, 0, 0.15, 1)" : "none",
+          transform: isDropping
+            ? "translate3d(0, 115vh, 0) rotate(1.2deg)"
+            : isCrumpling
+            ? "perspective(1200px) rotateX(4deg) scale(0.99)"
+            : "none",
+          transition: isDropping
+            ? "transform 2.2s cubic-bezier(0.35, 0, 0.15, 1)"
+            : isCrumpling
+            ? "transform 0.12s ease-out"
+            : "none",
           boxShadow: isDropping ? "0 -40px 100px rgba(0,0,0,0.98)" : "none",
-          willChange: "transform",
+          willChange: isCrumpling ? "transform" : "auto",
         }}
       >
-        {/* GERÇEK BURUŞUK KAĞIT DOKUSU OVERLAY (KULLANICININ İLETTİĞİ DOĞAL KAĞIT FOTOĞRAFI) */}
+        {/* GERÇEK BURUŞUK KAĞIT DOKUSU OVERLAY (YÜKSEK KONTRASTLI, KIRIŞIKLIKLARI NET GÖZÜKEN DOĞAL DOKU) */}
         {isCrumpling && (
-          <>
-            {/* Katman 1: Doğal Buruşuk Kağıt Kabartması & Kırışıklıkları */}
-            <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-95 transition-opacity duration-200">
-              <Image
-                src="/images/crumpled-paper.jpg"
-                alt="Buruşuk Kağıt Dokusu"
-                fill
-                priority
-                className="object-cover object-center w-full h-full contrast-125 brightness-90"
-              />
-            </div>
-
-            {/* Katman 2: Kırışıklık Derinlik ve Işık/Gölge Vurgusu */}
-            <div className="fixed inset-0 pointer-events-none z-50 mix-blend-screen opacity-25">
-              <Image
-                src="/images/crumpled-paper.jpg"
-                alt="Buruşuk Kağıt Gölgeleri"
-                fill
-                priority
-                className="object-cover object-center w-full h-full invert contrast-150"
-              />
-            </div>
-          </>
+          <div className="fixed inset-0 pointer-events-none z-50">
+            {/* Katman 1: Beyaz kırışıklık çizgileri & kabartma (mix-blend-screen sayesinde siyah üzerinde apaçık parlar) */}
+            <Image
+              src="/images/crumpled-paper.jpg"
+              alt="Buruşuk Kağıt Dokusu"
+              fill
+              priority
+              className="object-cover object-center w-full h-full invert contrast-[2.8] brightness-125 mix-blend-screen opacity-90"
+            />
+            {/* Katman 2: Organik kağıt bükülme gölgeleri */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 mix-blend-multiply" />
+          </div>
         )}
 
         {/* AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
