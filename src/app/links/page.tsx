@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -9,7 +9,8 @@ import {
   FileText,
   Mail,
   ArrowLeft,
-  Sparkles,
+  Mic,
+  Headphones,
 } from "lucide-react";
 import {
   GithubIcon,
@@ -26,13 +27,6 @@ import {
 
 export default function LinksPage() {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const currentFrameRef = useRef(0);
-  const targetFrameRef = useRef(0);
-  const animationFrameIdRef = useRef<number | null>(null);
-
-  const totalFrames = 143;
 
   const handleCopy = (key: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -40,154 +34,10 @@ export default function LinksPage() {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  // Draw frame on canvas with cover mode
-  const drawFrame = useCallback((frameIndex: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let img = imagesRef.current[frameIndex];
-    if (!img || !img.complete) {
-      for (let offset = 1; offset < 25; offset++) {
-        const left = imagesRef.current[frameIndex - offset];
-        if (left && left.complete) {
-          img = left;
-          break;
-        }
-        const right = imagesRef.current[frameIndex + offset];
-        if (right && right.complete) {
-          img = right;
-          break;
-        }
-      }
-    }
-
-    if (!img || !img.complete || img.naturalWidth === 0) return;
-
-    const canvasWidth = canvas.width;
-    const canvasHeight = canvas.height;
-    const imgWidth = img.naturalWidth;
-    const imgHeight = img.naturalHeight;
-
-    const imgRatio = imgWidth / imgHeight;
-    const canvasRatio = canvasWidth / canvasHeight;
-
-    let renderWidth = canvasWidth;
-    let renderHeight = canvasHeight;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    if (canvasRatio > imgRatio) {
-      renderHeight = canvasWidth / imgRatio;
-      offsetY = (canvasHeight - renderHeight) / 2;
-    } else {
-      renderWidth = canvasHeight * imgRatio;
-      offsetX = (canvasWidth - renderWidth) / 2;
-    }
-
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(img, offsetX, offsetY, renderWidth, renderHeight);
-  }, []);
-
-  // Preload frames
-  useEffect(() => {
-    let isCancelled = false;
-    const images: HTMLImageElement[] = new Array(totalFrames);
-    const padZero = (n: number) => n.toString().padStart(4, "0");
-
-    const firstImg = new window.Image();
-    firstImg.src = "/frames/frame_0001.jpg";
-    firstImg.onload = () => {
-      if (isCancelled) return;
-      images[0] = firstImg;
-      drawFrame(0);
-    };
-
-    for (let i = 1; i <= totalFrames; i++) {
-      const img = new window.Image();
-      img.src = `/frames/frame_${padZero(i)}.jpg`;
-      img.onload = () => {
-        if (isCancelled) return;
-        images[i - 1] = img;
-        if (Math.round(currentFrameRef.current) === i - 1) {
-          drawFrame(i - 1);
-        }
-      };
-      images[i - 1] = img;
-    }
-
-    imagesRef.current = images;
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [totalFrames, drawFrame]);
-
-  // Window resize & Retina canvas
-  useEffect(() => {
-    const handleResize = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      drawFrame(Math.round(currentFrameRef.current));
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [drawFrame]);
-
-  // Scroll scrubbing listener with physics lerp
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollHeight <= 0) return;
-      const p = Math.max(0, Math.min(1, window.scrollY / scrollHeight));
-      targetFrameRef.current = p * (totalFrames - 1);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    const updateLerp = () => {
-      const diff = targetFrameRef.current - currentFrameRef.current;
-      if (Math.abs(diff) > 0.005) {
-        currentFrameRef.current += diff * 0.14;
-        drawFrame(Math.round(currentFrameRef.current));
-      }
-      animationFrameIdRef.current = requestAnimationFrame(updateLerp);
-    };
-
-    animationFrameIdRef.current = requestAnimationFrame(updateLerp);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-      }
-    };
-  }, [totalFrames, drawFrame]);
-
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased relative">
-      {/* 1. SCROLL-SCRUBBED CANVAS VIDEO ENGINE (Fixed background, reactive to finger scroll) */}
-      <div className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
-        <canvas
-          ref={canvasRef}
-          className="w-full h-full object-cover opacity-35 transition-opacity duration-1000"
-        />
-        {/* Deep ambient vignette so text always stands out with supreme contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/80 via-[#000000]/50 to-[#000000]" />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#000000]/60 to-[#000000]" />
-      </div>
-
-      {/* 2. TOP NAV BAR */}
-      <header className="relative z-20 max-w-lg mx-auto px-5 pt-6 pb-2 flex items-center justify-between">
+      {/* 1. TOP NAV BAR */}
+      <header className="relative z-20 max-w-lg mx-auto px-5 pt-8 pb-4 flex items-center justify-between">
         <Link
           href="/"
           className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.12] backdrop-blur-xl border border-white/10 hover:border-white/20 text-xs text-zinc-300 hover:text-white transition-all active:scale-95"
@@ -195,20 +45,11 @@ export default function LinksPage() {
           <ArrowLeft className="w-3.5 h-3.5" />
           <span className="font-mono">kursat.itibar.app</span>
         </Link>
-
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md text-[10px] font-mono tracking-wider text-zinc-400">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span>SCROLL SYNC</span>
-        </span>
       </header>
 
-      {/* 3. EDITORIAL HERO (NO PROFILE AVATAR PHOTO AS REQUESTED) */}
-      <div className="relative z-10 max-w-md mx-auto px-4 pt-10 pb-6 text-center">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-            <span>OFFICIAL HUB</span>
-          </div>
-
+      {/* 2. EDITORIAL HERO (CLEAN, NO AVATAR) */}
+      <div className="relative z-10 max-w-md mx-auto px-4 pt-6 pb-4 text-center">
+        <div className="space-y-1.5">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white uppercase font-archivo">
             Kürşat Yılmaz
           </h1>
@@ -248,13 +89,12 @@ export default function LinksPage() {
           </button>
         </div>
 
-        {/* 4. LINKS SECTIONS (TACTILE, MINIMALIST MONOCHROME) */}
-        <div className="mt-10 space-y-7 text-left">
+        {/* 3. TACTILE GLASS LINK DIRECTORY (BEĞENİLEN ŞEFFAF KARTLAR) */}
+        <div className="mt-8 space-y-7 text-left">
           {/* Section: Animasyon & Medya */}
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 mb-2.5 px-1 flex items-center justify-between">
               <span>Animasyon & Medya</span>
-              <span className="text-[10px] text-zinc-600">6 KANAL</span>
             </div>
 
             <div className="space-y-2">
@@ -384,7 +224,6 @@ export default function LinksPage() {
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 mb-2.5 px-1 flex items-center justify-between">
               <span>Kişisel & Projeler</span>
-              <span className="text-[10px] text-zinc-600">6 BAĞLANTI</span>
             </div>
 
             <div className="space-y-2">
@@ -552,35 +391,54 @@ export default function LinksPage() {
         </div>
       </div>
 
-      {/* 5. NATURAL SEAMLESS BLEND: KÜRŞAT & BÖCEK (ZERO CONTAINER, FADES GENTLY INTO BLACK VOID) */}
-      <div className="relative z-10 w-full max-w-2xl mx-auto mt-24 overflow-hidden pointer-events-none select-none">
-        <div className="relative aspect-[16/9] w-full">
+      {/* 4. NATURAL ATMOSPHERIC PODCAST FINALE (FOTOĞRAFIN ÜST KISMI SİTEYE ŞEFFAFLAŞARAK ERİR, ALT KISIM CANLI & DOĞAL) */}
+      <section className="relative w-full max-w-xl mx-auto mt-20 pb-16 px-4">
+        {/* The photo with smooth top fade into site's pure black */}
+        <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden shadow-2xl">
           <Image
             src="/images/bocek-podcast.jpg"
-            alt="Kürşat & Böcek"
+            alt="Kürşat & Böcek Podcast"
             fill
             className="object-cover object-bottom"
           />
-          {/* Top fade: Melts seamlessly into the black site background */}
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-[#000000]/60 to-[#000000]" />
-          {/* Bottom & side fade: Melts softly into the footer */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#000000]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#000000] via-transparent to-[#000000]" />
-        </div>
-      </div>
+          {/* Top fade gradient - melts smoothly into site black background */}
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-black/30 to-[#000000]" />
+          {/* Side soft fade */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
 
-      {/* 6. MINIMAL MONUMENTAL FOOTER */}
-      <footer className="relative z-10 py-12 border-t border-white/5 text-center text-xs text-zinc-500 font-normal">
-        <div className="max-w-md mx-auto px-4 flex flex-col items-center justify-center gap-2">
-          <span>© 2026 Kürşat Yılmaz • Tüm hakları saklıdır.</span>
-          <Link
-            href="/"
-            className="text-[11px] text-zinc-600 hover:text-zinc-400 font-mono transition-colors"
-          >
-            kursat.itibar.app
-          </Link>
+          {/* On-air badge */}
+          <div className="absolute top-4 left-4 z-10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[10px] font-mono tracking-wider text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>STÜDYO • ON-AIR</span>
+            </span>
+          </div>
         </div>
-      </footer>
+
+        {/* Podcast Dialogue & Narration */}
+        <div className="mt-5 space-y-3 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+          <div className="space-y-1">
+            <div className="text-base font-bold text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
+              <Mic className="w-4 h-4 text-emerald-400" />
+              <span>Kürşat & Böcek</span>
+            </div>
+            <p className="text-xs text-zinc-400 font-light leading-relaxed max-w-sm">
+              “Koda dökülen mantık, mikrofonda yaşayan absürtlük. Sokak simülasyonları ve gecenin nabzı.”
+            </p>
+          </div>
+
+          <a
+            href="https://www.youtube.com/@kursatsi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0 active:scale-95"
+          >
+            <Headphones className="w-3.5 h-3.5" />
+            <span>Yayını Dinle</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      </section>
     </main>
   );
 }
