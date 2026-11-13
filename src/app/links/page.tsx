@@ -50,6 +50,16 @@ const KISISEL_LINKS: LinkBanner[] = [
     badge: "APP",
   },
   {
+    id: "spotify",
+    title: "Spotify",
+    handle: "Kürşat Yılmaz • Sanatçı Profili & Sesler",
+    url: "https://open.spotify.com/intl-tr/artist/5NQc0XkMOuLmfSrgNaz3YP",
+    watermark: <SpotifyIcon className="w-full h-full fill-current" />,
+    icon: <SpotifyIcon className="w-4 h-4 fill-current text-emerald-400" />,
+    badge: "ARTIST",
+    glow: "from-emerald-500/15 via-transparent to-transparent",
+  },
+  {
     id: "cv",
     title: "Özgeçmiş / CV",
     handle: "devkursat.github.io/cv • Lead AI Product Developer",
@@ -62,7 +72,7 @@ const KISISEL_LINKS: LinkBanner[] = [
   {
     id: "github",
     title: "GitHub",
-    handle: "github.com/DevKursat • Açık Kaynak & Mimariler",
+    handle: "github.com/DevKursat • Açık Kaynak & Sistemler",
     url: "https://github.com/DevKursat",
     watermark: <GithubIcon className="w-full h-full fill-current" />,
     icon: <GithubIcon className="w-4 h-4 fill-current" />,
@@ -135,16 +145,6 @@ const ANIMASYON_LINKS: LinkBanner[] = [
     icon: <InstagramIcon className="w-4 h-4 fill-current text-pink-400" />,
     badge: "REELS",
     glow: "from-pink-500/15 via-transparent to-transparent",
-  },
-  {
-    id: "spotify",
-    title: "Spotify",
-    handle: "Kürşat Yılmaz • Sanatçı Profili & Sesler",
-    url: "https://open.spotify.com/intl-tr/artist/5NQc0XkMOuLmfSrgNaz3YP",
-    watermark: <SpotifyIcon className="w-full h-full fill-current" />,
-    icon: <SpotifyIcon className="w-4 h-4 fill-current text-emerald-400" />,
-    badge: "AUDIO",
-    glow: "from-emerald-500/15 via-transparent to-transparent",
   },
   {
     id: "twitter-mizah",
@@ -248,7 +248,7 @@ export default function LinksPage() {
         <div className="hidden lg:block lg:w-1/2" />
 
         {/* ============================================================ */}
-        {/* RIGHT: KURSAT. links + TOGGLE + CINEMATIC WATERMARK CARDS    */}
+        {/* RIGHT: KURSAT. links + TOGGLE + CINEMATIC CARDS              */}
         {/* ============================================================ */}
         <div className="w-full lg:w-1/2 min-h-screen px-5 sm:px-10 lg:px-14 xl:px-16 py-10 sm:py-16 lg:py-20 flex flex-col justify-between relative z-10 bg-[#000000] lg:bg-transparent">
           <div className="space-y-8 max-w-xl mx-auto w-full">
@@ -305,7 +305,7 @@ export default function LinksPage() {
                   rel="noopener noreferrer"
                   className="group relative block w-full aspect-[22/8] sm:aspect-[24/7] rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-xl active:scale-[0.99] bg-zinc-950/70"
                 >
-                  {/* ARKA PLAN: İtibar/Unutma/YouTube İçin Görsel, Diğerleri İçin Marka Watermark Logosu */}
+                  {/* ARKA PLAN: İtibar/Unutma/YouTube İçin Görsel, Diğerleri İçin Sağ Alttan Taşmalı Netleşen Watermark */}
                   {item.image ? (
                     <>
                       <Image
@@ -319,20 +319,20 @@ export default function LinksPage() {
                     </>
                   ) : (
                     <>
-                      {/* Ambient brand glow */}
+                      {/* Ambient brand color wash */}
                       <div
-                        className={`absolute inset-0 bg-gradient-to-r ${item.glow || "from-white/5"} via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500`}
+                        className={`absolute inset-0 bg-gradient-to-r ${item.glow || "from-white/5"} via-transparent to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-500`}
                       />
 
-                      {/* Giant Embossed Watermark Brand Logo */}
-                      <div className="absolute inset-0 flex items-center justify-end pr-6 sm:pr-10 pointer-events-none select-none overflow-hidden">
-                        <div className="w-28 h-28 sm:w-36 sm:h-36 opacity-[0.09] group-hover:opacity-[0.20] group-hover:scale-110 transition-all duration-700 ease-out text-white">
+                      {/* SAĞ ALTTA KISMEN KIRPIK & HOVER'DA NETLEŞEN DEV LOGO */}
+                      <div className="absolute -bottom-6 -right-6 sm:-bottom-8 sm:-right-8 pointer-events-none select-none overflow-hidden">
+                        <div className="w-36 h-36 sm:w-44 sm:h-44 text-white opacity-[0.07] blur-[2.5px] group-hover:opacity-[0.24] group-hover:blur-0 group-hover:scale-110 group-hover:-translate-x-2 group-hover:-translate-y-2 transition-all duration-500 ease-out">
                           {item.watermark}
                         </div>
                       </div>
 
                       {/* Dark glass surface overlay */}
-                      <div className="absolute inset-0 bg-white/[0.02] group-hover:bg-white/[0.05] transition-colors duration-300 backdrop-blur-md" />
+                      <div className="absolute inset-0 bg-white/[0.02] group-hover:bg-white/[0.04] transition-colors duration-300 backdrop-blur-md" />
                     </>
                   )}
 
@@ -359,7 +359,7 @@ export default function LinksPage() {
               ))}
             </div>
 
-            {/* QUICK CONTACT BAR: CLEAN WHATSAPP BUTTON (NO USERNAME) + EMAIL COPY BUTTON */}
+            {/* QUICK CONTACT BAR: CLEAN WHATSAPP BUTTON + EMAIL COPY BUTTON */}
             <div className="pt-3 pb-8 flex items-center gap-3">
               <a
                 href="https://wa.me/kursat.yz"
