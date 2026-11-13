@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, ArrowLeft, Check, Mail } from "lucide-react";
+import { ArrowUpRight, ArrowLeft, Check, Mail, FileText } from "lucide-react";
+import CustomCursor from "@/components/CustomCursor";
 import {
   GithubIcon,
   TwitterXIcon,
@@ -22,9 +23,11 @@ interface LinkBanner {
   title: string;
   handle: string;
   url: string;
-  image: string;
+  image?: string;
+  watermark?: React.ReactNode;
   icon: React.ReactNode;
   badge?: string;
+  glow?: string;
 }
 
 const KISISEL_LINKS: LinkBanner[] = [
@@ -51,49 +54,55 @@ const KISISEL_LINKS: LinkBanner[] = [
     title: "Özgeçmiş / CV",
     handle: "devkursat.github.io/cv • Lead AI Product Developer",
     url: "https://devkursat.github.io/cv/",
-    image: "/blog/ai-bumerangi-muhendislerin-donusu.png",
-    icon: <span className="font-mono text-xs font-bold">CV</span>,
+    watermark: <FileText className="w-full h-full stroke-[1.2]" />,
+    icon: <FileText className="w-4 h-4 text-emerald-400" />,
     badge: "RESUME",
+    glow: "from-emerald-500/10 via-transparent to-transparent",
   },
   {
     id: "github",
     title: "GitHub",
     handle: "github.com/DevKursat • Açık Kaynak & Mimariler",
     url: "https://github.com/DevKursat",
-    image: "/projects/aetheris.jpg",
+    watermark: <GithubIcon className="w-full h-full fill-current" />,
     icon: <GithubIcon className="w-4 h-4 fill-current" />,
+    glow: "from-white/10 via-transparent to-transparent",
   },
   {
     id: "linkedin",
     title: "LinkedIn",
     handle: "linkedin.com/in/kürşatyılmaz",
     url: "https://www.linkedin.com/in/kürşatyılmaz/",
-    image: "/blog/geo.jpg",
-    icon: <LinkedinIcon className="w-4 h-4 fill-current" />,
+    watermark: <LinkedinIcon className="w-full h-full fill-current" />,
+    icon: <LinkedinIcon className="w-4 h-4 fill-current text-blue-400" />,
+    glow: "from-blue-600/15 via-transparent to-transparent",
   },
   {
     id: "twitter-kisisel",
     title: "X (Twitter)",
-    handle: "@DevKursat • AI, Sistemler & Vizyon",
+    handle: "@DevKursat • Yapay Zeka & Sistem Mühendisliği",
     url: "https://x.com/DevKursat",
-    image: "/blog/swarm.jpg",
+    watermark: <TwitterXIcon className="w-full h-full fill-current" />,
     icon: <TwitterXIcon className="w-4 h-4 fill-current" />,
+    glow: "from-zinc-400/10 via-transparent to-transparent",
   },
   {
     id: "instagram-kisisel",
     title: "Instagram",
     handle: "@kursat.yz • Kişisel Profil",
     url: "https://www.instagram.com/kursat.yz/",
-    image: "/blog/latency.jpg",
-    icon: <InstagramIcon className="w-4 h-4 fill-current" />,
+    watermark: <InstagramIcon className="w-full h-full fill-current" />,
+    icon: <InstagramIcon className="w-4 h-4 fill-current text-pink-400" />,
+    glow: "from-pink-500/15 via-transparent to-transparent",
   },
   {
     id: "devto",
     title: "DEV.to",
-    handle: "dev.to/devkursat • Teknik Makaleler",
+    handle: "dev.to/devkursat • Teknik Makaleler & Mimariler",
     url: "https://dev.to/devkursat",
-    image: "/blog/meta-muhendisi-yapay-zeka-kod-itirafi-ve-kirilgan-mimari.png",
+    watermark: <DevtoIcon className="w-full h-full fill-current" />,
     icon: <DevtoIcon className="w-4 h-4 fill-current" />,
+    glow: "from-zinc-300/10 via-transparent to-transparent",
   },
 ];
 
@@ -104,7 +113,7 @@ const ANIMASYON_LINKS: LinkBanner[] = [
     handle: "@kursatsi • Stüdyo, Podcast & Animasyon",
     url: "https://www.youtube.com/@kursatsi",
     image: "/images/bocek-podcast.jpg",
-    icon: <YouTubeIcon className="w-5 h-5 fill-current" />,
+    icon: <YouTubeIcon className="w-5 h-5 fill-current text-red-500" />,
     badge: "YAYIN",
   },
   {
@@ -112,49 +121,77 @@ const ANIMASYON_LINKS: LinkBanner[] = [
     title: "TikTok",
     handle: "@kursat.yz • Animasyon & Sokak Mizahı",
     url: "https://www.tiktok.com/@kursat.yz",
-    image: "/blog/meta-muhendisi-yapay-zeka-kod-itirafi-ve-kirilgan-mimari.png",
+    watermark: <TikTokIcon className="w-full h-full fill-current" />,
     icon: <TikTokIcon className="w-4 h-4 fill-current" />,
     badge: "VİRAL",
+    glow: "from-cyan-500/15 via-transparent to-red-500/10",
   },
   {
     id: "instagram-mizah",
     title: "Instagram",
-    handle: "@kursatsi • Karakterler & Mizah Klipleri",
+    handle: "@kursatsi • Karakterler, Kesitler & Mizah",
     url: "https://www.instagram.com/kursatsi/",
-    image: "/blog/qwen-acik-kaynak-silikon-vadisi.png",
-    icon: <InstagramIcon className="w-4 h-4 fill-current" />,
+    watermark: <InstagramIcon className="w-full h-full fill-current" />,
+    icon: <InstagramIcon className="w-4 h-4 fill-current text-pink-400" />,
     badge: "REELS",
+    glow: "from-pink-500/15 via-transparent to-transparent",
   },
   {
     id: "spotify",
     title: "Spotify",
     handle: "Kürşat Yılmaz • Sanatçı Profili & Sesler",
     url: "https://open.spotify.com/intl-tr/artist/5NQc0XkMOuLmfSrgNaz3YP",
-    image: "/blog/latency.jpg",
-    icon: <SpotifyIcon className="w-4 h-4 fill-current" />,
+    watermark: <SpotifyIcon className="w-full h-full fill-current" />,
+    icon: <SpotifyIcon className="w-4 h-4 fill-current text-emerald-400" />,
     badge: "AUDIO",
+    glow: "from-emerald-500/15 via-transparent to-transparent",
   },
   {
     id: "twitter-mizah",
     title: "X (Twitter)",
     handle: "@kursatsi • Duyurular & Video Kesitleri",
     url: "https://x.com/kursatsi",
-    image: "/blog/swarm.jpg",
+    watermark: <TwitterXIcon className="w-full h-full fill-current" />,
     icon: <TwitterXIcon className="w-4 h-4 fill-current" />,
+    glow: "from-zinc-400/10 via-transparent to-transparent",
   },
   {
     id: "facebook",
     title: "Facebook",
     handle: "kursatsi • Topluluk Sayfası",
     url: "https://www.facebook.com/kursatsi",
-    image: "/blog/openai-1-2-milyon-dolarlik-linux-exploit-skandali.png",
-    icon: <FacebookIcon className="w-4 h-4 fill-current" />,
+    watermark: <FacebookIcon className="w-full h-full fill-current" />,
+    icon: <FacebookIcon className="w-4 h-4 fill-current text-blue-400" />,
+    glow: "from-blue-600/15 via-transparent to-transparent",
   },
 ];
 
 export default function LinksPage() {
   const [activeTab, setActiveTab] = useState<"kisisel" | "animasyon">("kisisel");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  // Hash Routing support (#kisisel and #animasyon)
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.toLowerCase().replace("#", "");
+      if (hash === "animasyon" || hash === "animation" || hash === "mizah") {
+        setActiveTab("animasyon");
+      } else if (hash === "kisisel" || hash === "personal") {
+        setActiveTab("kisisel");
+      }
+    };
+
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
+  const switchTab = (tab: "kisisel" | "animasyon") => {
+    setActiveTab(tab);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", `#${tab}`);
+    }
+  };
 
   const handleCopy = (key: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -166,7 +203,10 @@ export default function LinksPage() {
 
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased">
-      {/* Back to Home floating pill */}
+      {/* 1. ORIGINAL SITE CUSTOM FLUID CURSOR */}
+      <CustomCursor />
+
+      {/* 2. BACK TO HOME FLOATING PILL */}
       <div className="fixed top-6 left-6 z-50">
         <Link
           href="/"
@@ -177,10 +217,10 @@ export default function LinksPage() {
         </Link>
       </div>
 
-      {/* AWWWARDS EXACT SPLIT LAYOUT: FULL-BLEED MONOLITH ON LEFT, SCROLLING BANNERS ON RIGHT */}
+      {/* 3. AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
       <div className="min-h-screen flex flex-col lg:flex-row">
         {/* ============================================================ */}
-        {/* LEFT: FULL-BLEED MONOLITH (ZERO BOX PADDING, OCCUPIES 100% OF HALF) */}
+        {/* LEFT: FULL-BLEED MONOLITH (EDGE-TO-EDGE, ZERO BOX CONSTRAINTS) */}
         {/* ============================================================ */}
         <div className="w-full lg:w-1/2 lg:fixed lg:inset-y-0 lg:left-0 h-[48vh] sm:h-[55vh] lg:h-screen relative overflow-hidden bg-black select-none pointer-events-none lg:pointer-events-auto">
           <Image
@@ -191,7 +231,7 @@ export default function LinksPage() {
             className="object-cover object-center scale-100 lg:scale-105 hover:scale-108 transition-transform duration-1000 ease-out"
           />
 
-          {/* Luxury ambient vignettes seamlessly melting edges into black */}
+          {/* Ambient gradients */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent lg:hidden" />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/80 hidden lg:block" />
           <div className="absolute inset-0 bg-black/20" />
@@ -204,11 +244,11 @@ export default function LinksPage() {
           </div>
         </div>
 
-        {/* Spacer for desktop fixed left side */}
+        {/* Desktop Spacer for Fixed Left Side */}
         <div className="hidden lg:block lg:w-1/2" />
 
         {/* ============================================================ */}
-        {/* RIGHT: KURSAT. links + TOGGLE + WIDE AWWWARDS BANNER CARDS   */}
+        {/* RIGHT: KURSAT. links + TOGGLE + CINEMATIC WATERMARK CARDS    */}
         {/* ============================================================ */}
         <div className="w-full lg:w-1/2 min-h-screen px-5 sm:px-10 lg:px-14 xl:px-16 py-10 sm:py-16 lg:py-20 flex flex-col justify-between relative z-10 bg-[#000000] lg:bg-transparent">
           <div className="space-y-8 max-w-xl mx-auto w-full">
@@ -223,11 +263,11 @@ export default function LinksPage() {
                 </span>
               </div>
 
-              {/* TOGGLE SWITCH: KİŞİSEL (1.) vs ANİMASYON (2.) */}
+              {/* TOGGLE SWITCH: KİŞİSEL (1.) vs ANİMASYON (2.) WITH HASH ROUTING */}
               <div className="flex items-center justify-between gap-4 pt-1">
                 <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
                   <button
-                    onClick={() => setActiveTab("kisisel")}
+                    onClick={() => switchTab("kisisel")}
                     className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
                       activeTab === "kisisel"
                         ? "bg-white text-black font-bold shadow-lg"
@@ -238,7 +278,7 @@ export default function LinksPage() {
                   </button>
 
                   <button
-                    onClick={() => setActiveTab("animasyon")}
+                    onClick={() => switchTab("animasyon")}
                     className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
                       activeTab === "animasyon"
                         ? "bg-white text-black font-bold shadow-lg"
@@ -255,7 +295,7 @@ export default function LinksPage() {
               </div>
             </div>
 
-            {/* WIDE CINEMATIC AWWWARDS BANNER CARDS */}
+            {/* WIDE CINEMATIC CARDS */}
             <div className="space-y-3.5">
               {currentLinks.map((item) => (
                 <a
@@ -263,19 +303,38 @@ export default function LinksPage() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative block w-full aspect-[22/8] sm:aspect-[24/7] rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-xl active:scale-[0.99]"
+                  className="group relative block w-full aspect-[22/8] sm:aspect-[24/7] rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-xl active:scale-[0.99] bg-zinc-950/70"
                 >
-                  {/* Atmospheric Background Image */}
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
-                  />
+                  {/* ARKA PLAN: İtibar/Unutma/YouTube İçin Görsel, Diğerleri İçin Marka Watermark Logosu */}
+                  {item.image ? (
+                    <>
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                      />
+                      <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-black/70 group-hover:via-black/25 transition-colors duration-500" />
+                    </>
+                  ) : (
+                    <>
+                      {/* Ambient brand glow */}
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-r ${item.glow || "from-white/5"} via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500`}
+                      />
 
-                  {/* Dark Contrast Glass Overlay */}
-                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-black/70 group-hover:via-black/25 transition-colors duration-500" />
+                      {/* Giant Embossed Watermark Brand Logo */}
+                      <div className="absolute inset-0 flex items-center justify-end pr-6 sm:pr-10 pointer-events-none select-none overflow-hidden">
+                        <div className="w-28 h-28 sm:w-36 sm:h-36 opacity-[0.09] group-hover:opacity-[0.20] group-hover:scale-110 transition-all duration-700 ease-out text-white">
+                          {item.watermark}
+                        </div>
+                      </div>
+
+                      {/* Dark glass surface overlay */}
+                      <div className="absolute inset-0 bg-white/[0.02] group-hover:bg-white/[0.05] transition-colors duration-300 backdrop-blur-md" />
+                    </>
+                  )}
 
                   {/* Card Content: Centered Title + Subtitle */}
                   <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 py-4">
@@ -300,21 +359,21 @@ export default function LinksPage() {
               ))}
             </div>
 
-            {/* Quick Contact Bar */}
-            <div className="pt-2 flex items-center gap-3">
+            {/* QUICK CONTACT BAR: CLEAN WHATSAPP BUTTON (NO USERNAME) + EMAIL COPY BUTTON */}
+            <div className="pt-3 pb-8 flex items-center gap-3">
               <a
                 href="https://wa.me/kursat.yz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
               >
                 <WhatsappIcon className="w-4 h-4 fill-current text-emerald-400" />
-                <span>WhatsApp: @kursat.yz</span>
+                <span>WhatsApp</span>
               </a>
 
               <button
                 onClick={() => handleCopy("email", "kursat@itibar.app")}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all active:scale-95"
               >
                 {copiedKey === "email" ? (
                   <>
@@ -330,18 +389,6 @@ export default function LinksPage() {
               </button>
             </div>
           </div>
-
-          {/* Minimalist Awwwards Footer */}
-          <footer className="pt-12 pb-4 max-w-xl mx-auto w-full border-t border-white/10 space-y-1.5 text-left">
-            <p className="text-xs text-zinc-400 font-light leading-relaxed">
-              Yapay Zeka Mimarisi, Otonom Sistemler ve Sokak Çizgisi.
-            </p>
-            <div className="flex items-center gap-2 font-mono text-xs text-zinc-500">
-              <span className="text-zinc-300">@kursatsi • @kursat.yz</span>
-              <span>•</span>
-              <span>2026</span>
-            </div>
-          </footer>
         </div>
       </div>
     </main>
