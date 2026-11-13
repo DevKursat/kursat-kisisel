@@ -252,34 +252,31 @@ export default function LinksPage() {
           willChange: "transform",
         }}
       >
-        {/* Dikey Buruşuk Kepenk Katlanma Çizgileri Overlay */}
+        {/* GERÇEK BURUŞUK KAĞIT DOKUSU OVERLAY (KULLANICININ İLETTİĞİ DOĞAL KAĞIT FOTOĞRAFI) */}
         {isCrumpling && (
-          <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-90 transition-opacity duration-300">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="crease1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="48%" stopColor="#000" stopOpacity="0.8" />
-                  <stop offset="50%" stopColor="#fff" stopOpacity="0.7" />
-                  <stop offset="52%" stopColor="#000" stopOpacity="0.8" />
-                </linearGradient>
-                <linearGradient id="crease2" x1="100%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="49%" stopColor="#000" stopOpacity="0.85" />
-                  <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
-                  <stop offset="51%" stopColor="#000" stopOpacity="0.85" />
-                </linearGradient>
-                <pattern id="shutterRibs" width="100%" height="48" patternUnits="userSpaceOnUse">
-                  <line x1="0" y1="0" x2="100%" y2="0" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-                  <line x1="0" y1="2" x2="100%" y2="2" stroke="rgba(0,0,0,0.6)" strokeWidth="2" />
-                  <line x1="0" y1="24" x2="100%" y2="24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                  <line x1="0" y1="26" x2="100%" y2="26" stroke="rgba(0,0,0,0.5)" strokeWidth="2" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#shutterRibs)" />
-              <line x1="0%" y1="18%" x2="100%" y2="82%" stroke="url(#crease1)" strokeWidth="6" />
-              <line x1="0%" y1="72%" x2="100%" y2="28%" stroke="url(#crease2)" strokeWidth="5" />
-              <line x1="38%" y1="0%" x2="62%" y2="100%" stroke="url(#crease1)" strokeWidth="6" />
-            </svg>
-          </div>
+          <>
+            {/* Katman 1: Doğal Buruşuk Kağıt Kabartması & Kırışıklıkları */}
+            <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-95 transition-opacity duration-200">
+              <Image
+                src="/images/crumpled-paper.jpg"
+                alt="Buruşuk Kağıt Dokusu"
+                fill
+                priority
+                className="object-cover object-center w-full h-full contrast-125 brightness-90"
+              />
+            </div>
+
+            {/* Katman 2: Kırışıklık Derinlik ve Işık/Gölge Vurgusu */}
+            <div className="fixed inset-0 pointer-events-none z-50 mix-blend-screen opacity-25">
+              <Image
+                src="/images/crumpled-paper.jpg"
+                alt="Buruşuk Kağıt Gölgeleri"
+                fill
+                priority
+                className="object-cover object-center w-full h-full invert contrast-150"
+              />
+            </div>
+          </>
         )}
 
         {/* AWWWARDS TRUE 50/50 SPLIT SCREEN LAYOUT */}
