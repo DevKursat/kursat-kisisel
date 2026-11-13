@@ -35,6 +35,26 @@ interface BlogPostItem {
 
 const ALL_POSTS_TR: BlogPostItem[] = [
   {
+    slug: "microsoft-ve-claude-cokus-bulut-sla-yalani",
+    tag: "MİMARİ OTOPSİ",
+    category: "mimari",
+    title: 'Bulutun %99.99 SLA Yalanı: Microsoft ve Claude Aynı Gün Çökünce Korkan CTO\'lar',
+    excerpt: "Microsoft 365 12 saat kilitlendi, Anthropic auth motoru Claude Code oturumlarını kesti. Dijital egemenliğini kapalı bulutlara devreden kurumsal dünyanın kırılganlık anatomisi.",
+    date: "13 Kas 2026",
+    isoDate: "2026-11-13",
+    readTime: "4 dk okuma",
+    imageUrl: "/blog/microsoft-ve-claude-cokus-bulut-sla-yalani.png",
+    metrics: [
+      { label: "KESİNTİ SÜRESİ", val: "12+ Saat" },
+      { label: "ETKİLENEN ALTYAPI", val: "M365 & Claude" },
+    ],
+    content: [
+      "Yıllık bütçe toplantılarında 'her şeyi buluta taşıdık, artık %99.99 SLA garantimiz var' diye sunum yapan kurumsal slaytların mürekkebi yine kurudu. Bugün Microsoft 365 küresel çapta fişi çekti; Outlook, Teams, Exchange ve Copilot tam 12 saat boyunca dünya genelinde milyonlarca şirketi taş devrine döndürdü. Aynı saatlerde Anthropic tarafı da auth krizine girip Claude Code oturumlarını kilitleyince, kurumsal dünyanın bütün dijital egemenliği tek bir öğleden sonrada buharlaştı.",
+      "Mesele bir sunucunun çökmesi değil. Mesele, trilyon dolarlık teknoloji tekellerinin pazarladığı 'biz sizin yerinize her şeyi yönetiriz, siz sadece faturayı ödeyin' konforunun aslında dev bir dijital rehin alma operasyonu olması. Kendi sunucusunu yönetmekten korkup bütün operasyonunu iki tane kapalı API ve üç tane bulut servisine bağlayan şirketler; bugün çalışanlarına 'mailler gitmiyor, WhatsApp'tan yazışalım' derken teknolojiyi değil çaresizliği yönettiler.",
+      "Bir şirketin kendi donanımında, kendi konteynerinde veya kendi yerel ağında çalıştıramadığı hiçbir yazılım o şirkete ait değildir. Sadece aylık kira ödediğiniz şık bir bağımlılıktır. Ve o kirayı verdiğiniz efendiler içeride bir auth servisini patlattığında, yüzlerce kıdemli mühendisiniz ekrana boş boş bakıp kahve içmekten başka hiçbir şey yapamaz.",
+    ],
+  },
+  {
     slug: "meta-muhendisi-yapay-zeka-kod-itirafi-ve-kirilgan-mimari",
     tag: "MİMARİ OTOPSİ",
     category: "mimari",
