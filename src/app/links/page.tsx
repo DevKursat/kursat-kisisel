@@ -171,15 +171,15 @@ export default function LinksPage() {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [isCrumpling, setIsCrumpling] = useState(false);
 
-  // Return to Origin (Özüne Dön): Buruşturulmuş Kağıt Akışı & Ana Sayfa Geçişi
+  // Return to Origin (Özüne Dön): Buruşturulmuş Kağıt Kepenk Akışı & Ana Sayfa Geçişi
   const handleReturnToOrigin = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isCrumpling) return;
     setIsCrumpling(true);
-    // Kağıt buruşup aşağı aktıktan sonra ana sayfaya pürüzsüz geç
+    // Yavaşça kepenk gibi dikey aşağı indikten sonra ana sayfaya geç
     setTimeout(() => {
       window.location.href = "/";
-    }, 1000);
+    }, 2200);
   };
 
   // Hash Routing support (#kisisel and #animasyon)
@@ -218,19 +218,17 @@ export default function LinksPage() {
       {/* 1. ORIGINAL SITE CUSTOM FLUID CURSOR */}
       <CustomCursor />
 
-      {/* 2. SVG FILTER: BURUŞTURULMUŞ KAĞIT DEFORMASYONU (TURBULENCE & DISPLACEMENT) */}
+      {/* 2. SVG FILTER: DİKEY BURUŞTURULMUŞ KAĞIT & KEPENK DOKUSU */}
       <svg className="fixed top-0 left-0 w-0 h-0 pointer-events-none opacity-0" aria-hidden="true">
-        <filter id="paper-crumple" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isCrumpling ? 45 : 0} xChannelSelector="R" yChannelSelector="G" />
+        <filter id="paper-crumple" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.035" numOctaves="4" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isCrumpling ? 28 : 0} xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
 
-      {/* 3. ARKA PLANDA BELİREN YENİ ANA SAYFA (KAĞIT AKARKEN ARKADAN GELEN SAHNE) */}
+      {/* 3. ARKA PLANDA HAZIR AÇIK BEKLEYEN YENİ ANA SAYFA (KEPENK İNERKEN AÇIĞA ÇIKAN SAHNE) */}
       <div
-        className={`fixed inset-0 z-0 bg-[#000000] text-white flex flex-col justify-between p-6 sm:p-12 lg:p-16 transition-opacity duration-300 pointer-events-none ${
-          isCrumpling ? "opacity-100" : "opacity-0"
-        }`}
+        className="fixed inset-0 z-0 bg-[#000000] text-white flex flex-col justify-between p-6 sm:p-12 lg:p-16 pointer-events-none select-none"
       >
         {/* Ambient Radial Spotlight & Grid */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,_rgba(255,255,255,0.08),_transparent_70%)]" />
@@ -271,38 +269,41 @@ export default function LinksPage() {
         </div>
       </div>
 
-      {/* 4. BURUŞTURULUP AŞAĞIYA AKAN KAĞIT KATMANI (MEVCUT /LINKS SAYFASI) */}
+      {/* 4. DİKEY BURUŞTURULUP KEPENK GİBİ AŞAĞIYA AKAN KAĞIT KATMANI (MEVCUT /LINKS SAYFASI) */}
       <div
-        className={`min-h-screen relative z-10 bg-[#000000] origin-top transition-all ${
-          isCrumpling ? "animate-paper-crumple-fall shadow-2xl" : ""
+        className={`min-h-screen relative z-10 bg-[#000000] w-full transition-all ${
+          isCrumpling ? "animate-wrinkled-shutter-drop shadow-[0_-30px_90px_rgba(0,0,0,0.98)]" : ""
         }`}
         style={{
           filter: isCrumpling ? "url(#paper-crumple)" : undefined,
         }}
       >
-        {/* Kağıt Buruşma ve Kırışıklık Işık/Gölge Çizgileri Overlay */}
+        {/* Dikey Buruşuk Kepenk Katlanma Çizgileri Overlay */}
         {isCrumpling && (
-          <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-90 transition-opacity duration-200">
+          <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-85 transition-opacity duration-300">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="crease1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="48%" stopColor="#000" stopOpacity="0.85" />
-                  <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
-                  <stop offset="52%" stopColor="#000" stopOpacity="0.85" />
+                  <stop offset="48%" stopColor="#000" stopOpacity="0.8" />
+                  <stop offset="50%" stopColor="#fff" stopOpacity="0.7" />
+                  <stop offset="52%" stopColor="#000" stopOpacity="0.8" />
                 </linearGradient>
                 <linearGradient id="crease2" x1="100%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="49%" stopColor="#000" stopOpacity="0.9" />
-                  <stop offset="50%" stopColor="#fff" stopOpacity="0.85" />
-                  <stop offset="51%" stopColor="#000" stopOpacity="0.9" />
+                  <stop offset="49%" stopColor="#000" stopOpacity="0.85" />
+                  <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
+                  <stop offset="51%" stopColor="#000" stopOpacity="0.85" />
                 </linearGradient>
+                <pattern id="shutterRibs" width="100%" height="48" patternUnits="userSpaceOnUse">
+                  <line x1="0" y1="0" x2="100%" y2="0" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+                  <line x1="0" y1="2" x2="100%" y2="2" stroke="rgba(0,0,0,0.6)" strokeWidth="2" />
+                  <line x1="0" y1="24" x2="100%" y2="24" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+                  <line x1="0" y1="26" x2="100%" y2="26" stroke="rgba(0,0,0,0.5)" strokeWidth="2" />
+                </pattern>
               </defs>
-              <line x1="0%" y1="18%" x2="100%" y2="82%" stroke="url(#crease1)" strokeWidth="7" />
-              <line x1="0%" y1="72%" x2="100%" y2="28%" stroke="url(#crease2)" strokeWidth="6" />
-              <line x1="38%" y1="0%" x2="62%" y2="100%" stroke="url(#crease1)" strokeWidth="8" />
-              <line x1="78%" y1="0%" x2="18%" y2="100%" stroke="url(#crease2)" strokeWidth="5" />
-              <polygon points="60,90 340,190 180,440" fill="rgba(0,0,0,0.4)" />
-              <polygon points="460,130 800,370 440,600" fill="rgba(255,255,255,0.08)" />
-              <polygon points="200,580 600,780 140,900" fill="rgba(0,0,0,0.48)" />
+              <rect width="100%" height="100%" fill="url(#shutterRibs)" />
+              <line x1="0%" y1="18%" x2="100%" y2="82%" stroke="url(#crease1)" strokeWidth="6" />
+              <line x1="0%" y1="72%" x2="100%" y2="28%" stroke="url(#crease2)" strokeWidth="5" />
+              <line x1="38%" y1="0%" x2="62%" y2="100%" stroke="url(#crease1)" strokeWidth="6" />
             </svg>
           </div>
         )}
@@ -353,13 +354,13 @@ export default function LinksPage() {
                   </span>
                 </div>
 
-                {/* UNIFIED TOOLBAR: TOGGLE + 3D TAKTİL "ÖZÜNE DÖN" BUTONU */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                {/* UNIFIED TOOLBAR: TOGGLE + 3D TAKTİL "ÖZÜNE DÖN" BUTONU (DİKEYDE KUSURSUZ ORTALANMIŞ) */}
+                <div className="flex flex-row items-center justify-between gap-4 py-3 sm:py-3.5">
                   {/* Segmented Switch: KİŞİSEL vs ANİMASYON */}
                   <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
                     <button
                       onClick={() => switchTab("kisisel")}
-                      className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
+                      className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
                         activeTab === "kisisel"
                           ? "bg-white text-black font-bold shadow-lg"
                           : "text-zinc-400 hover:text-white"
@@ -370,7 +371,7 @@ export default function LinksPage() {
 
                     <button
                       onClick={() => switchTab("animasyon")}
-                      className={`px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
+                      className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
                         activeTab === "animasyon"
                           ? "bg-white text-black font-bold shadow-lg"
                           : "text-zinc-400 hover:text-white"
@@ -380,14 +381,14 @@ export default function LinksPage() {
                     </button>
                   </div>
 
-                  {/* 3D TAKTİL MEKANİK "ÖZÜNE DÖN" BUTONU */}
+                  {/* 3D TAKTİL MEKANİK "ÖZÜNE DÖN" BUTONU (ELİN İŞARET ETTİĞİ MERKEZDE) */}
                   <button
                     onClick={handleReturnToOrigin}
                     disabled={isCrumpling}
                     title="Özüne Dön - Sayfayı Buruşturup Ana Sahneye Geç"
-                    className="relative group inline-flex shrink-0 items-stretch rounded-xl p-[2px] bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border border-white/10 shadow-[0_6px_0_#121214,0_12px_22px_rgba(0,0,0,0.8)] hover:shadow-[0_8px_0_#121214,0_16px_28px_rgba(0,0,0,0.95)] active:shadow-[0_1px_0_#121214,0_4px_10px_rgba(0,0,0,0.6)] -translate-y-1 hover:-translate-y-1.5 active:translate-y-1 transition-all duration-150 cursor-pointer select-none active:scale-[0.98]"
+                    className="relative group inline-flex shrink-0 items-stretch rounded-xl p-[2px] bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border border-white/10 shadow-[0_5px_0_#121214,0_10px_20px_rgba(0,0,0,0.8)] hover:shadow-[0_6px_0_#121214,0_14px_24px_rgba(0,0,0,0.9)] active:shadow-[0_1px_0_#121214,0_4px_8px_rgba(0,0,0,0.6)] translate-y-0 active:translate-y-1 transition-all duration-150 cursor-pointer select-none"
                   >
-                    <div className="relative flex items-center justify-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-[10px] bg-gradient-to-b from-zinc-800 via-zinc-900 to-black border-t border-white/25 border-b border-black/80 shadow-[inset_0_1px_2px_rgba(255,255,255,0.2)]">
+                    <div className="relative flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-[10px] bg-gradient-to-b from-zinc-800 via-zinc-900 to-black border-t border-white/25 border-b border-black/80 shadow-[inset_0_1px_2px_rgba(255,255,255,0.2)]">
                       <RotateCcw className="w-3.5 h-3.5 text-zinc-300 group-hover:text-white group-hover:-rotate-90 transition-transform duration-300 shrink-0" />
                       <span className="text-xs font-mono uppercase tracking-[0.2em] font-extrabold bg-gradient-to-b from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent group-hover:from-white group-hover:to-zinc-100 transition-colors">
                         ÖZÜNE DÖN
