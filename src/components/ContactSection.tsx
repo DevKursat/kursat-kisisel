@@ -359,7 +359,7 @@ export default function ContactSection() {
             >
               {/* Instagram Pure Logo Orb */}
               <motion.a
-                href="https://instagram.com/devkursat"
+                href="https://instagram.com/kursat.yz"
                 target="_blank"
                 rel="noopener noreferrer"
                 animate={{ y: [0, -9, 0], rotate: [0, 1.2, 0] }}
@@ -433,14 +433,14 @@ export default function ContactSection() {
           <div className="flex items-center justify-center gap-2 sm:gap-2.5 mb-4 sm:mb-8">
             <TypeformContactModal />
 
-            {/* Sadece Yuvarlak WhatsApp İkon Butonu — Kullanıcı Adı: kursat.ylmz */}
+            {/* Sadece Yuvarlak WhatsApp İkon Butonu — Kullanıcı Adı: kursat.yz */}
             <a
-              href="https://wa.me/kursat.ylmz"
+              href="https://wa.me/kursat.yz"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center w-[42px] h-[42px] sm:w-[48px] sm:h-[48px] rounded-full border border-white/25 hover:border-emerald-500/60 bg-black/70 hover:bg-emerald-950/30 backdrop-blur-2xl text-emerald-400 hover:text-emerald-300 transition-all shadow-[0_15px_45px_rgba(0,0,0,0.95)] active:scale-95 group select-none shrink-0"
-              title="WhatsApp: @kursat.ylmz"
-              aria-label="WhatsApp: @kursat.ylmz"
+              title="WhatsApp: @kursat.yz"
+              aria-label="WhatsApp: @kursat.yz"
             >
               <WhatsappIcon className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
             </a>
@@ -486,7 +486,7 @@ export default function ContactSection() {
 
               {/* Sağ 3'lü */}
               <a
-                href="https://instagram.com/devkursat"
+                href="https://instagram.com/kursat.yz"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:text-black hover:bg-white transition-all active:scale-95"

@@ -688,13 +688,13 @@ export default function TypeformContactModal() {
 
                           <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
                             <a
-                              href="https://wa.me/kursat.ylmz"
+                              href="https://wa.me/kursat.yz"
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-emerald-500/40 bg-emerald-950/30 text-xs font-mono text-emerald-300 hover:bg-emerald-500/20 transition-all cursor-pointer shadow-[0_4px_20px_rgba(16,185,129,0.15)]"
                             >
                               <WhatsappIcon className="w-3.5 h-3.5 text-emerald-400" />
-                              <span>WhatsApp: @kursat.ylmz</span>
+                              <span>WhatsApp: @kursat.yz</span>
                             </a>
                             <button
                               type="button"
