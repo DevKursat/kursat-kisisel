@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Check, Mail, FileText, Sparkles } from "lucide-react";
+import { ArrowUpRight, Check, Mail, FileText, Sparkles, Flame } from "lucide-react";
 import CustomCursor from "@/components/CustomCursor";
 import {
   GithubIcon,
@@ -279,25 +279,37 @@ export default function LinksPage() {
                   </button>
                 </div>
 
-                {/* DİNAMİK MOTION PORTFOLYO BUTONU (SİTE ADI YAZMAZ, KİNETİK GLOW & RADAR) */}
+                {/* DİNAMİK ALEVLİ VE PARILTILI MOTION ANA SAHNE BUTONU */}
                 <Link
                   href="/"
-                  className="relative group inline-flex items-center justify-center gap-2 px-5 py-2 rounded-xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-white/[0.04] to-emerald-500/10 hover:border-emerald-400/60 transition-all duration-300 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] shrink-0 overflow-hidden"
+                  className="relative group inline-flex shrink-0 p-[2px] rounded-xl overflow-visible active:scale-95 transition-transform duration-200"
                 >
-                  {/* Subtle animated shimmer background */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                  {/* Katman 1: Dış Alev & Yoğun Neon Kor Işıltısı (Ambient Flame Halo) */}
+                  <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-red-600 via-orange-500 to-amber-400 opacity-80 blur-md group-hover:opacity-100 group-hover:blur-xl transition-all duration-500 animate-flame-pulse pointer-events-none" />
 
-                  {/* Pulsing radar dot */}
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                  </span>
+                  {/* Katman 2: Dönen Akışkan Plazma / Magma Ateş Çerçevesi */}
+                  <div className="relative rounded-[11px] overflow-hidden p-[1.5px] w-full flex items-center justify-center">
+                    <div className="absolute -inset-[250%] animate-flame-spin bg-[conic-gradient(from_0deg_at_50%_50%,#ff1a00_0deg,#ff6a00_50deg,#ffb700_100deg,#ffffff_130deg,#ffb700_160deg,#ff3c00_220deg,#ff0055_280deg,#ff1a00_360deg)] pointer-events-none" />
 
-                  <span className="text-xs font-mono uppercase tracking-widest text-zinc-200 group-hover:text-white font-semibold transition-colors">
-                    ANA SAHNE
-                  </span>
+                    {/* Katman 3: Yükselen Kıvılcım & Kor Parçacıkları (Embers) */}
+                    <span className="absolute bottom-1 left-3 w-1 h-1 rounded-full bg-amber-300 animate-ember-1 pointer-events-none" />
+                    <span className="absolute bottom-0.5 right-6 w-1 h-1 rounded-full bg-orange-400 animate-ember-2 pointer-events-none" />
+                    <span className="absolute bottom-1 left-1/2 w-0.5 h-0.5 rounded-full bg-yellow-100 animate-ember-3 pointer-events-none" />
 
-                  <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                    {/* Katman 4: İç Kömür / Obsidyen Cam Zemin & İç Alev Aydınlatması */}
+                    <div className="relative z-10 flex items-center justify-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-[9.5px] bg-[#0c0705] border border-orange-500/20 shadow-[inset_0_-10px_16px_rgba(255,80,0,0.25),inset_0_1px_1px_rgba(255,200,120,0.4)] transition-all duration-300 group-hover:bg-[#150a06]">
+                      {/* Titreyen Alev İkonu */}
+                      <Flame className="w-4 h-4 text-orange-400 group-hover:text-amber-300 animate-flame-flicker transition-colors shrink-0" />
+
+                      {/* Alev Gradient Tipografi */}
+                      <span className="text-xs font-mono uppercase tracking-[0.2em] font-extrabold bg-gradient-to-r from-amber-200 via-orange-400 to-amber-100 bg-clip-text text-transparent group-hover:from-white group-hover:via-amber-200 group-hover:to-orange-300 transition-all">
+                        ANA SAHNE
+                      </span>
+
+                      {/* Ok İkonu */}
+                      <ArrowUpRight className="w-3.5 h-3.5 text-orange-400 group-hover:text-amber-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0" />
+                    </div>
+                  </div>
                 </Link>
               </div>
             </div>

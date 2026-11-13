@@ -50,3 +50,83 @@ body {
 .font-instrument {
   font-family: var(--font-instrument);
 }
+
+/* Fluid Flame & Neon Fire Keyframes */
+@keyframes flameSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes flamePulse {
+  0%, 100% {
+    opacity: 0.75;
+    filter: blur(14px);
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(22px);
+    transform: scale(1.06);
+  }
+}
+
+@keyframes flameFlicker {
+  0%, 100% {
+    transform: scale(1) translateY(0) rotate(0deg);
+    filter: drop-shadow(0 0 8px #ff5500);
+  }
+  25% {
+    transform: scale(1.15) translateY(-2px) rotate(-4deg);
+    filter: drop-shadow(0 0 16px #ff8800) drop-shadow(0 0 25px #ff2200);
+  }
+  50% {
+    transform: scale(0.95) translateY(1px) rotate(2deg);
+    filter: drop-shadow(0 0 10px #ff4400);
+  }
+  75% {
+    transform: scale(1.1) translateY(-1px) rotate(-2deg);
+    filter: drop-shadow(0 0 18px #ffaa00) drop-shadow(0 0 28px #ff2200);
+  }
+}
+
+@keyframes emberFloat {
+  0% {
+    transform: translateY(6px) translateX(0) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20px) translateX(-4px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.animate-flame-spin {
+  animation: flameSpin 3s linear infinite;
+}
+
+.animate-flame-pulse {
+  animation: flamePulse 2.4s ease-in-out infinite;
+}
+
+.animate-flame-flicker {
+  animation: flameFlicker 1.8s ease-in-out infinite;
+}
+
+.animate-ember-1 {
+  animation: emberFloat 2s ease-out infinite;
+}
+
+.animate-ember-2 {
+  animation: emberFloat 2.6s ease-out infinite 0.7s;
+}
+
+.animate-ember-3 {
+  animation: emberFloat 1.8s ease-out infinite 1.3s;
+}
