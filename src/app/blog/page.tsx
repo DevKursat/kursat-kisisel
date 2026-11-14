@@ -35,6 +35,26 @@ interface BlogPostItem {
 
 const ALL_POSTS_TR: BlogPostItem[] = [
   {
+    slug: "claude-code-secret-leak-gitignore-skandali",
+    tag: "GÜVENLİK OTOPSİSİ",
+    category: "guvenlik",
+    title: "1.5 Trilyon Dolarlık Değerleme, Sıfır .gitignore: Claude Code 2.500 Canlı Sırrı GitHub'a Nasıl Saçtı?",
+    excerpt: "Terminalde 'Yes, and don't ask again' butonuna basan geliştiricilerin veritabanı şifreleri ve API anahtarları .claude/settings.local.json üzerinden 2.000 public repoya sızdı.",
+    date: "14 Kas 2026",
+    isoDate: "2026-11-14",
+    readTime: "4 dk okuma",
+    imageUrl: "/blog/claude-code-secret-leak-gitignore-skandali.jpg",
+    metrics: [
+      { label: "SIZAN CANLI SIR", val: "2.539 Secret" },
+      { label: "ETKİLENEN REPO", val: "1.994 Public" },
+    ],
+    content: [
+      "Anthropic 1.5 trilyon dolar değerlemeyle halka arza hazırlanırken, amiral gemisi Claude Code geliştiricilerin veritabanı şifrelerini ve API anahtarlarını güle oynaya public GitHub repolarına saçtı. Apiiro araştırmacılarının ortaya çıkardığı tabloya göre 1.994 public repoda 2.539 canlı sır tespit edildi.",
+      "Mekanizma o kadar komik ki insan sinirlenmeye bile kıyamıyor. Terminalde ajan sizden izin isterken o masum 'Yes, and don't ask again' seçeneğine tıkladığınız an, düz metin komut satırını içindeki PGPASSWORD ve API anahtarlarıyla birlikte .claude/settings.local.json dosyasına gömüyor. Dosyayı proje düzeyinde .gitignore kuralına otomatik eklemediği için de o gizli anahtarlar ilk git push ile tüm dünyaya açılıyor.",
+      "Üstelik geleneksel tarama araçları (Gitleaks, TruffleHog) komut satırı içine gömülü bu dizgilerin önemli bir bölümünü standart regex kalıplarının dışında kaldığı için yakalayamadı. Bu durum, kapısına milyon dolarlık zırhlı güvenlik sistemi taktırıp evin yedek anahtarını paspasın altına koyan site yönetimi kafasıdır. Yapay zeka ajanına kod yazdırırken konfor uğruna otomatiğe bağlanan her onay butonu, şirketin üretim ortamını halka açık panoya asıyor.",
+    ],
+  },
+  {
     slug: "microsoft-ve-claude-cokus-bulut-sla-yalani",
     tag: "MİMARİ OTOPSİ",
     category: "mimari",
