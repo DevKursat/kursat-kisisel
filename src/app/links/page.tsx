@@ -65,8 +65,16 @@ const KISISEL_LINKS: LinkBanner[] = [
     title: "Özgeçmiş / CV (EN)",
     handle: "Kursat_Yılmaz_CV_EN.pdf • Full-Stack & AI Product Engineer",
     url: "/Kursat_Yilmaz_CV_EN.pdf",
-    watermark: <FileText className="w-full h-full stroke-[1.2]" />,
-    icon: <FileText className="w-4 h-4 text-emerald-400" />,
+    watermark: (
+      <span className="font-archivo font-black text-6xl sm:text-7xl tracking-tighter select-none opacity-80">
+        CV
+      </span>
+    ),
+    icon: (
+      <span className="font-archivo font-black text-xs tracking-tighter text-emerald-400 select-none">
+        CV
+      </span>
+    ),
     badge: "PDF",
     glow: "from-emerald-500/10 via-transparent to-transparent",
   },
