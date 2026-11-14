@@ -62,12 +62,12 @@ const KISISEL_LINKS: LinkBanner[] = [
   },
   {
     id: "cv",
-    title: "Özgeçmiş / CV",
-    handle: "devkursat.github.io/cv • Lead AI Product Developer",
-    url: "https://devkursat.github.io/cv/",
+    title: "Özgeçmiş / CV (EN)",
+    handle: "Kursat_Yılmaz_CV_EN.pdf • Full-Stack & AI Product Engineer",
+    url: "/Kursat_Yilmaz_CV_EN.pdf",
     watermark: <FileText className="w-full h-full stroke-[1.2]" />,
     icon: <FileText className="w-4 h-4 text-emerald-400" />,
-    badge: "RESUME",
+    badge: "PDF",
     glow: "from-emerald-500/10 via-transparent to-transparent",
   },
   {
@@ -346,13 +346,13 @@ export default function LinksPage() {
                   </span>
                 </div>
 
-                {/* UNIFIED TOOLBAR: TOGGLE + 3D TAKTİL "ÖZÜNE DÖN" BUTONU (DİKEYDE KUSURSUZ ORTALANMIŞ) */}
-                <div className="flex flex-row items-center justify-between gap-4 py-3 sm:py-3.5">
+                {/* UNIFIED TOOLBAR: TOGGLE + 3D TAKTİL "ÖZÜNE DÖN" BUTONU (MOBİLDE VE MASAÜSTÜNDE KUSURSUZ ÖLÇEKLENEN DENGELİ TASARIM) */}
+                <div className="flex flex-row items-center justify-between gap-2.5 sm:gap-4 py-2 sm:py-3.5">
                   {/* Segmented Switch: KİŞİSEL vs ANİMASYON */}
-                  <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
+                  <div className="inline-flex p-0.5 sm:p-1 rounded-lg sm:rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
                     <button
                       onClick={() => switchTab("kisisel")}
-                      className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
+                      className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-mono tracking-wide sm:tracking-wider transition-all duration-200 ${
                         activeTab === "kisisel"
                           ? "bg-white text-black font-bold shadow-lg"
                           : "text-zinc-400 hover:text-white"
@@ -363,7 +363,7 @@ export default function LinksPage() {
 
                     <button
                       onClick={() => switchTab("animasyon")}
-                      className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
+                      className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-mono tracking-wide sm:tracking-wider transition-all duration-200 ${
                         activeTab === "animasyon"
                           ? "bg-white text-black font-bold shadow-lg"
                           : "text-zinc-400 hover:text-white"
@@ -373,16 +373,16 @@ export default function LinksPage() {
                     </button>
                   </div>
 
-                  {/* 3D TAKTİL MEKANİK "ÖZÜNE DÖN" BUTONU (ELİN İŞARET ETTİĞİ MERKEZDE) */}
+                  {/* 3D TAKTİL MEKANİK "ÖZÜNE DÖN" BUTONU (MOBİLDE ZARİF VE TAM ORANTILI) */}
                   <button
                     onClick={handleReturnToOrigin}
                     disabled={isCrumpling}
                     title="Özüne Dön - Sayfayı Buruşturup Ana Sahneye Geç"
-                    className="relative group inline-flex shrink-0 items-stretch rounded-xl p-[2px] bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border border-white/10 shadow-[0_5px_0_#121214,0_10px_20px_rgba(0,0,0,0.8)] hover:shadow-[0_6px_0_#121214,0_14px_24px_rgba(0,0,0,0.9)] active:shadow-[0_1px_0_#121214,0_4px_8px_rgba(0,0,0,0.6)] translate-y-0 active:translate-y-1 transition-all duration-150 cursor-pointer select-none"
+                    className="relative group inline-flex shrink-0 items-stretch rounded-lg sm:rounded-xl p-[1.5px] sm:p-[2px] bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border border-white/10 shadow-[0_3px_0_#141416,0_6px_14px_rgba(0,0,0,0.7)] sm:shadow-[0_5px_0_#121214,0_10px_20px_rgba(0,0,0,0.8)] hover:shadow-[0_4px_0_#141416,0_8px_18px_rgba(0,0,0,0.85)] sm:hover:shadow-[0_6px_0_#121214,0_14px_24px_rgba(0,0,0,0.9)] active:shadow-[0_1px_0_#141416,0_3px_6px_rgba(0,0,0,0.5)] translate-y-0 active:translate-y-0.5 sm:active:translate-y-1 transition-all duration-150 cursor-pointer select-none"
                   >
-                    <div className="relative flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-[10px] bg-gradient-to-b from-zinc-800 via-zinc-900 to-black border-t border-white/25 border-b border-black/80 shadow-[inset_0_1px_2px_rgba(255,255,255,0.2)]">
-                      <RotateCcw className="w-3.5 h-3.5 text-zinc-300 group-hover:text-white group-hover:-rotate-90 transition-transform duration-300 shrink-0" />
-                      <span className="text-xs font-mono uppercase tracking-[0.2em] font-extrabold bg-gradient-to-b from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent group-hover:from-white group-hover:to-zinc-100 transition-colors">
+                    <div className="relative flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-[6.5px] sm:rounded-[10px] bg-gradient-to-b from-zinc-800 via-zinc-900 to-black border-t border-white/25 border-b border-black/80 shadow-[inset_0_1px_2px_rgba(255,255,255,0.2)]">
+                      <RotateCcw className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-zinc-300 group-hover:text-white group-hover:-rotate-90 transition-transform duration-300 shrink-0" />
+                      <span className="text-[10px] sm:text-xs font-mono uppercase tracking-wider sm:tracking-[0.2em] font-extrabold bg-gradient-to-b from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent group-hover:from-white group-hover:to-zinc-100 transition-colors whitespace-nowrap">
                         ÖZÜNE DÖN
                       </span>
                     </div>

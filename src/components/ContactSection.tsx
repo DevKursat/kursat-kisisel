@@ -339,7 +339,7 @@ export default function ContactSection() {
 
               {/* CV / Resume Pure Logo Orb */}
               <motion.a
-                href="/cv.pdf"
+                href="/Kursat_Yilmaz_CV_EN.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 animate={{ y: [0, -8, 0], rotate: [0, -1, 0] }}
@@ -471,7 +471,7 @@ export default function ContactSection() {
                 <GithubIcon className="w-4 h-4" />
               </a>
               <a
-                href="/cv.pdf"
+                href="/Kursat_Yilmaz_CV_EN.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:text-black hover:bg-white transition-all active:scale-95"
