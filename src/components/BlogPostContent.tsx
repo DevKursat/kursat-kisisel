@@ -173,14 +173,14 @@ export function ArticleMarkup({
   > = {
     guvenlik: isTr
       ? {
-          badge: "ZERO-TRUST & İTİBAR",
+          badge: "ZERO-TRUST & GÜVENLİK",
           title: "Üretim sistemlerinde deterministik koruma",
-          body: "Otonom ajanlar, RLS sınırları ve marka itibarı için sıfır halüsinasyonlu güvenlik mimarisi kuruyoruz.",
+          body: "Otonom ajanlar, RLS sınırları ve veri izolasyonu için sıfır açık toleranslı güvenlik mimarisi kuruyoruz.",
         }
       : {
-          badge: "ZERO-TRUST & İTİBAR",
+          badge: "ZERO-TRUST & SECURITY",
           title: "Deterministic defense in production",
-          body: "We engineer verifiable isolation boundaries and zero-hallucination reputation systems for autonomous workflows.",
+          body: "We engineer verifiable isolation boundaries and strict RLS authorization for autonomous workflows.",
         },
     mimari: isTr
       ? {
@@ -831,15 +831,6 @@ export function ArticleMarkup({
             </div>
             <div className="relative z-10 flex flex-wrap items-center gap-2.5 pt-2">
               <TypeformContactModal />
-              <a
-                href="https://itibar.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white hover:text-black text-xs font-mono text-zinc-200 transition-all"
-              >
-                <span>itibar.app</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
             </div>
           </motion.div>
 
@@ -939,17 +930,16 @@ export function ArticleMarkup({
               href="https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
             >
-              <LinkedinIcon className="w-3.5 h-3.5 text-black" />
+              <LinkedinIcon className="w-3.5 h-3.5" />
               <span>LinkedIn</span>
-              <ArrowUpRight className="w-3 h-3 text-black" />
             </a>
             <a
               href="https://x.com/DevKursat"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
             >
               <TwitterXIcon className="w-3 h-3" />
               <span>X</span>
@@ -958,7 +948,7 @@ export function ArticleMarkup({
               href="https://dev.to/devkursat"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
             >
               <DevtoIcon className="w-3.5 h-3.5" />
               <span>DEV.to</span>
@@ -967,7 +957,7 @@ export function ArticleMarkup({
               href="https://medium.com/@ykursat054"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
             >
               <MediumIcon className="w-3.5 h-3.5" />
               <span>Medium</span>
@@ -976,7 +966,7 @@ export function ArticleMarkup({
               href="https://github.com/DevKursat"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
             >
               <GithubIcon className="w-3.5 h-3.5" />
               <span>GitHub</span>
@@ -985,7 +975,7 @@ export function ArticleMarkup({
               href={rssHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs font-mono text-zinc-300 hover:bg-white hover:text-black transition-all"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
             >
               <Rss className="w-3.5 h-3.5" />
               <span>RSS</span>

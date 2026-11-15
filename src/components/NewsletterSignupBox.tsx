@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Loader2, Mail, Sparkles } from "lucide-react";
+import { Check, Loader2, Mail } from "lucide-react";
 import { Spotlight } from "@/components/core/spotlight";
 import type { BlogLang } from "@/data/blogIndex";
 
@@ -107,17 +107,10 @@ export default function NewsletterSignupBox({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: -6 }}
               transition={{ type: "spring", stiffness: 360, damping: 26 }}
-              className="flex items-center justify-between gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-xs font-mono text-emerald-300"
+              className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-xs font-mono text-emerald-300"
             >
-              <span className="inline-flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>
-                  {isTr
-                    ? "Abone Olundu — Kaydınız alındı."
-                    : "Subscribed — Welcome aboard."}
-                </span>
-              </span>
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>{isTr ? "Abone Olundu" : "Subscribed"}</span>
             </motion.div>
           ) : (
             <motion.form

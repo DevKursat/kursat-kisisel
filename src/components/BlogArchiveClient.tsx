@@ -422,15 +422,6 @@ function BlogArchiveContent({
             </div>
             <div className="relative z-10 flex flex-wrap items-center gap-2.5 pt-1">
               <TypeformContactModal />
-              <a
-                href="https://itibar.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white hover:text-black text-xs font-mono text-zinc-200 transition-all"
-              >
-                <span>itibar.app</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
             </div>
           </motion.div>
 
@@ -460,58 +451,62 @@ function BlogArchiveContent({
               href="https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-white text-black text-xs sm:text-sm font-semibold hover:bg-zinc-200 transition-colors shrink-0"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
+              aria-label="LinkedIn"
             >
-              <LinkedinIcon className="w-4 h-4 text-black" />
-              <span>{ui.communityBtn}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-black" />
+              <LinkedinIcon className="w-3.5 h-3.5" />
+              <span>LinkedIn</span>
             </a>
 
             <a
               href="https://x.com/DevKursat"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-zinc-300 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
               aria-label="X (Twitter)"
             >
-              <TwitterXIcon className="w-3.5 h-3.5" />
+              <TwitterXIcon className="w-3 h-3" />
+              <span>X</span>
             </a>
 
             <a
               href="https://dev.to/devkursat"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-zinc-300 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
               aria-label="DEV.to"
             >
-              <DevtoIcon className="w-4 h-4" />
+              <DevtoIcon className="w-3.5 h-3.5" />
+              <span>DEV.to</span>
             </a>
 
             <a
               href="https://medium.com/@ykursat054"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-zinc-300 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
               aria-label="Medium"
             >
-              <MediumIcon className="w-4 h-4" />
+              <MediumIcon className="w-3.5 h-3.5" />
+              <span>Medium</span>
             </a>
 
             <a
               href="https://github.com/DevKursat"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-zinc-300 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
               aria-label="GitHub"
             >
-              <GithubIcon className="w-4 h-4" />
+              <GithubIcon className="w-3.5 h-3.5" />
+              <span>GitHub</span>
             </a>
 
             <a
               href={rssHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-10 px-3 items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono text-zinc-300 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
+              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
               aria-label={ui.rssFeed}
             >
               <Rss className="w-3.5 h-3.5" />
