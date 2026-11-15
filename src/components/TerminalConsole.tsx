@@ -89,7 +89,7 @@ export default function TerminalConsole() {
       case "hire":
         response = (
           <div className="text-zinc-300">
-            Email: <a href="mailto:tckursat@icloud.com" className="text-white underline">tckursat@icloud.com</a>
+            Email: <a href="mailto:kursat@itibar.app" className="text-white underline">kursat@itibar.app</a>
             <br />
             GitHub: <a href="https://github.com/devkursat" target="_blank" rel="noreferrer" className="text-white underline">github.com/devkursat</a>
             <br />
