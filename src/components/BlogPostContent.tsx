@@ -1,9 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -46,6 +53,42 @@ import {
   GithubIcon,
 } from "@/components/Icons";
 import TypeformContactModal from "@/components/TypeformContactModal";
+
+const INLINE_TOKEN_REGEX =
+  /((?:^|(?<=[\s([{"“—]))(?:'[^'\n]{2,40}'|(?:\$|%)?\d+(?:[.,]\d+)*(?:\+|%|x|K|M|B|ms|GB|TB|MB)?)(?=$|[\s.,:;!?)\]}"”'/]))/g;
+
+function renderFormattedParagraph(text: string): ReactNode {
+  const parts = text.split(INLINE_TOKEN_REGEX);
+  if (parts.length <= 1) return text;
+
+  return parts.map((part, index) => {
+    if (!part) return null;
+    const isQuoted =
+      part.startsWith("'") && part.endsWith("'") && part.length >= 4;
+    if (isQuoted) {
+      return (
+        <span
+          key={index}
+          className="text-white font-medium bg-white/[0.05] px-1.5 py-0.5 rounded-md border border-white/10"
+        >
+          {part}
+        </span>
+      );
+    }
+
+    const isMetric =
+      /^(?:\$|%)?\d+(?:[.,]\d+)*(?:\+|%|x|K|M|B|ms|GB|TB|MB)?$/.test(part);
+    if (isMetric) {
+      return (
+        <span key={index} className="text-white font-semibold tabular-nums">
+          {part}
+        </span>
+      );
+    }
+
+    return <Fragment key={index}>{part}</Fragment>;
+  });
+}
 
 export function BlogPostArticleBody({
   rawPost,
@@ -90,6 +133,13 @@ export function ArticleMarkup({
 }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCitation, setCopiedCitation] = useState(false);
+  const articleBodyRef = useRef<HTMLDivElement | null>(null);
+  const [selectionPopover, setSelectionPopover] = useState<{
+    text: string;
+    top: number;
+    left: number;
+    copied: boolean;
+  } | null>(null);
 
   const post = getLocalizedPost(rawPost, activeLang);
   const langMeta = getBlogLangMeta(activeLang);
@@ -175,6 +225,98 @@ export function ArticleMarkup({
       localStorage.setItem(BLOG_LANG_STORAGE_KEY, activeLang);
     }
   }, [post.title, activeLang, hasExplicitQueryLang]);
+
+  const syncSelectionPopover = useCallback(() => {
+    const container = articleBodyRef.current;
+    const selection = window.getSelection();
+    if (
+      !container ||
+      !selection ||
+      selection.rangeCount === 0 ||
+      selection.isCollapsed
+    ) {
+      setSelectionPopover(null);
+      return;
+    }
+
+    const rawText = selection.toString().replace(/\s+/g, " ").trim();
+    if (rawText.length < 8 || rawText.length > 360) {
+      setSelectionPopover(null);
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    if (!container.contains(range.commonAncestorContainer)) {
+      setSelectionPopover(null);
+      return;
+    }
+
+    const rect = range.getBoundingClientRect();
+    if (!rect || (rect.width === 0 && rect.height === 0)) {
+      setSelectionPopover(null);
+      return;
+    }
+
+    const clampedLeft = Math.min(
+      Math.max(132, rect.left + rect.width / 2),
+      window.innerWidth - 132
+    );
+    const top = Math.max(76, rect.top - 52);
+
+    setSelectionPopover({
+      text: rawText,
+      top,
+      left: clampedLeft,
+      copied: false,
+    });
+  }, []);
+
+  useEffect(() => {
+    let rafId = 0;
+
+    const handleSelectionTrigger = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(syncSelectionPopover);
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as Element | null;
+      if (target?.closest?.("#selection-share-popover")) return;
+      setSelectionPopover(null);
+    };
+
+    const handleScroll = () => {
+      setSelectionPopover(null);
+    };
+
+    document.addEventListener("mouseup", handleSelectionTrigger);
+    document.addEventListener("keyup", handleSelectionTrigger);
+    document.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      document.removeEventListener("mouseup", handleSelectionTrigger);
+      document.removeEventListener("keyup", handleSelectionTrigger);
+      document.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [syncSelectionPopover]);
+
+  const handleCopyQuote = async () => {
+    if (!selectionPopover) return;
+    const formatted = `"${selectionPopover.text}" — Kürşat Yılmaz (${articleUrl})`;
+    try {
+      await navigator.clipboard.writeText(formatted);
+      setSelectionPopover((prev) => (prev ? { ...prev, copied: true } : null));
+      setTimeout(() => {
+        setSelectionPopover(null);
+        window.getSelection()?.removeAllRanges();
+      }, 1200);
+    } catch {
+      // Clipboard API unavailable
+    }
+  };
 
   const handleCopyLink = async () => {
     try {
@@ -299,6 +441,59 @@ export function ArticleMarkup({
       <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
         <ScrollProgress className="h-[2px] bg-gradient-to-r from-white/20 via-white to-white" />
       </div>
+
+      {/* Floating Selection Quote / Share Popover */}
+      <AnimatePresence>
+        {selectionPopover && (
+          <motion.div
+            id="selection-share-popover"
+            role="toolbar"
+            aria-label={isTr ? "Alıntı paylaşım çubuğu" : "Quote share toolbar"}
+            initial={{ opacity: 0, y: 6, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 420, damping: 28 }}
+            onMouseDown={(e) => e.preventDefault()}
+            style={{
+              top: `${selectionPopover.top}px`,
+              left: `${selectionPopover.left}px`,
+            }}
+            className="fixed z-50 -translate-x-1/2 flex items-center gap-1 rounded-full border border-white/20 bg-[#0b0b10]/95 backdrop-blur-xl px-2 py-1.5 shadow-[0_12px_36px_rgba(0,0,0,0.85)]"
+          >
+            <a
+              href={`https://x.com/intent/tweet?text=${encodeURIComponent(
+                `"${selectionPopover.text}" — @DevKursat`
+              )}&url=${encodeURIComponent(articleUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white text-black hover:bg-zinc-200 text-[11px] font-mono font-semibold transition-colors whitespace-nowrap"
+            >
+              <TwitterXIcon className="w-3 h-3 text-black" />
+              <span>{isTr ? "X'te Paylaş" : "Share on X"}</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={handleCopyQuote}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-zinc-200 hover:bg-white/10 hover:text-white text-[11px] font-mono transition-colors whitespace-nowrap"
+            >
+              {selectionPopover.copied ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  <span className="text-emerald-300">
+                    {isTr ? "Kopyalandı" : "Copied"}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3" />
+                  <span>{isTr ? "Alıntıla" : "Copy Quote"}</span>
+                </>
+              )}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Localized Sticky Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/10 bg-[#000000]/80 backdrop-blur-xl">
@@ -427,14 +622,22 @@ export function ArticleMarkup({
           </div>
         </header>
 
-        {/* Cover Image */}
-        <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-zinc-950 mb-8">
+        {/* Cover Image — Uncropped Editorial Frame with Ambient Backdrop */}
+        <figure className="relative w-full rounded-2xl overflow-hidden border border-white/12 bg-[#070709] mb-8 p-2 sm:p-4 flex items-center justify-center min-h-[240px] max-h-[560px]">
           <img
             src={post.imageUrl}
-            alt={post.title}
-            className="w-full h-full object-cover"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 scale-110"
           />
-        </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30" />
+          <img
+            id="article-cover-image"
+            src={post.imageUrl}
+            alt={post.title}
+            className="relative z-10 w-auto max-w-full max-h-[520px] h-auto object-contain rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
+          />
+        </figure>
 
         {/* GEO Executive Brief / TL;DR Card */}
         <aside
@@ -476,11 +679,51 @@ export function ArticleMarkup({
           </div>
         </aside>
 
-        {/* Article Body */}
-        <div className="space-y-6 text-zinc-200 text-base sm:text-lg leading-relaxed font-normal">
-          {post.content.map((paragraph, idx) => (
-            <p key={idx}>{paragraph}</p>
-          ))}
+        {/* Article Body — 3-Beat Editorial Typography */}
+        <div
+          id="article-body-content"
+          ref={articleBodyRef}
+          className="space-y-6 font-normal"
+        >
+          {post.content.map((paragraph, idx) => {
+            const isLeadHook = idx === 0;
+            const isPunchline =
+              idx === post.content.length - 1 && post.content.length > 1;
+
+            if (isLeadHook) {
+              return (
+                <p
+                  key={idx}
+                  data-beat="hook"
+                  className="text-lg sm:text-[21px] text-white font-medium leading-[1.7] tracking-[-0.01em]"
+                >
+                  {renderFormattedParagraph(paragraph)}
+                </p>
+              );
+            }
+
+            if (isPunchline) {
+              return (
+                <p
+                  key={idx}
+                  data-beat="punchline"
+                  className="relative pl-4 sm:pl-5 py-2.5 border-l-2 border-emerald-400/70 bg-white/[0.025] rounded-r-xl text-base sm:text-[18px] text-white font-medium leading-[1.7]"
+                >
+                  {renderFormattedParagraph(paragraph)}
+                </p>
+              );
+            }
+
+            return (
+              <p
+                key={idx}
+                data-beat="analysis"
+                className="text-base sm:text-[17.5px] text-zinc-300 leading-[1.8]"
+              >
+                {renderFormattedParagraph(paragraph)}
+              </p>
+            );
+          })}
         </div>
 
         {/* Interactive Citation & Share Toolbar */}
