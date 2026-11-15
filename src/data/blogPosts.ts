@@ -75,6 +75,156 @@ export const SITE_URL = "https://kursat.itibar.app";
 
 export const BLOG_POSTS: BlogPostItem[] = [
   {
+    slug: "openai-chatgpt-wallet-ve-lovable-veri-sizintisi",
+    tag: "GÜVENLİK OTOPSİSİ",
+    category: "guvenlik",
+    title: "Ajanlara Kredi Kartı Vermek: ChatGPT Wallet ve Pasaport Sızdıran 'Vibe Coding' Çılgınlığı",
+    excerpt: "OpenAI otonom alışveriş ajanlarına cüzdan bağlarken, yapay zeka ile üretilen binlerce uygulama eksik RLS yüzünden pasaportları ve 200.000+ özel mesajı internete açtı.",
+    date: "15 Kas 2026",
+    isoDate: "2026-11-15",
+    readTime: "4 dk okuma",
+    imageUrl: "/blog/openai-chatgpt-wallet-ve-lovable-veri-sizintisi.jpg",
+    metrics: [
+      { label: "SIZAN ÖZEL MESAJ", val: "200.000+" },
+      { label: "TARANAN PROJE", val: "159.000+" },
+    ],
+    content: [
+      "OpenAI, 'dots' adını verdiği otonom ajanların ABD'deki Pro kullanıcıları adına alışveriş yapabilmesi için ChatGPT Wallet'ı duyurdu. Aynı hafta güvenlik araştırmacıları, Lovable gibi yapay zeka tabanlı 'vibe coding' platformlarıyla üretilen 159.000'den fazla projeyi tarayıp binlerce uygulamanın veritabanı yetkilendirmesini unuttuğu için pasaport numaralarını, faturaları ve 200.000'den fazla özel mesajı internete açık bıraktığını ortaya çıkardı.",
+      "Bir yanda Face ID ve ödeme token'ı ile güvenli otonom alışveriş pazarlanırken, diğer yanda yapay zekanın ürettiği arka uçlarda temel Row Level Security (RLS) kuralı bile yazılmadan canlıya alınan uygulamalar kullanıcı verilerini sızdırıyor. Bu durum, fren sistemi eksik arabaya otopilot takıp 'direksiyon deri kaplama, çok güvenli' diye reklam yapmaya benziyor.",
+      "Kodun arkasındaki veritabanı erişim kontrolünü kuramayan bir yapay zeka ekosistemine şimdi bir de cüzdan ve ödeme yetkisi bağlamak, mühendislik sorununu çözmeden otomasyonun hızını artırmaktır. Üretim ortamında güvenlik arayüzdeki şık butonlarla değil, arka uçtaki katı yetkilendirme sınırlarıyla sağlanır.",
+    ],
+    translations: {
+      en: {
+        tag: "SECURITY AUTOPSY",
+        title: "Handing Credit Cards to AI Agents: ChatGPT Wallet Meets the 'Vibe Coding' Data Leak",
+        excerpt: "As OpenAI connects wallets to autonomous shopping agents, thousands of AI-generated apps leaked passport numbers and 200,000+ private messages over missing RLS.",
+        date: "Nov 15, 2026",
+        readTime: "4 min read",
+        metrics: [
+          { label: "LEAKED MESSAGES", val: "200,000+" },
+          { label: "AUDITED PROJECTS", val: "159,000+" },
+        ],
+        content: [
+          "OpenAI just rolled out ChatGPT Wallet for US Pro users, letting its 'dots' agents autonomously shop and check out via tokenized cards. In the exact same week, security researchers analyzing over 159,000 projects built on AI 'vibe coding' platforms like Lovable found thousands of production apps missing basic backend authorization and Row Level Security—exposing passport numbers, invoices, and 200,000+ private messages to the open web.",
+          "Shipping autonomous checkout flows while AI-generated backends still forget basic database access rules is like putting autopilot on a car with no brakes and bragging about the leather seats.",
+          "Giving AI agents access to wallets before the industry solves deterministic backend security only scales the blast radius. Production safety comes from strict authorization boundaries, not polished UI buttons.",
+        ],
+      },
+      zh: {
+        tag: "安全剖析",
+        title: "把信用卡交给AI代理：ChatGPT Wallet 遇上“Vibe Coding”护照泄露潮",
+        excerpt: "就在OpenAI为自主购物代理接入数字钱包的同一周，数千款AI生成应用因缺失RLS权限校验，将护照号和20万余条私信暴露在公网。",
+        date: "2026年11月15日",
+        readTime: "4 分钟阅读",
+        metrics: [
+          { label: "泄露私信数量", val: "200,000+" },
+          { label: "扫描项目总数", val: "159,000+" },
+        ],
+        content: [
+          "OpenAI 刚面向美国 Pro 用户推出 ChatGPT Wallet，允许名为“dots”的自主代理通过令牌化银行卡完成下单与结账。几乎在同一周，安全研究人员分析了超过 15.9 万个基于 Lovable 等 AI“氛围编程（vibe coding）”平台构建的项目，发现数千个线上应用缺少最基本的后端鉴权与行级安全（RLS）规则，导致护照号码、发票和超过 20 万条私人聊天记录直接暴露在公网上。",
+          "在 AI 生成的后端代码连基础数据库访问控制都能遗漏的当下，急着把自主结账和支付权限交给 AI 代理，就像给没有刹车的汽车装上自动驾驶，然后炫耀真皮座椅有多安全。",
+          "在行业真正解决确定性后端安全之前，把钱包交给代理只会成倍放大事故半径。生产环境的安全靠的是严格的权限边界，而不是界面上精致的确认按钮。",
+        ],
+      },
+      hi: {
+        tag: "सुरक्षा पोस्टमॉर्टम",
+        title: "AI एजेंट्स को क्रेडिट कार्ड: ChatGPT Wallet और पासपोर्ट लीक करने वाला 'Vibe Coding' पागलपन",
+        excerpt: "OpenAI ने शॉपिंग एजेंट्स को वॉलेट से जोड़ा, वहीं उसी हफ्ते हजारों AI-निर्मित ऐप्स ने RLS की कमी से पासपोर्ट नंबर और 2 लाख+ निजी संदेश इंटरनेट पर उजागर कर दिए।",
+        date: "15 नवम्बर 2026",
+        readTime: "4 मिनट",
+        metrics: [
+          { label: "लीक निजी संदेश", val: "200,000+" },
+          { label: "जांचे गए प्रोजेक्ट", val: "159,000+" },
+        ],
+        content: [
+          "OpenAI ने अमेरिकी Pro यूज़र्स के लिए ChatGPT Wallet लॉन्च किया है, जिससे उसके 'dots' एजेंट्स टोकनाइज्ड कार्ड के जरिए खुद खरीदारी और चेकआउट कर सकते हैं। ठीक उसी हफ्ते सुरक्षा शोधकर्ताओं ने Lovable जैसे AI 'vibe coding' प्लेटफॉर्म पर बने 1,59,000+ प्रोजेक्ट्स की जांच में पाया कि हजारों लाइव ऐप्स में बेसिक बैकएंड ऑथराइजेशन और Row Level Security (RLS) गायब थी—जिससे पासपोर्ट नंबर, इनवॉइस और 2,00,000+ निजी चैट खुले इंटरनेट पर लीक हो गए।",
+          "जब AI से बने बैकएंड में डेटाबेस एक्सेस के बुनियादी नियम ही छूट रहे हों, तब ऑटोनॉमस पेमेंट फ्लो शिप करना बिना ब्रेक वाली कार में ऑटोपायलट लगाकर लेदर सीट की तारीफ करने जैसा है।",
+          "बैकएंड सुरक्षा की बुनियादी समस्या सुलझाए बिना AI एजेंट्स को वॉलेट की चाबी सौंपना सिर्फ नुकसान का दायरा बढ़ाता है।",
+        ],
+      },
+      es: {
+        tag: "AUTOPSIA DE SEGURIDAD",
+        title: "Dar tarjetas de crédito a agentes de IA: ChatGPT Wallet frente a la fuga de datos del 'Vibe Coding'",
+        excerpt: "Mientras OpenAI conecta billeteras a agentes de compra autónomos, miles de apps creadas con IA expusieron pasaportes y más de 200.000 mensajes privados por falta de RLS.",
+        date: "15 nov 2026",
+        readTime: "4 min lectura",
+        metrics: [
+          { label: "MENSAJES FILTRADOS", val: "200.000+" },
+          { label: "PROYECTOS AUDITADOS", val: "159.000+" },
+        ],
+        content: [
+          "OpenAI lanzó ChatGPT Wallet para suscriptores Pro en EE. UU., permitiendo que sus agentes 'dots' compren y paguen de forma autónoma mediante tarjetas tokenizadas. En la misma semana, investigadores que analizaron más de 159.000 proyectos creados en plataformas de 'vibe coding' como Lovable hallaron miles de aplicaciones en producción sin autorización de backend ni Row Level Security, exponiendo números de pasaporte, facturas y más de 200.000 mensajes privados.",
+          "Desplegar pagos autónomos cuando los backends generados por IA aún olvidan reglas básicas de acceso a bases de datos es como instalar piloto automático en un coche sin frenos y presumir de la tapicería.",
+          "Entregar billeteras a agentes de IA antes de resolver la seguridad determinista del backend solo multiplica el radio de impacto.",
+        ],
+      },
+      ar: {
+        tag: "تشريح أمني",
+        title: "تسليم بطاقات الائتمان لوكلاء الذكاء الاصطناعي: ChatGPT Wallet في مواجهة تسريبات 'Vibe Coding'",
+        excerpt: "بالتزامن مع ربط OpenAI للمحافظ الرقمية بوكلاء التسوق المستقلين، كشفت آلاف التطبيقات المولدة بالذكاء الاصطناعي عن جوازات سفر وأكثر من 200 ألف رسالة خاصة بسبب غياب RLS.",
+        date: "15 نوفمبر 2026",
+        readTime: "4 دقائق",
+        metrics: [
+          { label: "رسائل مسربة", val: "200,000+" },
+          { label: "مشاريع مفحوصة", val: "159,000+" },
+        ],
+        content: [
+          "أطلقت OpenAI ميزة ChatGPT Wallet لمشتركي Pro في الولايات المتحدة، لتتيح لوكلاء 'dots' التسوق والدفع تلقائياً عبر بطاقات مشفرة. في الأسبوع نفسه، كشف باحثون أمنيون فحصوا أكثر من 159 ألف مشروع مبني على منصات 'vibe coding' مثل Lovable أن آلاف التطبيقات المنشورة تفتقر إلى التحقق الأساسي في الخادم وسياسات Row Level Security، مما ترك أرقام جوازات السفر والفواتير وأكثر من 200 ألف رسالة خاصة مكشوفة على الإنترنت.",
+          "إطلاق عمليات دفع مستقلة بينما لا تزال الخوادم المولدة بالذكاء الاصطناعي تنسى أبسط قواعد صلاحيات قواعد البيانات يشبه تركيب نظام قيادة ذاتية في سيارة بلا مكابح والتفاخر بجمال المقاعد الجلدية.",
+          "منح وكلاء الذكاء الاصطناعي صلاحية الوصول إلى المحافظ قبل حل معضلة الأمان الحتمي في الخلفية يضاعف حجم الكارثة فقط.",
+        ],
+      },
+      pt: {
+        tag: "AUTÓPSIA DE SEGURANÇA",
+        title: "Dando Cartões de Crédito a Agentes de IA: ChatGPT Wallet e o Vazamento do 'Vibe Coding'",
+        excerpt: "Enquanto a OpenAI conecta carteiras a agentes de compra autônomos, milhares de apps gerados por IA expuseram passaportes e mais de 200 mil mensagens privadas por falta de RLS.",
+        date: "15 nov 2026",
+        readTime: "4 min de leitura",
+        metrics: [
+          { label: "MENSAGENS VAZADAS", val: "200.000+" },
+          { label: "PROJETOS AUDITADOS", val: "159.000+" },
+        ],
+        content: [
+          "A OpenAI lançou a ChatGPT Wallet para assinantes Pro nos EUA, permitindo que seus agentes 'dots' façam compras e pagamentos autônomos com cartões tokenizados. Na mesma semana, pesquisadores de segurança que analisaram mais de 159 mil projetos em plataformas de 'vibe coding' como a Lovable encontraram milhares de apps em produção sem autorização de backend ou Row Level Security, expondo passaportes, faturas e mais de 200 mil mensagens privadas.",
+          "Colocar checkout autônomo no ar enquanto backends gerados por IA ainda esquecem regras básicas de acesso ao banco de dados é como instalar piloto automático em um carro sem freios e elogiar o acabamento dos bancos.",
+          "Dar acesso a carteiras digitais para agentes antes de resolver a segurança determinística do backend apenas amplia o raio da explosão.",
+        ],
+      },
+      de: {
+        tag: "SICHERHEITS-AUTOPSIE",
+        title: "Kreditkarten für KI-Agenten: ChatGPT Wallet trifft auf das 'Vibe Coding'-Datenleck",
+        excerpt: "Während OpenAI Shopping-Agenten mit Wallets verknüpft, legten Tausende KI-generierte Apps wegen fehlender RLS-Regeln Reisepässe und über 200.000 Privatnachrichten offen.",
+        date: "15. Nov. 2026",
+        readTime: "4 Min. Lesezeit",
+        metrics: [
+          { label: "GELEAKTE NACHRICHTEN", val: "200.000+" },
+          { label: "GEPRÜFTE PROJEKTE", val: "159.000+" },
+        ],
+        content: [
+          "OpenAI hat ChatGPT Wallet für US-Pro-Nutzer gestartet, damit 'dots'-Agenten autonom einkaufen und über tokenisierte Karten bezahlen können. In derselben Woche deckten Sicherheitsforscher bei der Analyse von über 159.000 Projekten auf 'Vibe Coding'-Plattformen wie Lovable auf, dass Tausenden Live-Apps grundlegende Backend-Autorisierung und Row Level Security fehlen—wodurch Passnummern, Rechnungen und über 200.000 Privatnachrichten offen im Netz standen.",
+          "Autonome Bezahlprozesse auszuliefern, während KI-generierte Backends noch grundlegende Datenbank-Zugriffsregeln vergessen, ist wie ein Autopilot im Auto ohne Bremsen, bei dem man die Ledersitze lobt.",
+          "Agenten Zugriff auf Wallets zu geben, bevor deterministische Backend-Sicherheit gelöst ist, vergrößert nur den Schadensradius.",
+        ],
+      },
+      ja: {
+        tag: "セキュリティ解剖",
+        title: "AIエージェントにクレジットカードを渡す危うさ：ChatGPT Walletとパスポート流出の「Vibe Coding」",
+        excerpt: "OpenAIが自律購買エージェントにウォレットを接続した同じ週、数千のAI生成アプリがRLS設定漏れでパスポート番号や20万件以上の私信を露出した。",
+        date: "2026年11月15日",
+        readTime: "4分で読了",
+        metrics: [
+          { label: "流出した私信", val: "200,000+" },
+          { label: "監査プロジェクト数", val: "159,000+" },
+        ],
+        content: [
+          "OpenAIは米国のProユーザー向けにChatGPT Walletを公開し、自律エージェント「dots」がトークン化カードで決済まで完了できるようにした。まさに同じ週、LovableなどのAI「バイブコーディング」基盤で作られた15万9,000件超のプロジェクトを調査したセキュリティ研究者は、数千の本番アプリに基本的なバックエンド認証とRow Level Security（RLS）が欠如し、パスポート番号や請求書、20万件以上の非公開チャットがネット上に露出していることを突き止めた。",
+          "AIが生成したバックエンドがデータベースの基本的なアクセス制御すら忘れている状態で自律決済を送り出すのは、ブレーキのない車に自動運転を載せて革張りシートの出来を自慢するようなものだ。",
+          "決定論的なバックエンドの安全性を確保する前にエージェントへ財布を渡せば、被害の爆発半径を広げるだけに終わる。",
+        ],
+      },
+    },
+  },
+  {
     slug: "nvidia-jensen-huang-megaspeed-skandali",
     tag: "DONANIM OTOPSİSİ",
     category: "donanim",
