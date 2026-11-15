@@ -7,13 +7,16 @@ export default function JsonLd() {
     jobTitle: "AI Product Engineer",
     description:
       "Kürşat Yılmaz is an AI Product Engineer specializing in autonomous multi-agent systems, multimodal intelligence pipelines, low-latency UI engineering, and production LLM orchestration.",
-    url: "https://kursatyilmaz.dev",
-    image: "https://kursatyilmaz.dev/og-image.jpg",
+    url: "https://kursat.itibar.app",
+    image: "https://kursat.itibar.app/og-image.jpg",
     sameAs: [
-      "https://github.com/kursat-yilmaz",
-      "https://linkedin.com",
-      "https://x.com",
-      "https://dev.to",
+      "https://github.com/DevKursat",
+      "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
+      "https://x.com/DevKursat",
+      "https://dev.to/devkursat",
+      "https://medium.com/@ykursat054",
+      "https://bionluk.com/kurstayilmaz",
+      "https://www.fiverr.com/kurs_tt",
     ],
     knowsAbout: [
       "AI Product Engineering",
@@ -36,7 +39,7 @@ export default function JsonLd() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Kürşat Yılmaz — AI Product Engineer Portfolio",
-    url: "https://kursatyilmaz.dev",
+    url: "https://kursat.itibar.app",
     description:
       "Official portfolio and engineering notes of Kürşat Yılmaz, AI Product Engineer.",
     author: {

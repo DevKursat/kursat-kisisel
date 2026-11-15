@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kursatyilmaz.dev"),
+  metadataBase: new URL("https://kursat.itibar.app"),
   title: "Kürşat Yılmaz — AI Product Engineer",
   description:
     "Official portfolio of Kürşat Yılmaz. Architecting autonomous multi-agent systems, multimodal vision pipelines, and production-grade intelligent software.",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     "GEO",
     "AEO",
   ],
-  authors: [{ name: "Kürşat Yılmaz", url: "https://kursatyilmaz.dev" }],
+  authors: [{ name: "Kürşat Yılmaz", url: "https://kursat.itibar.app" }],
   creator: "Kürşat Yılmaz",
   publisher: "Kürşat Yılmaz",
   robots: {
@@ -57,12 +57,12 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://kursatyilmaz.dev",
+    locale: "tr_TR",
+    url: "https://kursat.itibar.app",
     title: "Kürşat Yılmaz — AI Product Engineer",
     description:
       "Architecting autonomous systems, multi-agent frameworks, and high-performance intelligent interfaces at the edge of code and reality.",
-    siteName: "Kürşat Yılmaz Portfolio",
+    siteName: "Kürşat Yılmaz",
     images: [
       {
         url: "/og-image.jpg",
@@ -78,10 +78,13 @@ export const metadata: Metadata = {
     description:
       "Architecting autonomous systems, multi-agent frameworks, and high-performance intelligent interfaces.",
     images: ["/og-image.jpg"],
-    creator: "@kursat_yilmaz",
+    creator: "@DevKursat",
   },
   alternates: {
-    canonical: "https://kursatyilmaz.dev",
+    canonical: "https://kursat.itibar.app",
+    types: {
+      "application/rss+xml": "https://kursat.itibar.app/rss.xml",
+    },
   },
 };
 
