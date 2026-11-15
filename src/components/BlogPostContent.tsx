@@ -921,65 +921,58 @@ export function ArticleMarkup({
           </section>
         )}
 
-        <footer className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <footer className="mt-14 pt-8 border-t border-white/10 flex flex-col gap-4">
           <div className="text-xs font-mono text-zinc-500">
             {ui.footerSubtitle}
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <a
-              href="https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
-            >
-              <LinkedinIcon className="w-3.5 h-3.5" />
-              <span>LinkedIn</span>
-            </a>
-            <a
-              href="https://x.com/DevKursat"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
-            >
-              <TwitterXIcon className="w-3 h-3" />
-              <span>X</span>
-            </a>
-            <a
-              href="https://dev.to/devkursat"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
-            >
-              <DevtoIcon className="w-3.5 h-3.5" />
-              <span>DEV.to</span>
-            </a>
-            <a
-              href="https://medium.com/@ykursat054"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
-            >
-              <MediumIcon className="w-3.5 h-3.5" />
-              <span>Medium</span>
-            </a>
-            <a
-              href="https://github.com/DevKursat"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
-            >
-              <GithubIcon className="w-3.5 h-3.5" />
-              <span>GitHub</span>
-            </a>
-            <a
-              href={rssHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all"
-            >
-              <Rss className="w-3.5 h-3.5" />
-              <span>RSS</span>
-            </a>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full">
+            {[
+              {
+                label: "LinkedIn",
+                href: "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
+                icon: <LinkedinIcon className="w-3.5 h-3.5 shrink-0" />,
+              },
+              {
+                label: "X",
+                href: "https://x.com/DevKursat",
+                icon: <TwitterXIcon className="w-3 h-3 shrink-0" />,
+              },
+              {
+                label: "DEV.to",
+                href: "https://dev.to/devkursat",
+                icon: <DevtoIcon className="w-3.5 h-3.5 shrink-0" />,
+              },
+              {
+                label: "Medium",
+                href: "https://medium.com/@ykursat054",
+                icon: <MediumIcon className="w-3.5 h-3.5 shrink-0" />,
+              },
+              {
+                label: "GitHub",
+                href: "https://github.com/DevKursat",
+                icon: <GithubIcon className="w-3.5 h-3.5 shrink-0" />,
+              },
+              {
+                label: "RSS",
+                href: rssHref,
+                icon: <Rss className="w-3.5 h-3.5 shrink-0" />,
+              },
+            ].map((channel) => (
+              <a
+                key={channel.label}
+                href={channel.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={channel.label}
+                className="flex h-10 px-3.5 items-center justify-between gap-2 rounded-xl border border-white/12 bg-white/[0.03] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all group"
+              >
+                <span className="inline-flex items-center gap-2 min-w-0 truncate">
+                  {channel.icon}
+                  <span className="truncate">{channel.label}</span>
+                </span>
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 transition-opacity shrink-0" />
+              </a>
+            ))}
           </div>
         </footer>
       </article>

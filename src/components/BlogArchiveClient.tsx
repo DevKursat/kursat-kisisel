@@ -434,10 +434,10 @@ function BlogArchiveContent({
         </motion.section>
 
         {/* Community Banner at bottom (LinkedIn, X, DEV.to, Medium, GitHub, RSS) */}
-        <div className="mt-8 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141416] to-[#0a0a0c] p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="mt-8 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141416] to-[#0a0a0c] p-5 sm:p-7 flex flex-col gap-5">
           <Spotlight size={420} />
 
-          <div className="relative z-10 max-w-xl space-y-1">
+          <div className="relative z-10 max-w-2xl space-y-1.5">
             <h3 className="font-archivo font-[800] text-xl sm:text-2xl text-white tracking-tight">
               {ui.communityTitle}
             </h3>
@@ -446,72 +446,60 @@ function BlogArchiveContent({
             </p>
           </div>
 
-          <div className="relative z-10 flex flex-wrap items-center gap-2 shrink-0">
-            <a
-              href="https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
-              aria-label="LinkedIn"
-            >
-              <LinkedinIcon className="w-3.5 h-3.5" />
-              <span>LinkedIn</span>
-            </a>
-
-            <a
-              href="https://x.com/DevKursat"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
-              aria-label="X (Twitter)"
-            >
-              <TwitterXIcon className="w-3 h-3" />
-              <span>X</span>
-            </a>
-
-            <a
-              href="https://dev.to/devkursat"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
-              aria-label="DEV.to"
-            >
-              <DevtoIcon className="w-3.5 h-3.5" />
-              <span>DEV.to</span>
-            </a>
-
-            <a
-              href="https://medium.com/@ykursat054"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
-              aria-label="Medium"
-            >
-              <MediumIcon className="w-3.5 h-3.5" />
-              <span>Medium</span>
-            </a>
-
-            <a
-              href="https://github.com/DevKursat"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
-              aria-label="GitHub"
-            >
-              <GithubIcon className="w-3.5 h-3.5" />
-              <span>GitHub</span>
-            </a>
-
-            <a
-              href={rssHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 px-3.5 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
-              aria-label={ui.rssFeed}
-            >
-              <Rss className="w-3.5 h-3.5" />
-              <span>RSS</span>
-            </a>
+          <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 w-full">
+            {[
+              {
+                label: "LinkedIn",
+                ariaLabel: "LinkedIn",
+                href: "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
+                icon: <LinkedinIcon className="w-3.5 h-3.5 shrink-0" />,
+              },
+              {
+                label: "X",
+                ariaLabel: "X (Twitter)",
+                href: "https://x.com/DevKursat",
+                icon: <TwitterXIcon className="w-3 h-3 shrink-0" />,
+              },
+              {
+                label: "DEV.to",
+                ariaLabel: "DEV.to",
+                href: "https://dev.to/devkursat",
+                icon: <DevtoIcon className="w-3.5 h-3.5 shrink-0" />,
+              },
+              {
+                label: "Medium",
+                ariaLabel: "Medium",
+                href: "https://medium.com/@ykursat054",
+                icon: <MediumIcon className="w-3.5 h-3.5 shrink-0" />,
+              },
+              {
+                label: "GitHub",
+                ariaLabel: "GitHub",
+                href: "https://github.com/DevKursat",
+                icon: <GithubIcon className="w-3.5 h-3.5 shrink-0" />,
+              },
+              {
+                label: "RSS",
+                ariaLabel: ui.rssFeed,
+                href: rssHref,
+                icon: <Rss className="w-3.5 h-3.5 shrink-0" />,
+              },
+            ].map((channel) => (
+              <a
+                key={channel.label}
+                href={channel.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={channel.ariaLabel}
+                className="flex h-10 px-3.5 items-center justify-between gap-2 rounded-xl border border-white/12 bg-white/[0.03] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all group"
+              >
+                <span className="inline-flex items-center gap-2 min-w-0 truncate">
+                  {channel.icon}
+                  <span className="truncate">{channel.label}</span>
+                </span>
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 transition-opacity shrink-0" />
+              </a>
+            ))}
           </div>
         </div>
       </div>
