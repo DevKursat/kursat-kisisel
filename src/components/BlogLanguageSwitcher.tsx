@@ -310,6 +310,21 @@ export default function BlogLanguageSwitcher({
   if (variant === "navbar") {
     return (
       <div ref={dropdownRef} className="relative" dir="ltr">
+        {/* Keep 9 hreflang language links crawlable even when the popover is closed */}
+        <nav aria-label={ui.readingLanguage} className="sr-only">
+          {languages.map((item) => (
+            <Link
+              key={item.code}
+              href={getHref(item.code)}
+              hrefLang={item.hreflang}
+              lang={item.code}
+              aria-current={item.code === activeLang ? "page" : undefined}
+            >
+              {item.nativeName}
+            </Link>
+          ))}
+        </nav>
+
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}

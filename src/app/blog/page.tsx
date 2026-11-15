@@ -202,16 +202,6 @@ function BlogArchiveContent({
           </p>
         </header>
 
-        {/* Global Editorial Language Switcher */}
-        <div className="mb-7">
-          <BlogLanguageSwitcher
-            variant="editorial"
-            activeLang={activeLang}
-            basePath="/blog"
-            onSelectLang={setActiveLang}
-          />
-        </div>
-
         {/* Filter & Search Bar */}
         <div className="mb-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
           {/* Category Filter Pills */}

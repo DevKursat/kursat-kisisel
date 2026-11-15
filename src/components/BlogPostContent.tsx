@@ -307,19 +307,6 @@ export function ArticleMarkup({
           </span>
         </nav>
 
-        {/* Editorial 9-Language Switcher */}
-        {availableCodes.length > 1 && (
-          <div className="mb-8">
-            <BlogLanguageSwitcher
-              variant="editorial"
-              activeLang={activeLang}
-              basePath={`/blog/${post.slug}`}
-              availableCodes={availableCodes}
-              onSelectLang={onSelectLang}
-            />
-          </div>
-        )}
-
         <header className="space-y-5 mb-8">
           <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-zinc-400">
             <span className="px-2.5 py-1 rounded-full border border-white/15 bg-white/5 text-white">
