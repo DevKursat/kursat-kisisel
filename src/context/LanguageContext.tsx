@@ -238,7 +238,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem("ky_portfolio_lang") as Language | null;
     if (saved === "tr" || saved === "en") {
       setLangState(saved);
+      return;
     }
+
+    const browserLocale =
+      (navigator.languages && navigator.languages[0]) ||
+      navigator.language ||
+      "tr";
+    setLangState(browserLocale.toLowerCase().startsWith("tr") ? "tr" : "en");
   }, []);
 
   const setLang = (newLang: Language) => {

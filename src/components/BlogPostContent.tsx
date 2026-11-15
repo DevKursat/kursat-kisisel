@@ -32,19 +32,27 @@ import { ScrollProgress } from "@/components/core/scroll-progress";
 import { Spotlight } from "@/components/core/spotlight";
 import BlogLanguageSwitcher, {
   BLOG_LANG_STORAGE_KEY,
+  resolveClientBlogLang,
 } from "@/components/BlogLanguageSwitcher";
 import { LinkedinIcon, TwitterXIcon, DevtoIcon } from "@/components/Icons";
 
 export function BlogPostArticleBody({ rawPost }: { rawPost: BlogPostItem }) {
   const searchParams = useSearchParams();
   const rawLang = searchParams.get("lang");
-  const activeLang = resolveBlogLang(rawLang);
+  const [activeLang, setActiveLang] = useState<BlogLang>(() =>
+    resolveBlogLang(rawLang)
+  );
+
+  useEffect(() => {
+    setActiveLang(resolveClientBlogLang(rawLang));
+  }, [rawLang]);
 
   return (
     <ArticleMarkup
       rawPost={rawPost}
       activeLang={activeLang}
       hasExplicitQueryLang={Boolean(rawLang)}
+      onSelectLang={setActiveLang}
     />
   );
 }
@@ -53,10 +61,12 @@ export function ArticleMarkup({
   rawPost,
   activeLang = "tr",
   hasExplicitQueryLang = false,
+  onSelectLang,
 }: {
   rawPost: BlogPostItem;
   activeLang?: BlogLang;
   hasExplicitQueryLang?: boolean;
+  onSelectLang?: (lang: BlogLang) => void;
 }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCitation, setCopiedCitation] = useState(false);
@@ -249,7 +259,7 @@ export function ArticleMarkup({
               activeLang={activeLang}
               basePath={`/blog/${post.slug}`}
               availableCodes={availableCodes}
-              hasExplicitQueryLang={hasExplicitQueryLang}
+              onSelectLang={onSelectLang}
             />
 
             <a
@@ -305,7 +315,7 @@ export function ArticleMarkup({
               activeLang={activeLang}
               basePath={`/blog/${post.slug}`}
               availableCodes={availableCodes}
-              hasExplicitQueryLang={hasExplicitQueryLang}
+              onSelectLang={onSelectLang}
             />
           </div>
         )}

@@ -12,12 +12,11 @@ import {
   Rss,
   X,
 } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
 import { Spotlight } from "@/components/core/spotlight";
 import { ProgressiveBlur } from "@/components/core/progressive-blur";
 import { ScrollProgress } from "@/components/core/scroll-progress";
 import BlogLanguageSwitcher, {
-  BLOG_LANG_STORAGE_KEY,
+  resolveClientBlogLang,
 } from "@/components/BlogLanguageSwitcher";
 import { LinkedinIcon, TwitterXIcon, DevtoIcon } from "@/components/Icons";
 import {
@@ -32,7 +31,6 @@ import {
 } from "@/components/core/morphing-dialog";
 
 import {
-  BLOG_LANGUAGES,
   BLOG_POSTS,
   SITE_URL,
   getBlogLangMeta,
@@ -45,7 +43,7 @@ import {
 export default function BlogArchivePage() {
   return (
     <Suspense
-      fallback={<BlogArchiveContent initialLang="tr" hasExplicitQueryLang={false} />}
+      fallback={<BlogArchiveContent initialLang="tr" rawQueryLang={null} />}
     >
       <BlogArchiveWithSearchParams />
     </Suspense>
@@ -60,42 +58,25 @@ function BlogArchiveWithSearchParams() {
   return (
     <BlogArchiveContent
       initialLang={initialLang}
-      hasExplicitQueryLang={Boolean(rawLang)}
+      rawQueryLang={rawLang}
     />
   );
 }
 
 function BlogArchiveContent({
   initialLang,
-  hasExplicitQueryLang,
+  rawQueryLang,
 }: {
   initialLang: BlogLang;
-  hasExplicitQueryLang: boolean;
+  rawQueryLang: string | null;
 }) {
-  const { lang: portfolioLang } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeLang, setActiveLang] = useState<BlogLang>(initialLang);
 
   useEffect(() => {
-    if (hasExplicitQueryLang) {
-      setActiveLang(initialLang);
-      if (typeof window !== "undefined") {
-        localStorage.setItem(BLOG_LANG_STORAGE_KEY, initialLang);
-      }
-      return;
-    }
-
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem(BLOG_LANG_STORAGE_KEY);
-      if (saved && BLOG_LANGUAGES.some((item) => item.code === saved)) {
-        setActiveLang(saved as BlogLang);
-        return;
-      }
-    }
-
-    setActiveLang(portfolioLang === "en" ? "en" : "tr");
-  }, [initialLang, hasExplicitQueryLang, portfolioLang]);
+    setActiveLang(resolveClientBlogLang(rawQueryLang));
+  }, [rawQueryLang]);
 
   const langMeta = getBlogLangMeta(activeLang);
   const ui = getBlogUiCopy(activeLang);
@@ -182,7 +163,6 @@ function BlogArchiveContent({
               variant="navbar"
               activeLang={activeLang}
               basePath="/blog"
-              hasExplicitQueryLang={hasExplicitQueryLang}
               onSelectLang={setActiveLang}
             />
 
@@ -239,7 +219,6 @@ function BlogArchiveContent({
             variant="editorial"
             activeLang={activeLang}
             basePath="/blog"
-            hasExplicitQueryLang={hasExplicitQueryLang}
             onSelectLang={setActiveLang}
           />
         </div>

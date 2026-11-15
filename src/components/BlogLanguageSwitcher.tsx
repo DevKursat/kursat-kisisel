@@ -9,8 +9,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Globe,
-  Sparkles,
-  X,
 } from "lucide-react";
 import {
   BLOG_LANGUAGES,
@@ -23,10 +21,9 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 
 export const BLOG_LANG_STORAGE_KEY = "ky_blog_lang";
-export const BLOG_LANG_DISMISS_KEY = "ky_blog_lang_suggest_dismissed";
 
-export function detectBrowserBlogLang(): BlogLang | null {
-  if (typeof navigator === "undefined") return null;
+export function detectBrowserBlogLang(): BlogLang {
+  if (typeof navigator === "undefined") return "tr";
   const candidates =
     navigator.languages && navigator.languages.length > 0
       ? navigator.languages
@@ -34,12 +31,32 @@ export function detectBrowserBlogLang(): BlogLang | null {
 
   for (const rawLocale of candidates) {
     if (!rawLocale) continue;
-    const base = rawLocale.toLowerCase().split("-")[0] as BlogLang;
+    const base = rawLocale.toLowerCase().split(/[-_]/)[0] as BlogLang;
     if (BLOG_LANGUAGES.some((item) => item.code === base)) {
       return base;
     }
   }
-  return null;
+  return "en";
+}
+
+export function resolveClientBlogLang(explicitQueryLang: string | null): BlogLang {
+  const trimmed = explicitQueryLang?.trim();
+  if (trimmed) {
+    const resolvedQuery = resolveBlogLang(trimmed);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(BLOG_LANG_STORAGE_KEY, resolvedQuery);
+    }
+    return resolvedQuery;
+  }
+
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem(BLOG_LANG_STORAGE_KEY);
+    if (saved && BLOG_LANGUAGES.some((item) => item.code === saved)) {
+      return saved as BlogLang;
+    }
+  }
+
+  return detectBrowserBlogLang();
 }
 
 interface SlidingLanguageTrackProps {
@@ -215,7 +232,6 @@ interface BlogLanguageSwitcherProps {
   basePath: string; // e.g. "/blog" or `/blog/${slug}`
   variant?: "navbar" | "editorial";
   availableCodes?: BlogLang[];
-  hasExplicitQueryLang?: boolean;
   onSelectLang?: (lang: BlogLang) => void;
 }
 
@@ -224,12 +240,10 @@ export default function BlogLanguageSwitcher({
   basePath,
   variant = "editorial",
   availableCodes,
-  hasExplicitQueryLang = false,
   onSelectLang,
 }: BlogLanguageSwitcherProps) {
   const { setLang: setPortfolioLang } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [suggestedLang, setSuggestedLang] = useState<BlogLangMeta | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const instanceId = useId();
 
@@ -248,7 +262,6 @@ export default function BlogLanguageSwitcher({
 
   const handleLanguagePick = (code: BlogLang) => {
     setIsOpen(false);
-    setSuggestedLang(null);
     if (typeof window !== "undefined") {
       localStorage.setItem(BLOG_LANG_STORAGE_KEY, code);
       const meta = getBlogLangMeta(code);
@@ -272,39 +285,6 @@ export default function BlogLanguageSwitcher({
       document.documentElement.dir = "ltr";
     };
   }, [activeLang]);
-
-  // Detect browser language for a subtle 1-click switch suggestion when no explicit ?lang= is set
-  useEffect(() => {
-    if (variant !== "editorial" || hasExplicitQueryLang) {
-      setSuggestedLang(null);
-      return;
-    }
-    if (typeof window === "undefined") return;
-    if (sessionStorage.getItem(BLOG_LANG_DISMISS_KEY) === "1") return;
-
-    const saved = localStorage.getItem(BLOG_LANG_STORAGE_KEY);
-    if (saved) {
-      const resolvedSaved = resolveBlogLang(saved);
-      if (
-        resolvedSaved !== activeLang &&
-        languages.some((l) => l.code === resolvedSaved)
-      ) {
-        setSuggestedLang(getBlogLangMeta(resolvedSaved));
-        return;
-      }
-    }
-
-    const browserLang = detectBrowserBlogLang();
-    if (
-      browserLang &&
-      browserLang !== activeLang &&
-      languages.some((l) => l.code === browserLang)
-    ) {
-      setSuggestedLang(getBlogLangMeta(browserLang));
-    } else {
-      setSuggestedLang(null);
-    }
-  }, [activeLang, hasExplicitQueryLang, variant, languages]);
 
   // Close navbar popover on outside click or Escape
   useEffect(() => {
@@ -437,7 +417,7 @@ export default function BlogLanguageSwitcher({
   }
 
   return (
-    <div className="space-y-2.5" dir="ltr">
+    <div dir="ltr">
       <div className="rounded-2xl border border-white/10 bg-[#0a0a0e]/90 backdrop-blur-xl px-2.5 sm:px-3 py-2 shadow-[0_12px_36px_rgba(0,0,0,0.45)] flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5">
         <div className="flex items-center gap-2 text-xs text-zinc-300 min-w-0">
           <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/[0.06] border border-white/10 text-zinc-200">
@@ -464,52 +444,6 @@ export default function BlogLanguageSwitcher({
           onSelect={handleLanguagePick}
         />
       </div>
-
-      {/* Subtle 1-click detected language suggestion */}
-      <AnimatePresence>
-        {suggestedLang && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.06] text-xs"
-          >
-            <div className="flex items-center gap-2 text-zinc-300">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>
-                {ui.switchSuggestionPrefix}{" "}
-                <strong className="text-white font-semibold">
-                  {suggestedLang.nativeName} ({suggestedLang.label})
-                </strong>
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link
-                href={getHref(suggestedLang.code)}
-                hrefLang={suggestedLang.hreflang}
-                lang={suggestedLang.code}
-                onClick={() => handleLanguagePick(suggestedLang.code)}
-                className="px-2.5 py-1 rounded-full bg-emerald-400 text-black font-semibold text-[11px] hover:bg-emerald-300 transition-colors"
-              >
-                {ui.switchSuggestionAction} {suggestedLang.nativeName}
-              </Link>
-              <button
-                type="button"
-                aria-label="Dismiss language suggestion"
-                onClick={() => {
-                  setSuggestedLang(null);
-                  if (typeof window !== "undefined") {
-                    sessionStorage.setItem(BLOG_LANG_DISMISS_KEY, "1");
-                  }
-                }}
-                className="p-1 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
