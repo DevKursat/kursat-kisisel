@@ -19,14 +19,22 @@ import {
   MorphingDialogContainer,
 } from "@/components/core/morphing-dialog";
 
-import { BLOG_POSTS } from "@/data/blogPosts";
+import {
+  BLOG_LANGUAGES,
+  BLOG_POSTS,
+  getLocalizedPost,
+  type BlogLang,
+} from "@/data/blogPosts";
 
 export default function BlogArchivePage() {
   const { lang } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeLang, setActiveLang] = useState<BlogLang>(lang === "en" ? "en" : "tr");
 
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const localizedPosts = BLOG_POSTS.map((post) => getLocalizedPost(post, activeLang));
+
+  const filteredPosts = localizedPosts.filter((post) => {
     const matchesCategory =
       selectedCategory === "all" || post.category === selectedCategory;
     const matchesSearch =
@@ -96,6 +104,24 @@ export default function BlogArchivePage() {
           <p className="text-zinc-400 text-sm sm:text-base max-w-2xl font-normal leading-relaxed pt-1">
             Yapay zekâ sistem mimarisi, GPU/bellek fiziksel sınırları, otonom ajan güvenliği ve teknoloji endüstrisindeki kırılma noktaları üzerine günlük teknik analiz arşivi.
           </p>
+        </div>
+
+        {/* Global Language Switcher */}
+        <div className="mb-5 flex flex-wrap items-center gap-1.5">
+          {BLOG_LANGUAGES.map((item) => (
+            <button
+              key={item.code}
+              type="button"
+              onClick={() => setActiveLang(item.code)}
+              className={`px-2.5 py-1 rounded-full text-[11px] font-mono transition-all border ${
+                activeLang === item.code
+                  ? "bg-white text-black border-white font-semibold"
+                  : "border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white hover:border-white/25"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
 
         {/* Filter & Search Bar */}
@@ -208,7 +234,11 @@ export default function BlogArchivePage() {
                   </div>
 
                   <Link
-                    href={`/blog/${post.slug}`}
+                    href={
+                      activeLang === "tr"
+                        ? `/blog/${post.slug}`
+                        : `/blog/${post.slug}?lang=${activeLang}`
+                    }
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
