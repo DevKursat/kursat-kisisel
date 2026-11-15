@@ -5,7 +5,11 @@ import {
   BLOG_LANGUAGES,
   BLOG_POSTS,
   generatePostFaqs,
+  getBlogLangMeta,
   getBlogPostBySlug,
+  getLocalizedPost,
+  getRelatedPostSummaries,
+  resolveBlogLang,
   SITE_URL,
   type BlogLang,
 } from "@/data/blogPosts";
@@ -13,6 +17,7 @@ import { ArticleMarkup, BlogPostArticleBody } from "@/components/BlogPostContent
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ lang?: string }>;
 }
 
 export async function generateStaticParams() {
@@ -21,7 +26,10 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
 
@@ -31,8 +39,23 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     };
   }
 
+  let rawLang: string | undefined;
+  try {
+    const sp = searchParams ? await searchParams : undefined;
+    rawLang = sp?.lang;
+  } catch {
+    rawLang = undefined;
+  }
+
+  const activeLang = resolveBlogLang(rawLang);
+  const localized = getLocalizedPost(post, activeLang);
+  const langMeta = getBlogLangMeta(activeLang);
+
   const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+  const localizedUrl =
+    activeLang === "tr" ? canonicalUrl : `${canonicalUrl}?lang=${activeLang}`;
   const imageUrl = `${SITE_URL}${post.imageUrl}`;
+  const ogImageUrl = `${SITE_URL}/api/og?slug=${encodeURIComponent(post.slug)}&lang=${activeLang}`;
 
   const trMeta = BLOG_LANGUAGES.find((lang) => lang.code === "tr");
   const languageAlternates: Record<string, string> = {
@@ -48,8 +71,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 
   return {
-    title: `${post.title} — Kürşat Yılmaz`,
-    description: post.excerpt,
+    title: `${localized.title} — Kürşat Yılmaz`,
+    description: localized.excerpt,
     authors: [{ name: "Kürşat Yılmaz", url: SITE_URL }],
     alternates: {
       canonical: canonicalUrl,
@@ -57,28 +80,34 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     },
     openGraph: {
       type: "article",
-      locale: "tr_TR",
-      url: canonicalUrl,
-      title: post.title,
-      description: post.excerpt,
+      locale: langMeta.locale,
+      url: localizedUrl,
+      title: localized.title,
+      description: localized.excerpt,
       siteName: "Kürşat Yılmaz",
       publishedTime: `${post.isoDate}T09:00:00+03:00`,
       authors: ["Kürşat Yılmaz"],
-      tags: [post.tag, post.category, "Yapay Zeka", "Yazılım Mühendisliği"],
+      tags: [localized.tag, post.category, "AI Systems Engineering"],
       images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: localized.title,
+        },
         {
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: post.title,
+          alt: localized.title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
-      images: [imageUrl],
+      title: localized.title,
+      description: localized.excerpt,
+      images: [ogImageUrl],
       creator: "@DevKursat",
     },
   };
@@ -102,6 +131,7 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
     notFound();
   }
 
+  const relatedSummaries = getRelatedPostSummaries(post.slug, 3);
   const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
   const imageUrl = `${SITE_URL}${post.imageUrl}`;
 
@@ -215,8 +245,19 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
 
-      <Suspense fallback={<ArticleMarkup rawPost={post} activeLang="tr" />}>
-        <BlogPostArticleBody rawPost={post} />
+      <Suspense
+        fallback={
+          <ArticleMarkup
+            rawPost={post}
+            relatedSummaries={relatedSummaries}
+            activeLang="tr"
+          />
+        }
+      >
+        <BlogPostArticleBody
+          rawPost={post}
+          relatedSummaries={relatedSummaries}
+        />
       </Suspense>
     </>
   );

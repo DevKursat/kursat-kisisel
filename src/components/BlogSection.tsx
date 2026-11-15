@@ -4,12 +4,16 @@ import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { BLOG_POSTS, getLocalizedPost } from "@/data/blogPosts";
-import { LinkedinIcon, TwitterXIcon, DevtoIcon } from "./Icons";
+import { getLocalizedSummary, type BlogPostSummary } from "@/data/blogIndex";
+import { LinkedinIcon, TwitterXIcon, DevtoIcon, MediumIcon } from "./Icons";
 import { Spotlight } from "./core/spotlight";
 import { CoverflowGallery, CoverflowEssay } from "./core/coverflow";
 
-export default function BlogSection() {
+export default function BlogSection({
+  summaries = [],
+}: {
+  summaries?: BlogPostSummary[];
+}) {
   const { lang, t } = useLanguage();
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -23,8 +27,8 @@ export default function BlogSection() {
   const scale = useTransform(scrollYProgress, [0, 0.9], [0.96, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.4, 0.9], [0.5, 0.85, 1]);
 
-  const essays: CoverflowEssay[] = BLOG_POSTS.map((rawPost) => {
-    const post = getLocalizedPost(rawPost, lang);
+  const essays: CoverflowEssay[] = summaries.map((rawSummary) => {
+    const post = getLocalizedSummary(rawSummary, lang);
     return {
       id: post.slug,
       tag: post.tag,
@@ -34,7 +38,6 @@ export default function BlogSection() {
       readTime: post.readTime,
       imageUrl: post.imageUrl,
       metrics: post.metrics,
-      content: post.content,
       links: {
         linkedin: "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
         twitter: "https://x.com/DevKursat",
@@ -124,6 +127,17 @@ export default function BlogSection() {
               aria-label="Dev.to"
             >
               <DevtoIcon className="w-4 h-4" />
+            </a>
+
+            {/* Small Medium Capsule */}
+            <a
+              href="https://medium.com/@ykursat054"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-zinc-300 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
+              aria-label="Medium"
+            >
+              <MediumIcon className="w-4 h-4" />
             </a>
           </div>
         </div>

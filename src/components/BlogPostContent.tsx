@@ -13,30 +13,47 @@ import {
   Copy,
   FileCode2,
   HelpCircle,
+  Loader2,
+  Mail,
   Rss,
   Sparkles,
+  Terminal,
 } from "lucide-react";
 import {
   BLOG_LANGUAGES,
-  BLOG_POSTS,
   SITE_URL,
   generatePostFaqs,
   getBlogLangMeta,
   getBlogUiCopy,
   getLocalizedPost,
+  getLocalizedSummary,
   resolveBlogLang,
   type BlogLang,
   type BlogPostItem,
-} from "@/data/blogPosts";
+  type BlogPostSummary,
+} from "@/data/blogIndex";
 import { ScrollProgress } from "@/components/core/scroll-progress";
 import { Spotlight } from "@/components/core/spotlight";
 import BlogLanguageSwitcher, {
   BLOG_LANG_STORAGE_KEY,
   resolveClientBlogLang,
 } from "@/components/BlogLanguageSwitcher";
-import { LinkedinIcon, TwitterXIcon, DevtoIcon } from "@/components/Icons";
+import {
+  LinkedinIcon,
+  TwitterXIcon,
+  DevtoIcon,
+  MediumIcon,
+  GithubIcon,
+} from "@/components/Icons";
+import TypeformContactModal from "@/components/TypeformContactModal";
 
-export function BlogPostArticleBody({ rawPost }: { rawPost: BlogPostItem }) {
+export function BlogPostArticleBody({
+  rawPost,
+  relatedSummaries = [],
+}: {
+  rawPost: BlogPostItem;
+  relatedSummaries?: BlogPostSummary[];
+}) {
   const searchParams = useSearchParams();
   const rawLang = searchParams.get("lang");
   const [activeLang, setActiveLang] = useState<BlogLang>(() =>
@@ -50,6 +67,7 @@ export function BlogPostArticleBody({ rawPost }: { rawPost: BlogPostItem }) {
   return (
     <ArticleMarkup
       rawPost={rawPost}
+      relatedSummaries={relatedSummaries}
       activeLang={activeLang}
       hasExplicitQueryLang={Boolean(rawLang)}
       onSelectLang={setActiveLang}
@@ -59,17 +77,24 @@ export function BlogPostArticleBody({ rawPost }: { rawPost: BlogPostItem }) {
 
 export function ArticleMarkup({
   rawPost,
+  relatedSummaries = [],
   activeLang = "tr",
   hasExplicitQueryLang = false,
   onSelectLang,
 }: {
   rawPost: BlogPostItem;
+  relatedSummaries?: BlogPostSummary[];
   activeLang?: BlogLang;
   hasExplicitQueryLang?: boolean;
   onSelectLang?: (lang: BlogLang) => void;
 }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCitation, setCopiedCitation] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [newsletterError, setNewsletterError] = useState("");
 
   const post = getLocalizedPost(rawPost, activeLang);
   const langMeta = getBlogLangMeta(activeLang);
@@ -91,15 +116,100 @@ export function ArticleMarkup({
   const rssHref =
     activeLang === "tr" ? "/rss.xml" : `/rss.xml?lang=${activeLang}`;
 
-  const relatedPosts = BLOG_POSTS.filter((p) => p.slug !== rawPost.slug)
-    .sort((a, b) => {
-      const aMatch = a.category === rawPost.category ? 0 : 1;
-      const bMatch = b.category === rawPost.category ? 0 : 1;
-      if (aMatch !== bMatch) return aMatch - bMatch;
-      return b.isoDate.localeCompare(a.isoDate);
-    })
-    .slice(0, 3)
-    .map((p) => getLocalizedPost(p, activeLang));
+  const relatedPosts = relatedSummaries.map((p) =>
+    getLocalizedSummary(p, activeLang)
+  );
+
+  const isTr = activeLang === "tr";
+
+  const categoryNoteMap: Record<
+    BlogPostItem["category"],
+    { badge: string; title: string; body: string }
+  > = {
+    guvenlik: isTr
+      ? {
+          badge: "ZERO-TRUST & İTİBAR",
+          title: "Üretim sistemlerinde deterministik koruma",
+          body: "Otonom ajanlar, RLS sınırları ve marka itibarı için sıfır halüsinasyonlu güvenlik mimarisi kuruyoruz.",
+        }
+      : {
+          badge: "ZERO-TRUST & İTİBAR",
+          title: "Deterministic defense in production",
+          body: "We engineer verifiable isolation boundaries and zero-hallucination reputation systems for autonomous workflows.",
+        },
+    mimari: isTr
+      ? {
+          badge: "SİSTEM MİMARİSİ",
+          title: "Kırılgan soyutlamalardan sıyrılın",
+          body: "Yüksek hacimli dağıtık sistemler, event-driven boru hatları ve gerçek zamanlı AI ürünleri için doğrudan görüşelim.",
+        }
+      : {
+          badge: "SYSTEMS ARCHITECTURE",
+          title: "Strip away fragile abstractions",
+          body: "Let's architect high-throughput distributed pipelines and deterministic production AI products directly.",
+        },
+    llm: isTr
+      ? {
+          badge: "LLM & ÇIKARIM",
+          title: "Ajanlar için gerçek üretim mühendisliği",
+          body: "Araç çağırma, bağlam bütçesi ve çıkarım maliyeti optimizasyonunda kurucu/CTO danışmanlığı alın.",
+        }
+      : {
+          badge: "LLM & INFERENCE",
+          title: "Production AI engineering beyond demos",
+          body: "Partner directly on agent orchestration, context budgets, and inference latency optimization.",
+        },
+    donanim: isTr
+      ? {
+          badge: "DONANIM & BARE-METAL",
+          title: "Silikondan yazılıma uçtan uca kontrol",
+          body: "VRAM darboğazları, yerel çıkarım altyapıları ve maliyet arbitrajı üzerine doğrudan mühendislik görüşmesi.",
+        }
+      : {
+          badge: "HARDWARE & BARE-METAL",
+          title: "End-to-end control from silicon to app",
+          body: "Discuss VRAM bottlenecks, on-prem inference infrastructure, and unit economics arbitrage directly.",
+        },
+  };
+
+  const contextNote = categoryNoteMap[rawPost.category] ?? categoryNoteMap.mimari;
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleaned = newsletterEmail.trim();
+    if (!cleaned || !cleaned.includes("@") || !cleaned.includes(".")) {
+      setNewsletterStatus("error");
+      setNewsletterError(
+        isTr ? "Geçerli bir e-posta adresi girin." : "Enter a valid email address."
+      );
+      return;
+    }
+
+    setNewsletterStatus("loading");
+    setNewsletterError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "newsletter",
+          email: cleaned,
+          source: post.slug,
+          lang: activeLang,
+        }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setNewsletterStatus("success");
+      setNewsletterEmail("");
+    } catch {
+      setNewsletterStatus("error");
+      setNewsletterError(
+        isTr
+          ? "Kayıt sırasında hata oluştu, lütfen tekrar deneyin."
+          : "Could not subscribe right now, please try again."
+      );
+    }
+  };
 
   useEffect(() => {
     document.title = `${post.title} — Kürşat Yılmaz`;
@@ -491,6 +601,118 @@ export function ArticleMarkup({
           </div>
         </div>
 
+        {/* Contextual Engineering Note & Direct Contact + Free Newsletter */}
+        <section
+          aria-label="Engineering Actions"
+          className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          {/* Category-Aware System Note + TypeformContactModal */}
+          <div
+            id="article-engineering-cta"
+            className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b0f] p-5 flex flex-col justify-between gap-4"
+          >
+            <Spotlight size={280} />
+            <div className="relative z-10 space-y-2">
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-emerald-400">
+                <Terminal className="w-3.5 h-3.5" />
+                <span>{contextNote.badge}</span>
+              </div>
+              <h2 className="font-archivo font-[800] text-lg text-white leading-snug">
+                {contextNote.title}
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                {contextNote.body}
+              </p>
+            </div>
+            <div className="relative z-10 flex flex-wrap items-center gap-2.5 pt-2">
+              <TypeformContactModal />
+              <a
+                href="https://itibar.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white hover:text-black text-xs font-mono text-zinc-200 transition-all"
+              >
+                <span>itibar.app</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Free Engineering Newsletter */}
+          <div
+            id="article-newsletter"
+            className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b0f] p-5 flex flex-col justify-between gap-4"
+          >
+            <Spotlight size={280} />
+            <div className="relative z-10 space-y-2">
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                <Mail className="w-3.5 h-3.5 text-zinc-300" />
+                <span>
+                  {isTr ? "ÜCRETSİZ HAFTALIK BÜLTEN" : "FREE ENGINEERING DISPATCH"}
+                </span>
+              </div>
+              <h2 className="font-archivo font-[800] text-lg text-white leading-snug">
+                {isTr
+                  ? "Yeni mimari otopsiler gelen kutunuzda"
+                  : "Get new architectural autopsies via email"}
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                {isTr
+                  ? "Spam yok. Yalnızca gerçek üretim sistemleri, güvenlik vakaları ve AI maliyet analizleri."
+                  : "Zero spam. Only production post-mortems, security advisories, and AI unit economics."}
+              </p>
+            </div>
+
+            <form
+              onSubmit={handleNewsletterSubmit}
+              className="relative z-10 space-y-2 pt-1"
+            >
+              <div className="flex items-center gap-2">
+                <input
+                  type="email"
+                  required
+                  value={newsletterEmail}
+                  onChange={(e) => {
+                    setNewsletterEmail(e.target.value);
+                    if (newsletterStatus !== "idle") setNewsletterStatus("idle");
+                  }}
+                  placeholder={isTr ? "ornek@sirket.com" : "you@company.com"}
+                  aria-label="Email address for newsletter"
+                  className="flex-1 min-w-0 h-10 rounded-full border border-white/15 bg-black/70 px-4 text-xs font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 transition-colors"
+                />
+                <button
+                  type="submit"
+                  disabled={newsletterStatus === "loading"}
+                  className="h-10 px-4 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 disabled:opacity-60 transition-colors shrink-0 inline-flex items-center gap-1.5"
+                >
+                  {newsletterStatus === "loading" ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : newsletterStatus === "success" ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>{isTr ? "Abone Olundu" : "Subscribed"}</span>
+                    </>
+                  ) : (
+                    <span>{isTr ? "Katıl" : "Subscribe"}</span>
+                  )}
+                </button>
+              </div>
+              {newsletterStatus === "error" && newsletterError && (
+                <p className="text-[11px] font-mono text-red-400 px-1">
+                  {newsletterError}
+                </p>
+              )}
+              {newsletterStatus === "success" && (
+                <p className="text-[11px] font-mono text-emerald-400 px-1">
+                  {isTr
+                    ? "Kaydınız alındı. Teşekkürler."
+                    : "You're subscribed. Welcome aboard."}
+                </p>
+              )}
+            </form>
+          </div>
+        </section>
+
         {/* AEO Interactive Technical Q&A / FAQ Accordion */}
         <section
           id="article-faq"
@@ -573,7 +795,7 @@ export function ArticleMarkup({
           <div className="text-xs font-mono text-zinc-500">
             {ui.footerSubtitle}
           </div>
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2">
             <a
               href="https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/"
               target="_blank"
@@ -585,13 +807,49 @@ export function ArticleMarkup({
               <ArrowUpRight className="w-3 h-3 text-black" />
             </a>
             <a
+              href="https://x.com/DevKursat"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
+            >
+              <TwitterXIcon className="w-3 h-3" />
+              <span>X</span>
+            </a>
+            <a
               href="https://dev.to/devkursat"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
             >
               <DevtoIcon className="w-3.5 h-3.5" />
               <span>DEV.to</span>
+            </a>
+            <a
+              href="https://medium.com/@ykursat054"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
+            >
+              <MediumIcon className="w-3.5 h-3.5" />
+              <span>Medium</span>
+            </a>
+            <a
+              href="https://github.com/DevKursat"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs text-zinc-300 hover:bg-white hover:text-black transition-all"
+            >
+              <GithubIcon className="w-3.5 h-3.5" />
+              <span>GitHub</span>
+            </a>
+            <a
+              href={rssHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 text-xs font-mono text-zinc-300 hover:bg-white hover:text-black transition-all"
+            >
+              <Rss className="w-3.5 h-3.5" />
+              <span>RSS</span>
             </a>
           </div>
         </footer>

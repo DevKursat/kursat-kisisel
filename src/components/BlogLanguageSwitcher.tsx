@@ -17,7 +17,7 @@ import {
   resolveBlogLang,
   type BlogLang,
   type BlogLangMeta,
-} from "@/data/blogPosts";
+} from "@/data/blogIndex";
 import { useLanguage } from "@/context/LanguageContext";
 
 export const BLOG_LANG_STORAGE_KEY = "ky_blog_lang";

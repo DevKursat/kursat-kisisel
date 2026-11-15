@@ -18,7 +18,7 @@ export interface CoverflowEssay {
   readTime: string;
   imageUrl: string;
   metrics: { label: string; val: string }[];
-  content: string[];
+  content?: string[];
   links: {
     linkedin?: string;
     twitter?: string;

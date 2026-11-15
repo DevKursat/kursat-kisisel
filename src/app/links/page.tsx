@@ -16,6 +16,7 @@ import {
   TikTokIcon,
   SpotifyIcon,
   FacebookIcon,
+  MediumIcon,
 } from "@/components/Icons";
 
 interface LinkBanner {
@@ -121,6 +122,25 @@ const KISISEL_LINKS: LinkBanner[] = [
     watermark: <DevtoIcon className="w-full h-full fill-current" />,
     icon: <DevtoIcon className="w-4 h-4 fill-current" />,
     glow: "from-zinc-300/10 via-transparent to-transparent",
+  },
+  {
+    id: "medium",
+    title: "Medium",
+    handle: "medium.com/@ykursat054 • Global English Essays",
+    url: "https://medium.com/@ykursat054",
+    watermark: <MediumIcon className="w-full h-full fill-current" />,
+    icon: <MediumIcon className="w-4 h-4 fill-current" />,
+    glow: "from-zinc-400/10 via-transparent to-transparent",
+  },
+  {
+    id: "blog",
+    title: "Teknik Günlük / Blog",
+    handle: "kursat.itibar.app/blog • 9 Dilli Mühendislik Analizleri",
+    url: "/blog",
+    watermark: <FileText className="w-full h-full" />,
+    icon: <FileText className="w-4 h-4 text-zinc-200" />,
+    badge: "9 DİL",
+    glow: "from-emerald-500/10 via-transparent to-transparent",
   },
 ];
 

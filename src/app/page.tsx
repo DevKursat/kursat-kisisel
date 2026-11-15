@@ -4,9 +4,11 @@ import { ScrollTextLines } from "@/components/core/scroll-text-lines";
 import ProjectsSection from "@/components/ProjectsSection";
 import BlogSection from "@/components/BlogSection";
 import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
+import { getBlogPostSummaries } from "@/data/blogPosts";
 
 export default function Home() {
+  const blogSummaries = getBlogPostSummaries();
+
   return (
     <main className="relative bg-[#000000] min-h-screen text-white">
       {/* Navigation Header */}
@@ -21,7 +23,7 @@ export default function Home() {
       {/* Flagship Works & Rising Blog Section Deck */}
       <div className="relative">
         <ProjectsSection />
-        <BlogSection />
+        <BlogSection summaries={blogSummaries} />
       </div>
 
       {/* Cinematic Finale: Contact Scroller with Integrated Monumental Footer */}

@@ -3,12 +3,103 @@ import fs from "fs/promises";
 import path from "path";
 
 const MESSAGES_FILE = path.join(process.cwd(), "data", "messages.json");
+const NTFY_TOPIC = "kursat-li-7f3a91";
+
+async function appendRecordSafe(record: Record<string, unknown>) {
+  try {
+    await fs.mkdir(path.dirname(MESSAGES_FILE), { recursive: true });
+    let messages: Record<string, unknown>[] = [];
+    try {
+      const data = await fs.readFile(MESSAGES_FILE, "utf-8");
+      messages = JSON.parse(data);
+    } catch {
+      // File does not exist yet
+    }
+    messages.unshift(record);
+    await fs.writeFile(MESSAGES_FILE, JSON.stringify(messages, null, 2), "utf-8");
+  } catch {
+    // Ignore read-only filesystem errors on serverless runtimes (Vercel)
+  }
+}
+
+async function notifyNtfySafe(title: string, body: string) {
+  try {
+    const safeTitle = title.replace(/[^\x00-\x7F]/g, "").trim() || "Portfolio Alert";
+    await fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
+      method: "POST",
+      headers: {
+        Title: safeTitle,
+        Priority: "high",
+        Tags: "envelope,sparkles",
+      },
+      body: Buffer.from(body, "utf8"),
+    });
+  } catch (err) {
+    console.error("ntfy notification error:", err);
+  }
+}
+
+async function notifyResendSafe(subject: string, text: string) {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) return;
+  try {
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${resendKey}`,
+      },
+      body: JSON.stringify({
+        from: "Portfolio <onboarding@resend.dev>",
+        to: ["kursat@itibar.app"],
+        subject,
+        text,
+      }),
+    });
+  } catch (err) {
+    console.error("Resend email error:", err);
+  }
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, phone, role, message } = body;
 
+    if (body?.type === "newsletter") {
+      const cleanEmail = typeof body.email === "string" ? body.email.trim() : "";
+      if (!cleanEmail || !cleanEmail.includes("@") || !cleanEmail.includes(".")) {
+        return NextResponse.json(
+          { error: "Lütfen geçerli bir e-posta adresi girin." },
+          { status: 400 }
+        );
+      }
+
+      const subscriber = {
+        id: `sub_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+        type: "newsletter",
+        createdAt: new Date().toISOString(),
+        email: cleanEmail,
+        source: typeof body.source === "string" ? body.source : "blog",
+        lang: typeof body.lang === "string" ? body.lang : "tr",
+        read: false,
+      };
+
+      await appendRecordSafe(subscriber);
+
+      const summaryText = `Yeni Bulten Abonesi\nE-posta: ${subscriber.email}\nKaynak Yazi: ${subscriber.source}\nDil: ${subscriber.lang}`;
+      await Promise.all([
+        notifyNtfySafe("New Newsletter Subscriber", summaryText),
+        notifyResendSafe(`Yeni Blog Abonesi: ${subscriber.email}`, summaryText),
+      ]);
+
+      return NextResponse.json({
+        success: true,
+        subscriberId: subscriber.id,
+        receivedAt: subscriber.createdAt,
+      });
+    }
+
+    const { name, email, phone, role, message } = body ?? {};
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "Lütfen gerekli alanları (isim, e-posta, mesaj) doldurun." },
@@ -18,47 +109,29 @@ export async function POST(request: Request) {
 
     const newMessage = {
       id: `msg_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      type: "contact",
       createdAt: new Date().toISOString(),
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone ? phone.trim() : null,
-      role: role || null,
-      message: message.trim(),
+      name: String(name).trim(),
+      email: String(email).trim(),
+      phone: phone ? String(phone).trim() : null,
+      role: role ? String(role) : null,
+      message: String(message).trim(),
       read: false,
     };
 
-    // 1. Dosyaya kaydet (Asla kaybolmaz)
-    let messages = [];
-    try {
-      const data = await fs.readFile(MESSAGES_FILE, "utf-8");
-      messages = JSON.parse(data);
-    } catch {
-      // Dosya henüz yoksa oluşturulacak
-    }
-    messages.unshift(newMessage);
-    await fs.writeFile(MESSAGES_FILE, JSON.stringify(messages, null, 2), "utf-8");
+    await appendRecordSafe(newMessage);
 
-    // 2. Eğer Resend API Key varsa doğrudan kursat@itibar.app adresine e-posta yolla
-    const resendKey = process.env.RESEND_API_KEY;
-    if (resendKey) {
-      try {
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${resendKey}`,
-          },
-          body: JSON.stringify({
-            from: "Portfolio <onboarding@resend.dev>",
-            to: ["kursat@itibar.app"],
-            subject: `Yeni Portfolio Mesajı: ${newMessage.name} [${newMessage.role || "Genel"}]`,
-            text: `İsim: ${newMessage.name}\nE-posta: ${newMessage.email}\nTelefon: ${newMessage.phone || "-"}\nKategori: ${newMessage.role || "-"}\n\nMesaj:\n${newMessage.message}`,
-          }),
-        });
-      } catch (err) {
-        console.error("Resend e-posta gönderim hatası:", err);
-      }
-    }
+    const textPayload = `İsim: ${newMessage.name}\nE-posta: ${newMessage.email}\nTelefon: ${newMessage.phone || "-"}\nKategori: ${newMessage.role || "-"}\n\nMesaj:\n${newMessage.message}`;
+    await Promise.all([
+      notifyNtfySafe(
+        `New Portfolio Message: ${newMessage.role || "General"}`,
+        textPayload
+      ),
+      notifyResendSafe(
+        `Yeni Portfolio Mesajı: ${newMessage.name} [${newMessage.role || "Genel"}]`,
+        textPayload
+      ),
+    ]);
 
     return NextResponse.json({
       success: true,
