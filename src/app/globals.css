@@ -25,19 +25,41 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Complete OS native cursor removal on desktop */
+/* Hardware CSS hand cursor fallback until JS CustomCursor activates, then hide native cursor */
 @media (pointer: fine) {
-  html,
-  body,
-  *,
-  *::before,
-  *::after,
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  canvas {
+  html:not(.custom-cursor-active),
+  html:not(.custom-cursor-active) body,
+  html:not(.custom-cursor-active) *,
+  html:not(.custom-cursor-active) *::before,
+  html:not(.custom-cursor-active) *::after,
+  html:not(.custom-cursor-active) input,
+  html:not(.custom-cursor-active) textarea {
+    cursor: url("/cursor-hand-36.png") 4 1, auto;
+  }
+
+  html:not(.custom-cursor-active) a,
+  html:not(.custom-cursor-active) button,
+  html:not(.custom-cursor-active) [role="button"],
+  html:not(.custom-cursor-active) summary,
+  html:not(.custom-cursor-active) select,
+  html:not(.custom-cursor-active) label,
+  html:not(.custom-cursor-active) .cursor-pointer,
+  html:not(.custom-cursor-active) a *,
+  html:not(.custom-cursor-active) button * {
+    cursor: url("/cursor-hand-36.png") 4 1, pointer;
+  }
+
+  html.custom-cursor-active,
+  html.custom-cursor-active body,
+  html.custom-cursor-active *,
+  html.custom-cursor-active *::before,
+  html.custom-cursor-active *::after,
+  html.custom-cursor-active a,
+  html.custom-cursor-active button,
+  html.custom-cursor-active input,
+  html.custom-cursor-active textarea,
+  html.custom-cursor-active select,
+  html.custom-cursor-active canvas {
     cursor: none !important;
   }
 }

@@ -5,14 +5,10 @@ import ProjectsSection from "@/components/ProjectsSection";
 import BlogSection from "@/components/BlogSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
 
 export default function Home() {
   return (
     <main className="relative bg-[#000000] min-h-screen text-white">
-      {/* Precision Custom Fluid Cursor */}
-      <CustomCursor />
-
       {/* Navigation Header */}
       <Navbar />
 

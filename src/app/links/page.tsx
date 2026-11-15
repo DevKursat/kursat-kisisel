@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Check, Mail, FileText, Sparkles, RotateCcw } from "lucide-react";
-import CustomCursor from "@/components/CustomCursor";
 import {
   GithubIcon,
   TwitterXIcon,
@@ -220,9 +219,6 @@ export default function LinksPage() {
 
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased overflow-x-hidden relative">
-      {/* 1. ORIGINAL SITE CUSTOM FLUID CURSOR */}
-      <CustomCursor />
-
       {/* 2. SVG FİLTRESİ: BURUŞTURULMUŞ KAĞIT DEFORMASYONU (TURBULENCE & DISPLACEMENT) */}
       <svg className="fixed top-0 left-0 w-0 h-0 pointer-events-none opacity-0" aria-hidden="true">
         <filter id="paper-crumple" x="-20%" y="-20%" width="140%" height="140%">

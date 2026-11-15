@@ -1,12 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Plus, Terminal, Search, Calendar, Clock, BookOpen } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Plus,
+  Search,
+  BookOpen,
+  Rss,
+  X,
+} from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Spotlight } from "@/components/core/spotlight";
 import { ProgressiveBlur } from "@/components/core/progressive-blur";
-import CustomCursor from "@/components/CustomCursor";
+import { ScrollProgress } from "@/components/core/scroll-progress";
+import BlogLanguageSwitcher, {
+  BLOG_LANG_STORAGE_KEY,
+} from "@/components/BlogLanguageSwitcher";
 import { LinkedinIcon, TwitterXIcon, DevtoIcon } from "@/components/Icons";
 import {
   MorphingDialog,
@@ -22,54 +34,163 @@ import {
 import {
   BLOG_LANGUAGES,
   BLOG_POSTS,
+  SITE_URL,
+  getBlogLangMeta,
+  getBlogUiCopy,
   getLocalizedPost,
+  resolveBlogLang,
   type BlogLang,
 } from "@/data/blogPosts";
 
 export default function BlogArchivePage() {
-  const { lang } = useLanguage();
+  return (
+    <Suspense
+      fallback={<BlogArchiveContent initialLang="tr" hasExplicitQueryLang={false} />}
+    >
+      <BlogArchiveWithSearchParams />
+    </Suspense>
+  );
+}
+
+function BlogArchiveWithSearchParams() {
+  const searchParams = useSearchParams();
+  const rawLang = searchParams.get("lang");
+  const initialLang = resolveBlogLang(rawLang);
+
+  return (
+    <BlogArchiveContent
+      initialLang={initialLang}
+      hasExplicitQueryLang={Boolean(rawLang)}
+    />
+  );
+}
+
+function BlogArchiveContent({
+  initialLang,
+  hasExplicitQueryLang,
+}: {
+  initialLang: BlogLang;
+  hasExplicitQueryLang: boolean;
+}) {
+  const { lang: portfolioLang } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [activeLang, setActiveLang] = useState<BlogLang>(lang === "en" ? "en" : "tr");
+  const [activeLang, setActiveLang] = useState<BlogLang>(initialLang);
+
+  useEffect(() => {
+    if (hasExplicitQueryLang) {
+      setActiveLang(initialLang);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(BLOG_LANG_STORAGE_KEY, initialLang);
+      }
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(BLOG_LANG_STORAGE_KEY);
+      if (saved && BLOG_LANGUAGES.some((item) => item.code === saved)) {
+        setActiveLang(saved as BlogLang);
+        return;
+      }
+    }
+
+    setActiveLang(portfolioLang === "en" ? "en" : "tr");
+  }, [initialLang, hasExplicitQueryLang, portfolioLang]);
+
+  const langMeta = getBlogLangMeta(activeLang);
+  const ui = getBlogUiCopy(activeLang);
 
   const localizedPosts = BLOG_POSTS.map((post) => getLocalizedPost(post, activeLang));
 
   const filteredPosts = localizedPosts.filter((post) => {
     const matchesCategory =
       selectedCategory === "all" || post.category === selectedCategory;
+    const query = searchQuery.toLowerCase();
     const matchesSearch =
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.tag.toLowerCase().includes(searchQuery.toLowerCase());
+      !query ||
+      post.title.toLowerCase().includes(query) ||
+      post.excerpt.toLowerCase().includes(query) ||
+      post.tag.toLowerCase().includes(query);
     return matchesCategory && matchesSearch;
   });
 
+  const getPostHref = (slug: string) =>
+    activeLang === "tr" ? `/blog/${slug}` : `/blog/${slug}?lang=${activeLang}`;
+
+  const rssHref =
+    activeLang === "tr" ? "/rss.xml" : `/rss.xml?lang=${activeLang}`;
+
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${ui.archiveTitleLine1} ${ui.archiveTitleAccent} ${ui.archiveTitleLine2}`,
+    description: ui.archiveDesc,
+    url: activeLang === "tr" ? `${SITE_URL}/blog` : `${SITE_URL}/blog?lang=${activeLang}`,
+    inLanguage: langMeta.hreflang,
+    author: {
+      "@type": "Person",
+      name: "Kürşat Yılmaz",
+      url: SITE_URL,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: localizedPosts.length,
+      itemListElement: localizedPosts.map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url:
+          activeLang === "tr"
+            ? `${SITE_URL}/blog/${post.slug}`
+            : `${SITE_URL}/blog/${post.slug}?lang=${activeLang}`,
+        name: post.title,
+      })),
+    },
+  };
+
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black">
-      {/* Precision Custom Fluid Cursor */}
-      <CustomCursor />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+
+      {/* Reading Scroll Progress */}
+      <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
+        <ScrollProgress className="h-[2px] bg-gradient-to-r from-white/20 via-white to-white" />
+      </div>
 
       {/* Minimal Obsidian Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/10 bg-[#000000]/80 backdrop-blur-xl">
-        <div className="max-w-5xl mx-auto px-6 sm:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors group"
+            className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors group shrink-0"
           >
             <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
-            <span>Ana Sayfa</span>
+            <span>{ui.home}</span>
           </Link>
 
-          <div className="font-archivo font-[800] text-sm tracking-tight text-white">
-            KÜRŞAT YILMAZ <span className="font-mono text-zinc-500 font-normal text-xs ml-1.5">// GÜNLÜK</span>
+          <div className="font-archivo font-[800] text-sm tracking-tight text-white truncate">
+            KÜRŞAT YILMAZ{" "}
+            <span className="font-mono text-zinc-500 font-normal text-xs ml-1.5 hidden sm:inline">
+              // {ui.journalBadge}
+            </span>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 shrink-0">
+            <BlogLanguageSwitcher
+              variant="navbar"
+              activeLang={activeLang}
+              basePath="/blog"
+              hasExplicitQueryLang={hasExplicitQueryLang}
+              onSelectLang={setActiveLang}
+            />
+
             <a
               href="https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:bg-white hover:text-black transition-all"
+              className="hidden sm:flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:bg-white hover:text-black transition-all"
               aria-label="LinkedIn"
             >
               <LinkedinIcon className="w-3.5 h-3.5" />
@@ -78,7 +199,7 @@ export default function BlogArchivePage() {
               href="https://x.com/DevKursat"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:bg-white hover:text-black transition-all"
+              className="hidden sm:flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:bg-white hover:text-black transition-all"
               aria-label="X"
             >
               <TwitterXIcon className="w-3 h-3" />
@@ -88,40 +209,39 @@ export default function BlogArchivePage() {
       </nav>
 
       {/* Main Archive Content */}
-      <div className="pt-32 pb-24 max-w-5xl mx-auto px-6 sm:px-8">
+      <div
+        dir={langMeta.dir}
+        lang={activeLang}
+        className="pt-28 sm:pt-32 pb-24 max-w-5xl mx-auto px-5 sm:px-8"
+      >
         {/* Editorial Section Header */}
-        <div className="mb-12 space-y-3">
+        <header className="mb-8 space-y-3">
           <p className="text-xs font-semibold tracking-widest text-zinc-500 uppercase font-mono">
-            // GÜNLÜK MÜHENDİSLİK NOTLARI & YAYINLAR
+            {ui.archiveTag}
           </p>
           <h1 className="font-archivo font-[800] text-4xl sm:text-5xl md:text-6xl tracking-[-0.03em] text-white leading-[1.1]">
-            <span className="block">Yazıya dökülen,</span>
+            <span className="block">{ui.archiveTitleLine1}</span>
             <span className="block">
-              <span className="font-instrument italic font-normal text-white">derin</span>{" "}
-              deneyimler.
+              <span className="font-instrument italic font-normal text-white">
+                {ui.archiveTitleAccent}
+              </span>{" "}
+              {ui.archiveTitleLine2}
             </span>
           </h1>
           <p className="text-zinc-400 text-sm sm:text-base max-w-2xl font-normal leading-relaxed pt-1">
-            Yapay zekâ sistem mimarisi, GPU/bellek fiziksel sınırları, otonom ajan güvenliği ve teknoloji endüstrisindeki kırılma noktaları üzerine günlük teknik analiz arşivi.
+            {ui.archiveDesc}
           </p>
-        </div>
+        </header>
 
-        {/* Global Language Switcher */}
-        <div className="mb-5 flex flex-wrap items-center gap-1.5">
-          {BLOG_LANGUAGES.map((item) => (
-            <button
-              key={item.code}
-              type="button"
-              onClick={() => setActiveLang(item.code)}
-              className={`px-2.5 py-1 rounded-full text-[11px] font-mono transition-all border ${
-                activeLang === item.code
-                  ? "bg-white text-black border-white font-semibold"
-                  : "border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white hover:border-white/25"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+        {/* Global Editorial Language Switcher */}
+        <div className="mb-7">
+          <BlogLanguageSwitcher
+            variant="editorial"
+            activeLang={activeLang}
+            basePath="/blog"
+            hasExplicitQueryLang={hasExplicitQueryLang}
+            onSelectLang={setActiveLang}
+          />
         </div>
 
         {/* Filter & Search Bar */}
@@ -129,11 +249,11 @@ export default function BlogArchivePage() {
           {/* Category Filter Pills */}
           <div className="flex flex-wrap items-center gap-2">
             {[
-              { id: "all", label: `Tümü (${BLOG_POSTS.length})` },
-              { id: "mimari", label: "Sistem Mimarisi" },
-              { id: "donanim", label: "Donanım & Çip" },
-              { id: "llm", label: "LLM & Çıkarım" },
-              { id: "guvenlik", label: "Ajan Güvenliği" },
+              { id: "all", label: `${ui.catAll} (${BLOG_POSTS.length})` },
+              { id: "mimari", label: ui.catMimari },
+              { id: "donanim", label: ui.catDonanim },
+              { id: "llm", label: ui.catLlm },
+              { id: "guvenlik", label: ui.catGuvenlik },
             ].map((cat) => (
               <button
                 key={cat.id}
@@ -152,14 +272,25 @@ export default function BlogArchivePage() {
 
           {/* Quick Search Input */}
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Makalelerde ara..."
-              className="w-full bg-[#0c0c0e] border border-white/10 rounded-full pl-9 pr-4 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 font-mono transition-colors"
+              placeholder={ui.searchPlaceholder}
+              aria-label={ui.searchPlaceholder}
+              className="w-full bg-[#0c0c0e] border border-white/10 rounded-full pl-9 pr-8 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 font-mono transition-colors"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                aria-label={ui.clearFilters}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-zinc-400 hover:text-white transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
 
@@ -178,7 +309,7 @@ export default function BlogArchivePage() {
                 <Spotlight size={360} />
 
                 {/* Clickable Card Visual Trigger */}
-                <MorphingDialogTrigger className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none">
+                <MorphingDialogTrigger className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3">
                   <MorphingDialogImage
                     src={post.imageUrl}
                     alt={post.title}
@@ -211,6 +342,11 @@ export default function BlogArchivePage() {
                   </div>
                 </MorphingDialogTrigger>
 
+                {/* Excerpt Preview for Scannability & SEO */}
+                <p className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed line-clamp-2 px-1 mb-3">
+                  {post.excerpt}
+                </p>
+
                 {/* Bottom Bar: Telemetry Metrics + Read Pill */}
                 <div className="relative z-10 pt-3 px-1 mt-auto flex items-center justify-between gap-4 border-t border-white/5">
                   <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
@@ -234,15 +370,12 @@ export default function BlogArchivePage() {
                   </div>
 
                   <Link
-                    href={
-                      activeLang === "tr"
-                        ? `/blog/${post.slug}`
-                        : `/blog/${post.slug}?lang=${activeLang}`
-                    }
+                    href={getPostHref(post.slug)}
+                    hrefLang={langMeta.hreflang}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
-                    <span>Yazıyı Oku</span>
+                    <span>{ui.readArticle}</span>
                     <ArrowUpRight className="w-3 h-3" />
                   </Link>
                 </div>
@@ -265,7 +398,7 @@ export default function BlogArchivePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0e] via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  <div className="p-6 sm:p-8 space-y-6">
+                  <div dir={langMeta.dir} lang={activeLang} className="p-6 sm:p-8 space-y-6">
                     <div>
                       <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 mb-2">
                         <span>{post.tag}</span>
@@ -286,13 +419,14 @@ export default function BlogArchivePage() {
                         ))}
                       </div>
 
-                      <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-zinc-500 font-mono">
-                        <span>Kürşat Yılmaz — Mimari Notlar</span>
+                      <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-500 font-mono">
+                        <span>{ui.footerSubtitle}</span>
                         <Link
-                          href={`/blog/${post.slug}`}
+                          href={getPostHref(post.slug)}
+                          hrefLang={langMeta.hreflang}
                           className="inline-flex items-center gap-1 text-white hover:underline"
                         >
-                          <span>Tam Sayfada Aç</span>
+                          <span>{ui.openFullPage}</span>
                           <ArrowUpRight className="w-3 h-3" />
                         </Link>
                       </div>
@@ -305,8 +439,18 @@ export default function BlogArchivePage() {
         </div>
 
         {filteredPosts.length === 0 && (
-          <div className="py-20 text-center text-zinc-500 font-mono text-sm">
-            Aramanızla eşleşen makale bulunamadı.
+          <div className="py-20 text-center space-y-4">
+            <p className="text-zinc-500 font-mono text-sm">{ui.emptyState}</p>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCategory("all");
+                setSearchQuery("");
+              }}
+              className="px-4 py-2 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-mono text-zinc-200 transition-all"
+            >
+              {ui.clearFilters}
+            </button>
           </div>
         )}
 
@@ -316,14 +460,14 @@ export default function BlogArchivePage() {
 
           <div className="relative z-10 max-w-xl space-y-1">
             <h3 className="font-archivo font-[800] text-xl sm:text-2xl text-white tracking-tight">
-              10.000+ Takipçi ile Günlük Teknoloji Gündemi
+              {ui.communityTitle}
             </h3>
             <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-normal">
-              Her gün yayınlanan analizleri doğrudan akışınızda okumak ve tartışmalara katılmak için kanallardan takip edebilirsiniz.
+              {ui.communityDesc}
             </p>
           </div>
 
-          <div className="relative z-10 flex items-center gap-2.5 shrink-0">
+          <div className="relative z-10 flex flex-wrap items-center gap-2.5 shrink-0">
             <a
               href="https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/"
               target="_blank"
@@ -331,7 +475,7 @@ export default function BlogArchivePage() {
               className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-white text-black text-xs sm:text-sm font-semibold hover:bg-zinc-200 transition-colors shrink-0"
             >
               <LinkedinIcon className="w-4 h-4 text-black" />
-              <span>LinkedIn'de İncele</span>
+              <span>{ui.communityBtn}</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-black" />
             </a>
 
@@ -353,6 +497,17 @@ export default function BlogArchivePage() {
               aria-label="Dev.to"
             >
               <DevtoIcon className="w-4 h-4" />
+            </a>
+
+            <a
+              href={rssHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 px-3 items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono text-zinc-300 hover:bg-white hover:text-black hover:border-white transition-all shrink-0"
+              aria-label={ui.rssFeed}
+            >
+              <Rss className="w-3.5 h-3.5" />
+              <span>RSS</span>
             </a>
           </div>
         </div>

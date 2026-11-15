@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import JsonLd from "@/components/JsonLd";
 import { LanguageProvider } from "@/context/LanguageContext";
+import CustomCursor from "@/components/CustomCursor";
 
 const fontSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -113,6 +114,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-[#050505] text-zinc-100 antialiased selection:bg-white selection:text-black font-sans">
         <JsonLd />
         <LanguageProvider>
+          <CustomCursor />
           <SmoothScroll>{children}</SmoothScroll>
         </LanguageProvider>
       </body>
