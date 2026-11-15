@@ -3,21 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ArrowUpRight, BookOpen, Plus, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowUpRight, BookOpen, Sparkles } from "lucide-react";
 import { LinkedinIcon, TwitterXIcon, DevtoIcon } from "@/components/Icons";
 import { useLanguage } from "@/context/LanguageContext";
 import { ProgressiveBlur } from "./progressive-blur";
 import { Spotlight } from "./spotlight";
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogTitle,
-  MorphingDialogImage,
-  MorphingDialogClose,
-  MorphingDialogDescription,
-  MorphingDialogContainer,
-} from "./morphing-dialog";
 
 export interface CoverflowEssay {
   id: string;
@@ -275,189 +265,170 @@ interface CardItemProps {
 
 function CardItem({ item, isActive, onClick }: CardItemProps) {
   const { lang, t } = useLanguage();
+  const articleHref = lang === "en" ? `/blog/${item.id}?lang=en` : `/blog/${item.id}`;
+
+  const visualInner = (
+    <>
+      <img
+        src={item.imageUrl}
+        alt={item.title}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+      />
+
+      {/* Progressive Blur over lower 58% */}
+      <ProgressiveBlur
+        className="pointer-events-none absolute bottom-0 left-0 h-[58%] w-full"
+        blurIntensity={7}
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
+
+      {/* Open Article Icon */}
+      <div className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 group-hover:text-white group-hover:border-white/30 transition-all">
+        <ArrowUpRight className="w-3.5 h-3.5" />
+      </div>
+
+      {/* Tag Pill in Top-Left */}
+      <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300 uppercase tracking-wider">
+        {item.tag}
+      </div>
+
+      {/* Overlaid Meta */}
+      <div className="absolute bottom-0 left-0 p-3 sm:p-4 w-full z-10">
+        <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-2">
+          <span>{item.date}</span>
+          <span>•</span>
+          <span>{item.readTime}</span>
+        </div>
+      </div>
+    </>
+  );
 
   return (
-    <MorphingDialog
-      transition={{
-        type: "spring",
-        bounce: 0.05,
-        duration: 0.28,
-      }}
+    <div
+      onClick={onClick}
+      className={`flex flex-col h-full rounded-3xl border transition-all duration-300 p-4 sm:p-5 relative overflow-hidden group ${
+        isActive
+          ? "border-white/25 bg-[#0e0e11] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)]"
+          : "border-white/10 bg-[#09090b] shadow-lg opacity-90 cursor-pointer"
+      }`}
     >
-      <div
-        onClick={onClick}
-        className={`flex flex-col h-full rounded-3xl border transition-all duration-300 p-4 sm:p-5 relative overflow-hidden group ${
-          isActive
-            ? "border-white/25 bg-[#0e0e11] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)]"
-            : "border-white/10 bg-[#09090b] shadow-lg opacity-90"
-        }`}
-      >
-        <Spotlight size={360} />
+      <Spotlight size={360} />
 
-        {/* Visual Header Trigger */}
-        <MorphingDialogTrigger className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3">
-          <MorphingDialogImage
-            src={item.imageUrl}
-            alt={item.title}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          />
-
-          {/* Progressive Blur over lower 58% */}
-          <ProgressiveBlur
-            className="pointer-events-none absolute bottom-0 left-0 h-[58%] w-full"
-            blurIntensity={7}
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
-
-          {/* Floating Expand Icon */}
-          <div className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 group-hover:text-white group-hover:border-white/30 transition-all">
-            <Plus className="w-3.5 h-3.5" />
-          </div>
-
-          {/* Tag Pill in Top-Left */}
-          <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300 uppercase tracking-wider">
-            {item.tag}
-          </div>
-
-          {/* Overlaid Meta */}
-          <div className="absolute bottom-0 left-0 p-3 sm:p-4 w-full z-10">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-2">
-              <span>{item.date}</span>
-              <span>•</span>
-              <span>{item.readTime}</span>
-            </div>
-          </div>
-        </MorphingDialogTrigger>
-
-        {/* Article Title & Excerpt */}
-        <div className="flex-1 flex flex-col justify-start">
-          <h3 className="font-archivo font-[800] text-base sm:text-lg text-white tracking-tight line-clamp-2 leading-snug group-hover:text-white transition-colors">
-            {item.title}
-          </h3>
-          <p className="text-zinc-400 text-xs sm:text-[13px] leading-relaxed font-normal mt-1.5 line-clamp-2">
-            {item.excerpt}
-          </p>
+      {/* Visual Header: Direct link when active in front, rotates card when on side */}
+      {isActive ? (
+        <Link
+          href={articleHref}
+          className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3"
+        >
+          {visualInner}
+        </Link>
+      ) : (
+        <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3">
+          {visualInner}
         </div>
+      )}
 
-        {/* Metrics Telemetry Strip */}
-        <div className="pt-2.5 pb-2.5 px-1 my-2 border-t border-b border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-400">
-          <div>
-            <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
-              {item.metrics[0].label}
-            </span>
-            <span className="text-white font-semibold">
-              {item.metrics[0].val}
-            </span>
-          </div>
-          <div className="h-4 w-[1px] bg-white/10" />
-          <div>
-            <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
-              {item.metrics[1].label}
-            </span>
-            <span className="text-white font-semibold">
-              {item.metrics[1].val}
-            </span>
-          </div>
+      {/* Article Title & Excerpt */}
+      <div className="flex-1 flex flex-col justify-start">
+        <h3 className="font-archivo font-[800] text-base sm:text-lg text-white tracking-tight line-clamp-2 leading-snug group-hover:text-white transition-colors">
+          {isActive ? (
+            <Link href={articleHref} className="hover:underline">
+              {item.title}
+            </Link>
+          ) : (
+            item.title
+          )}
+        </h3>
+        <p className="text-zinc-400 text-xs sm:text-[13px] leading-relaxed font-normal mt-1.5 line-clamp-2">
+          {item.excerpt}
+        </p>
+      </div>
+
+      {/* Metrics Telemetry Strip */}
+      <div className="pt-2.5 pb-2.5 px-1 my-2 border-t border-b border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-400">
+        <div>
+          <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
+            {item.metrics[0].label}
+          </span>
+          <span className="text-white font-semibold">
+            {item.metrics[0].val}
+          </span>
         </div>
-
-        {/* Bottom Bar: Direct Read Button + Social Syndication */}
-        <div className="pt-2 flex items-center justify-between gap-2 mt-auto">
-          {/* Read Modal Trigger Button */}
-          <MorphingDialogTrigger className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0">
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>{t("blog.read")}</span>
-            <ArrowUpRight className="w-3 h-3" />
-          </MorphingDialogTrigger>
-
-          {/* Social Syndication Icons */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1.5"
-          >
-            {item.links.linkedin && (
-              <a
-                href={item.links.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black text-zinc-400 hover:border-white transition-colors"
-                title="LinkedIn"
-              >
-                <LinkedinIcon className="w-3 h-3" />
-              </a>
-            )}
-            {item.links.twitter && (
-              <a
-                href={item.links.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black text-zinc-400 hover:border-white transition-colors"
-                title="X / Twitter"
-              >
-                <TwitterXIcon className="w-3 h-3" />
-              </a>
-            )}
-            {item.links.devto && (
-              <a
-                href={item.links.devto}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black text-zinc-400 hover:border-white transition-colors"
-                title="Dev.to"
-              >
-                <DevtoIcon className="w-3 h-3" />
-              </a>
-            )}
-          </div>
+        <div className="h-4 w-[1px] bg-white/10" />
+        <div>
+          <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
+            {item.metrics[1].label}
+          </span>
+          <span className="text-white font-semibold">
+            {item.metrics[1].val}
+          </span>
         </div>
       </div>
 
-      {/* Morphing Modal Expansion View */}
-      <MorphingDialogContainer>
-        <MorphingDialogContent
-          style={{ borderRadius: "24px" }}
-          className="pointer-events-auto relative flex h-auto max-h-[90vh] w-full max-w-2xl flex-col overflow-y-auto border border-white/15 bg-[#0c0c0e] text-white shadow-2xl"
+      {/* Bottom Bar: Direct Article Link + Social Syndication */}
+      <div className="pt-2 flex items-center justify-between gap-2 mt-auto">
+        {isActive ? (
+          <Link
+            href={articleHref}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>{t("blog.read")}</span>
+            <ArrowUpRight className="w-3 h-3" />
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={onClick}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>{t("blog.read")}</span>
+            <ArrowUpRight className="w-3 h-3" />
+          </button>
+        )}
+
+        {/* Social Syndication Icons */}
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="flex items-center gap-1.5"
         >
-          <MorphingDialogClose />
-
-          <div className="relative w-full aspect-video overflow-hidden bg-black shrink-0">
-            <MorphingDialogImage
-              src={item.imageUrl}
-              alt={item.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0e] via-transparent to-transparent pointer-events-none" />
-          </div>
-
-          <div className="p-6 sm:p-8 space-y-6">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 mb-2">
-                <span>{item.tag}</span>
-                <span>•</span>
-                <span>{item.date}</span>
-                <span>•</span>
-                <span>{item.readTime}</span>
-              </div>
-              <MorphingDialogTitle className="font-archivo font-[800] text-2xl sm:text-3xl text-white tracking-tight leading-snug">
-                {item.title}
-              </MorphingDialogTitle>
-            </div>
-
-            <MorphingDialogDescription>
-              <div className="space-y-4 text-zinc-300 text-base leading-relaxed font-normal">
-                {item.content.map((paragraph, idx) => (
-                  <p key={idx}>{paragraph}</p>
-                ))}
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-zinc-500 font-mono">
-                <span>Kürşat Yılmaz — Mimari Notlar</span>
-                <span>© 2026</span>
-              </div>
-            </MorphingDialogDescription>
-          </div>
-        </MorphingDialogContent>
-      </MorphingDialogContainer>
-    </MorphingDialog>
+          {item.links.linkedin && (
+            <a
+              href={item.links.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black text-zinc-400 hover:border-white transition-colors"
+              title="LinkedIn"
+            >
+              <LinkedinIcon className="w-3 h-3" />
+            </a>
+          )}
+          {item.links.twitter && (
+            <a
+              href={item.links.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black text-zinc-400 hover:border-white transition-colors"
+              title="X / Twitter"
+            >
+              <TwitterXIcon className="w-3 h-3" />
+            </a>
+          )}
+          {item.links.devto && (
+            <a
+              href={item.links.devto}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black text-zinc-400 hover:border-white transition-colors"
+              title="Dev.to"
+            >
+              <DevtoIcon className="w-3 h-3" />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

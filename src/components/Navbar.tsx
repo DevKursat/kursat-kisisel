@@ -55,11 +55,12 @@ export default function Navbar() {
       } else {
         const el = document.getElementById(targetId);
         if (el) {
+          const targetY = el.getBoundingClientRect().top + window.scrollY;
           const lenis = (window as any).__lenis;
           if (lenis && typeof lenis.scrollTo === "function") {
-            lenis.scrollTo(el, { duration: 1.0 });
+            lenis.scrollTo(targetY, { duration: 1.0 });
           } else {
-            el.scrollIntoView({ behavior: "smooth" });
+            window.scrollTo({ top: targetY, behavior: "smooth" });
           }
         }
       }

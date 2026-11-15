@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Plus,
   Search,
   BookOpen,
   Rss,
@@ -19,16 +18,6 @@ import BlogLanguageSwitcher, {
   resolveClientBlogLang,
 } from "@/components/BlogLanguageSwitcher";
 import { LinkedinIcon, TwitterXIcon, DevtoIcon } from "@/components/Icons";
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogTitle,
-  MorphingDialogImage,
-  MorphingDialogClose,
-  MorphingDialogDescription,
-  MorphingDialogContainer,
-} from "@/components/core/morphing-dialog";
 
 import {
   BLOG_POSTS,
@@ -276,144 +265,88 @@ function BlogArchiveContent({
         {/* 2-Column Grid of All Articles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredPosts.map((post) => (
-            <MorphingDialog
+            <article
               key={post.slug}
-              transition={{
-                type: "spring",
-                bounce: 0.05,
-                duration: 0.28,
-              }}
+              className="flex flex-col h-full rounded-3xl border border-white/10 bg-[#0c0c0e] p-4 sm:p-5 transition-all duration-300 hover:border-white/25 group relative overflow-hidden"
             >
-              <article className="flex flex-col h-full rounded-3xl border border-white/10 bg-[#0c0c0e] p-4 sm:p-5 transition-all duration-300 hover:border-white/25 group relative overflow-hidden">
-                <Spotlight size={360} />
+              <Spotlight size={360} />
 
-                {/* Clickable Card Visual Trigger */}
-                <MorphingDialogTrigger className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3">
-                  <MorphingDialogImage
-                    src={post.imageUrl}
-                    alt={post.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
+              {/* Clickable Card Visual -> Direct Page Navigation */}
+              <Link
+                href={getPostHref(post.slug)}
+                hrefLang={langMeta.hreflang}
+                className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3"
+              >
+                <img
+                  src={post.imageUrl}
+                  alt={post.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
 
-                  {/* Progressive Blur Layer over the lower 58% */}
-                  <ProgressiveBlur
-                    className="pointer-events-none absolute bottom-0 left-0 h-[58%] w-full"
-                    blurIntensity={7}
-                  />
+                {/* Progressive Blur Layer over the lower 58% */}
+                <ProgressiveBlur
+                  className="pointer-events-none absolute bottom-0 left-0 h-[58%] w-full"
+                  blurIntensity={7}
+                />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
 
-                  {/* Expand Pill */}
-                  <div className="absolute top-3.5 right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 group-hover:text-white group-hover:border-white/30 transition-all">
-                    <Plus className="w-3.5 h-3.5" />
-                  </div>
-
-                  {/* Overlaid Title & Metadata */}
-                  <div className="absolute bottom-0 left-0 p-4 sm:p-5 w-full z-10 flex flex-col justify-end">
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-1 flex items-center gap-2">
-                      <span>{post.tag}</span>
-                      <span>•</span>
-                      <span>{post.date}</span>
-                    </div>
-                    <MorphingDialogTitle className="font-archivo font-[800] text-lg sm:text-xl text-white tracking-tight line-clamp-2 leading-snug">
-                      {post.title}
-                    </MorphingDialogTitle>
-                  </div>
-                </MorphingDialogTrigger>
-
-                {/* Excerpt Preview for Scannability & SEO */}
-                <p className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed line-clamp-2 px-1 mb-3">
-                  {post.excerpt}
-                </p>
-
-                {/* Bottom Bar: Telemetry Metrics + Read Pill */}
-                <div className="relative z-10 pt-3 px-1 mt-auto flex items-center justify-between gap-4 border-t border-white/5">
-                  <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
-                    <div>
-                      <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
-                        {post.metrics[0].label}
-                      </span>
-                      <span className="text-white font-semibold">
-                        {post.metrics[0].val}
-                      </span>
-                    </div>
-                    <div className="h-4 w-[1px] bg-white/10" />
-                    <div>
-                      <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
-                        {post.metrics[1].label}
-                      </span>
-                      <span className="text-white font-semibold">
-                        {post.metrics[1].val}
-                      </span>
-                    </div>
-                  </div>
-
-                  <Link
-                    href={getPostHref(post.slug)}
-                    hrefLang={langMeta.hreflang}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0"
-                  >
-                    <BookOpen className="w-3.5 h-3.5" />
-                    <span>{ui.readArticle}</span>
-                    <ArrowUpRight className="w-3 h-3" />
-                  </Link>
+                {/* Open Article Arrow Pill */}
+                <div className="absolute top-3.5 right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 group-hover:text-white group-hover:border-white/30 transition-all">
+                  <ArrowUpRight className="w-3.5 h-3.5" />
                 </div>
-              </article>
 
-              {/* Morphing Modal Expansion View */}
-              <MorphingDialogContainer>
-                <MorphingDialogContent
-                  style={{ borderRadius: "24px" }}
-                  className="pointer-events-auto relative flex h-auto max-h-[90vh] w-full max-w-2xl flex-col overflow-y-auto border border-white/15 bg-[#0c0c0e] text-white shadow-2xl"
+                {/* Overlaid Title & Metadata */}
+                <div className="absolute bottom-0 left-0 p-4 sm:p-5 w-full z-10 flex flex-col justify-end">
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-1 flex items-center gap-2">
+                    <span>{post.tag}</span>
+                    <span>•</span>
+                    <span>{post.date}</span>
+                  </div>
+                  <h2 className="font-archivo font-[800] text-lg sm:text-xl text-white tracking-tight line-clamp-2 leading-snug">
+                    {post.title}
+                  </h2>
+                </div>
+              </Link>
+
+              {/* Excerpt Preview for Scannability & SEO */}
+              <p className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed line-clamp-2 px-1 mb-3">
+                {post.excerpt}
+              </p>
+
+              {/* Bottom Bar: Telemetry Metrics + Read Pill */}
+              <div className="relative z-10 pt-3 px-1 mt-auto flex items-center justify-between gap-4 border-t border-white/5">
+                <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
+                  <div>
+                    <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
+                      {post.metrics[0].label}
+                    </span>
+                    <span className="text-white font-semibold">
+                      {post.metrics[0].val}
+                    </span>
+                  </div>
+                  <div className="h-4 w-[1px] bg-white/10" />
+                  <div>
+                    <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
+                      {post.metrics[1].label}
+                    </span>
+                    <span className="text-white font-semibold">
+                      {post.metrics[1].val}
+                    </span>
+                  </div>
+                </div>
+
+                <Link
+                  href={getPostHref(post.slug)}
+                  hrefLang={langMeta.hreflang}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0"
                 >
-                  <MorphingDialogClose />
-
-                  <div className="relative w-full aspect-video overflow-hidden bg-black shrink-0">
-                    <MorphingDialogImage
-                      src={post.imageUrl}
-                      alt={post.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0e] via-transparent to-transparent pointer-events-none" />
-                  </div>
-
-                  <div dir={langMeta.dir} lang={activeLang} className="p-6 sm:p-8 space-y-6">
-                    <div>
-                      <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 mb-2">
-                        <span>{post.tag}</span>
-                        <span>•</span>
-                        <span>{post.date}</span>
-                        <span>•</span>
-                        <span>{post.readTime}</span>
-                      </div>
-                      <MorphingDialogTitle className="font-archivo font-[800] text-2xl sm:text-3xl text-white tracking-tight leading-snug">
-                        {post.title}
-                      </MorphingDialogTitle>
-                    </div>
-
-                    <MorphingDialogDescription>
-                      <div className="space-y-4 text-zinc-300 text-base leading-relaxed font-normal">
-                        {post.content.map((paragraph, idx) => (
-                          <p key={idx}>{paragraph}</p>
-                        ))}
-                      </div>
-
-                      <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-500 font-mono">
-                        <span>{ui.footerSubtitle}</span>
-                        <Link
-                          href={getPostHref(post.slug)}
-                          hrefLang={langMeta.hreflang}
-                          className="inline-flex items-center gap-1 text-white hover:underline"
-                        >
-                          <span>{ui.openFullPage}</span>
-                          <ArrowUpRight className="w-3 h-3" />
-                        </Link>
-                      </div>
-                    </MorphingDialogDescription>
-                  </div>
-                </MorphingDialogContent>
-              </MorphingDialogContainer>
-            </MorphingDialog>
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>{ui.readArticle}</span>
+                  <ArrowUpRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </article>
           ))}
         </div>
 

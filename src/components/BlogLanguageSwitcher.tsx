@@ -23,13 +23,22 @@ import { useLanguage } from "@/context/LanguageContext";
 export const BLOG_LANG_STORAGE_KEY = "ky_blog_lang";
 
 export function detectBrowserBlogLang(): BlogLang {
-  if (typeof navigator === "undefined") return "tr";
-  const candidates =
-    navigator.languages && navigator.languages.length > 0
-      ? navigator.languages
-      : [navigator.language];
+  if (typeof navigator === "undefined") return "en";
+  const rawCandidates: string[] = [];
+  if (navigator.languages && navigator.languages.length > 0) {
+    rawCandidates.push(...navigator.languages);
+  }
+  if (navigator.language) {
+    rawCandidates.push(navigator.language);
+  }
+  try {
+    const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+    if (intlLocale) rawCandidates.push(intlLocale);
+  } catch {
+    // ignore Intl locale resolution issues
+  }
 
-  for (const rawLocale of candidates) {
+  for (const rawLocale of rawCandidates) {
     if (!rawLocale) continue;
     const base = rawLocale.toLowerCase().split(/[-_]/)[0] as BlogLang;
     if (BLOG_LANGUAGES.some((item) => item.code === base)) {
@@ -79,25 +88,14 @@ function SlidingLanguageTrack({
   onSelect,
 }: SlidingLanguageTrackProps) {
   const trackRef = useRef<HTMLElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(languages.length > 3);
 
   const getStepPx = useCallback(() => {
     const track = trackRef.current;
     const firstChild = track?.firstElementChild as HTMLElement | null;
     const pillWidth =
       firstChild?.offsetWidth ||
-      (typeof window !== "undefined" && window.innerWidth >= 640 ? 94 : 80);
+      (typeof window !== "undefined" && window.innerWidth >= 640 ? 88 : 76);
     return pillWidth + PILL_GAP_PX;
-  }, []);
-
-  const syncScrollButtons = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    setCanScrollLeft(track.scrollLeft > 2);
-    setCanScrollRight(
-      track.scrollLeft + track.clientWidth < track.scrollWidth - 2
-    );
   }, []);
 
   // Center the active language within the 3-slot viewport whenever language changes
@@ -116,11 +114,7 @@ function SlidingLanguageTrack({
         behavior: "smooth",
       });
     }
-
-    syncScrollButtons();
-    const timer = window.setTimeout(syncScrollButtons, 260);
-    return () => window.clearTimeout(timer);
-  }, [activeLang, languages, getStepPx, syncScrollButtons]);
+  }, [activeLang, languages, getStepPx]);
 
   // Translate vertical wheel over the 3-slot track into horizontal scroll without Lenis interference
   useEffect(() => {
@@ -135,23 +129,25 @@ function SlidingLanguageTrack({
       }
     };
 
-    const handleScroll = () => syncScrollButtons();
-    const handleResize = () => syncScrollButtons();
-
     track.addEventListener("wheel", handleWheel, { passive: false });
-    track.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize);
 
     return () => {
       track.removeEventListener("wheel", handleWheel);
-      track.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
     };
-  }, [syncScrollButtons]);
+  }, []);
 
   const scrollBySlot = (direction: -1 | 1) => {
     const track = trackRef.current;
     if (!track) return;
+    const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+    if (direction === -1 && track.scrollLeft <= 2) {
+      track.scrollTo({ left: maxScroll, behavior: "smooth" });
+      return;
+    }
+    if (direction === 1 && track.scrollLeft >= maxScroll - 2) {
+      track.scrollTo({ left: 0, behavior: "smooth" });
+      return;
+    }
     track.scrollBy({
       left: direction * getStepPx(),
       behavior: "smooth",
@@ -159,13 +155,15 @@ function SlidingLanguageTrack({
   };
 
   return (
-    <div className="flex items-center gap-1 sm:gap-1.5 shrink-0" dir="ltr">
+    <div
+      className="inline-flex items-center gap-1 rounded-full border border-white/12 bg-[#0a0a0e]/90 backdrop-blur-xl p-1 shadow-[0_10px_30px_rgba(0,0,0,0.5)] max-w-full"
+      dir="ltr"
+    >
       <button
         type="button"
         onClick={() => scrollBySlot(-1)}
-        disabled={!canScrollLeft}
         aria-label="Previous languages"
-        className="h-7 w-6 sm:w-7 shrink-0 inline-flex items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-white/25 hover:bg-white/[0.08] disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="h-7 w-7 shrink-0 inline-flex items-center justify-center rounded-full text-zinc-400 hover:text-white hover:bg-white/[0.08] active:scale-95 transition-all"
       >
         <ChevronLeft className="w-3.5 h-3.5" />
       </button>
@@ -174,7 +172,7 @@ function SlidingLanguageTrack({
         ref={trackRef}
         aria-label={ariaLabel}
         data-lenis-prevent="true"
-        className="relative w-[252px] sm:w-[294px] shrink-0 flex items-center gap-[6px] overflow-x-auto snap-x snap-mandatory scroll-smooth select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="relative w-[240px] sm:w-[276px] shrink-0 flex items-center gap-[6px] overflow-x-auto snap-x snap-mandatory scroll-smooth select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
         {languages.map((item) => {
           const isActive = item.code === activeLang;
@@ -186,20 +184,20 @@ function SlidingLanguageTrack({
               lang={item.code}
               aria-current={isActive ? "page" : undefined}
               onClick={() => onSelect(item.code)}
-              className={`w-[80px] sm:w-[94px] h-8 shrink-0 snap-start relative isolate inline-flex items-center justify-center gap-1 px-2 rounded-xl text-[11px] transition-colors border ${
+              className={`w-[76px] sm:w-[88px] h-7 shrink-0 snap-start relative isolate inline-flex items-center justify-center gap-1 px-2 rounded-full text-[11px] transition-colors ${
                 isActive
-                  ? "text-black border-white font-semibold"
-                  : "border-white/[0.08] bg-white/[0.03] text-zinc-300 hover:text-white hover:border-white/25 hover:bg-white/[0.07]"
+                  ? "text-black font-semibold"
+                  : "text-zinc-400 hover:text-white hover:bg-white/[0.06]"
               }`}
             >
               {isActive && (
                 <motion.span
                   layoutId={layoutId}
-                  transition={{ type: "spring", stiffness: 360, damping: 28 }}
-                  className="absolute inset-0 rounded-xl bg-white shadow-sm"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  className="absolute inset-0 rounded-full bg-white shadow-[0_2px_10px_rgba(255,255,255,0.25)]"
                 />
               )}
-              <span className="relative z-10 truncate max-w-[52px] sm:max-w-[62px]">
+              <span className="relative z-10 truncate max-w-[48px] sm:max-w-[56px]">
                 {item.nativeName}
               </span>
               <span
@@ -217,9 +215,8 @@ function SlidingLanguageTrack({
       <button
         type="button"
         onClick={() => scrollBySlot(1)}
-        disabled={!canScrollRight}
         aria-label="Next languages"
-        className="h-7 w-6 sm:w-7 shrink-0 inline-flex items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-white/25 hover:bg-white/[0.08] disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="h-7 w-7 shrink-0 inline-flex items-center justify-center rounded-full text-zinc-400 hover:text-white hover:bg-white/[0.08] active:scale-95 transition-all"
       >
         <ChevronRight className="w-3.5 h-3.5" />
       </button>
@@ -417,33 +414,15 @@ export default function BlogLanguageSwitcher({
   }
 
   return (
-    <div dir="ltr">
-      <div className="rounded-2xl border border-white/10 bg-[#0a0a0e]/90 backdrop-blur-xl px-2.5 sm:px-3 py-2 shadow-[0_12px_36px_rgba(0,0,0,0.45)] flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5">
-        <div className="flex items-center gap-2 text-xs text-zinc-300 min-w-0">
-          <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/[0.06] border border-white/10 text-zinc-200">
-            <Globe className="w-3.5 h-3.5" />
-          </span>
-          <span className="font-medium text-white truncate">
-            {ui.readingLanguage}
-          </span>
-          <span className="hidden md:inline text-zinc-600">·</span>
-          <span className="hidden md:inline font-mono text-[11px] text-zinc-400 truncate">
-            {activeMeta.nativeName} · {activeMeta.label}
-          </span>
-          <span className="font-mono text-[10px] px-1.5 py-0.5 rounded-full border border-white/10 bg-white/[0.04] text-zinc-400 shrink-0">
-            {activeIndex + 1}/{languages.length}
-          </span>
-        </div>
-
-        <SlidingLanguageTrack
-          languages={languages}
-          activeLang={activeLang}
-          ariaLabel={ui.readingLanguage}
-          layoutId={`blog-lang-pill-${instanceId}`}
-          getHref={getHref}
-          onSelect={handleLanguagePick}
-        />
-      </div>
+    <div dir="ltr" className="inline-flex max-w-full">
+      <SlidingLanguageTrack
+        languages={languages}
+        activeLang={activeLang}
+        ariaLabel={ui.readingLanguage}
+        layoutId={`blog-lang-pill-${instanceId}`}
+        getHref={getHref}
+        onSelect={handleLanguagePick}
+      />
     </div>
   );
 }

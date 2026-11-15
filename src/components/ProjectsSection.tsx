@@ -84,7 +84,7 @@ export default function ProjectsSection() {
   return (
     <section
       id="work"
-      className="relative z-10 md:sticky md:top-0 bg-[#000000] text-white pt-16 sm:pt-20 pb-16"
+      className="relative z-10 bg-[#000000] text-white pt-16 sm:pt-20 pb-16"
     >
       <div className="max-w-5xl mx-auto px-6 sm:px-8">
         {/* Editorial Style Intro Header - Strictly 2 Lines */}
