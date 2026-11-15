@@ -16,6 +16,26 @@ export const SITE_URL = "https://kursat.itibar.app";
 
 export const BLOG_POSTS: BlogPostItem[] = [
   {
+    slug: "nvidia-jensen-huang-megaspeed-skandali",
+    tag: "DONANIM OTOPSİSİ",
+    category: "donanim",
+    title: "12 Milyar Dolarlık Arka Kapı: Jensen Huang İstifası ve Silikon Vadisi'nin 'Stand with Jensen' İkiyüzlülüğü",
+    excerpt: "Singapur ve Malezya paravanları üzerinden Çin'e akan milyarlarca dolarlık kısıtlı GPU, Kongre celpleri ve ardından 135.000 imzayla başlatılan kurtarma tiyatrosu.",
+    date: "15 Kas 2026",
+    isoDate: "2026-11-15",
+    readTime: "4 dk okuma",
+    imageUrl: "/blog/nvidia-jensen-huang-megaspeed-skandali.jpg",
+    metrics: [
+      { label: "ARACI ÇİP SİPARİŞİ", val: "12 Milyar $" },
+      { label: "İMZA KAMPANYASI", val: "135.000+" },
+    ],
+    content: [
+      "33 yıllık koltuğunu bir günde bırakıp istifa eden Nvidia CEO'su Jensen Huang için Silikon Vadisi üç günde 135.000 imzalı 'Stand with Jensen' dilekçesi topladı. Ortada küçük bir detay var: Mesele masum bir ofis dedikodusu değil, Singapur merkezli Megaspeed ve Malezya bağlantılı paravan hatlar üzerinden Çin'e aktığı iddia edilen 12 milyar dolarlık kısıtlı GPU ticareti.",
+      "Yıllardır ABD Kongresi'ne çıkıp 'ihracat kontrollerine harfiyen uyuyoruz, ulusal güvenlik bizim önceliğimiz' diye vaaz veren bir donanım tekelinin, aynı anda Güneydoğu Asya'daki aracı bulut ortakları üzerinden milyarlarca dolarlık çip siparişi geçmesi; kendi evine alarm sistemi satıp arka bahçe kapısını komşunun kamyonuna açık bırakan güvenlik şirketine benziyor. Yönetim kurulu iç soruşturma açıp ABD Kongresi belgeleri ve ifadeleri masaya koyunca, 600 milyar doları aşan piyasa değeri dalgalanması arasında istifa faturası kesildi.",
+      "İşin en komik kısmı ise Elon Musk dahil teknoloji baronlarının hemen ertesi gün açtığı imza kampanyası oldu. Milyar dolarlık donanım tedarik zincirini devlet regülasyonlarının etrafından dolaştıran bir CEO söz konusu olduğunda, 'liyakat' ve 'etik' kuralları bir anda 'haksızlığa uğrayan dahi kurucu' romantizmine dönüşüyor. Sıradan bir mühendis şirket sunucusuna izinsiz SSH açsa kapının önüne koyan bu düzen, konu kendi hisse senedi olduğunda Change.org'dan hallice dilekçelerle adalet dağıtıyor.",
+    ],
+  },
+  {
     slug: "claude-code-secret-leak-gitignore-skandali",
     tag: "GÜVENLİK OTOPSİSİ",
     category: "guvenlik",
