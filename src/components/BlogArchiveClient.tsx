@@ -3,12 +3,14 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowUpRight,
   Search,
   BookOpen,
   Rss,
+  Terminal,
   X,
 } from "lucide-react";
 import { Spotlight } from "@/components/core/spotlight";
@@ -17,6 +19,8 @@ import { ScrollProgress } from "@/components/core/scroll-progress";
 import BlogLanguageSwitcher, {
   resolveClientBlogLang,
 } from "@/components/BlogLanguageSwitcher";
+import NewsletterSignupBox from "@/components/NewsletterSignupBox";
+import TypeformContactModal from "@/components/TypeformContactModal";
 import {
   LinkedinIcon,
   TwitterXIcon,
@@ -379,8 +383,67 @@ function BlogArchiveContent({
           </div>
         )}
 
+        {/* Animated Archive Newsletter & Direct Engineering Contact */}
+        <motion.section
+          aria-label="Newsletter & Direct Advisory"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ type: "spring", stiffness: 280, damping: 24 }}
+          className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ type: "spring", stiffness: 280, damping: 24 }}
+            className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b0f] p-5 flex flex-col justify-between gap-4 hover:border-white/25 transition-colors"
+          >
+            <Spotlight size={280} />
+            <div className="relative z-10 space-y-2">
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-emerald-400">
+                <Terminal className="w-3.5 h-3.5" />
+                <span>
+                  {activeLang === "tr"
+                    ? "MÜHENDİSLİK & DANIŞMANLIK"
+                    : "SYSTEMS & ADVISORY"}
+                </span>
+              </div>
+              <h2 className="font-archivo font-[800] text-lg text-white leading-snug">
+                {activeLang === "tr"
+                  ? "Doğrudan mimari ve AI sistem görüşmesi"
+                  : "Partner on production AI & architecture"}
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                {activeLang === "tr"
+                  ? "Otonom ajan güvenliği, veri sızıntısı önleme ve yüksek trafikli sistemler için doğrudan iletişime geçin."
+                  : "Collaborate directly on autonomous agents, deterministic isolation, and high-throughput products."}
+              </p>
+            </div>
+            <div className="relative z-10 flex flex-wrap items-center gap-2.5 pt-1">
+              <TypeformContactModal />
+              <a
+                href="https://itibar.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white hover:text-black text-xs font-mono text-zinc-200 transition-all"
+              >
+                <span>itibar.app</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </motion.div>
+
+          <NewsletterSignupBox
+            id="archive-newsletter"
+            source="blog-archive"
+            activeLang={activeLang}
+            delay={0.08}
+          />
+        </motion.section>
+
         {/* Community Banner at bottom (LinkedIn, X, DEV.to, Medium, GitHub, RSS) */}
-        <div className="mt-16 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141416] to-[#0a0a0c] p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="mt-8 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141416] to-[#0a0a0c] p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <Spotlight size={420} />
 
           <div className="relative z-10 max-w-xl space-y-1">

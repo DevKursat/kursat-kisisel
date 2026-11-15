@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -13,12 +14,11 @@ import {
   Copy,
   FileCode2,
   HelpCircle,
-  Loader2,
-  Mail,
   Rss,
   Sparkles,
   Terminal,
 } from "lucide-react";
+import NewsletterSignupBox from "@/components/NewsletterSignupBox";
 import {
   BLOG_LANGUAGES,
   SITE_URL,
@@ -90,11 +90,6 @@ export function ArticleMarkup({
 }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCitation, setCopiedCitation] = useState(false);
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterStatus, setNewsletterStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
-  const [newsletterError, setNewsletterError] = useState("");
 
   const post = getLocalizedPost(rawPost, activeLang);
   const langMeta = getBlogLangMeta(activeLang);
@@ -173,43 +168,6 @@ export function ArticleMarkup({
   };
 
   const contextNote = categoryNoteMap[rawPost.category] ?? categoryNoteMap.mimari;
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleaned = newsletterEmail.trim();
-    if (!cleaned || !cleaned.includes("@") || !cleaned.includes(".")) {
-      setNewsletterStatus("error");
-      setNewsletterError(
-        isTr ? "Geçerli bir e-posta adresi girin." : "Enter a valid email address."
-      );
-      return;
-    }
-
-    setNewsletterStatus("loading");
-    setNewsletterError("");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "newsletter",
-          email: cleaned,
-          source: post.slug,
-          lang: activeLang,
-        }),
-      });
-      if (!res.ok) throw new Error("Request failed");
-      setNewsletterStatus("success");
-      setNewsletterEmail("");
-    } catch {
-      setNewsletterStatus("error");
-      setNewsletterError(
-        isTr
-          ? "Kayıt sırasında hata oluştu, lütfen tekrar deneyin."
-          : "Could not subscribe right now, please try again."
-      );
-    }
-  };
 
   useEffect(() => {
     document.title = `${post.title} — Kürşat Yılmaz`;
@@ -601,15 +559,19 @@ export function ArticleMarkup({
           </div>
         </div>
 
-        {/* Contextual Engineering Note & Direct Contact + Free Newsletter */}
+        {/* Contextual Engineering Note & Direct Contact + Animated Free Newsletter */}
         <section
           aria-label="Engineering Actions"
           className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           {/* Category-Aware System Note + TypeformContactModal */}
-          <div
+          <motion.div
             id="article-engineering-cta"
-            className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b0f] p-5 flex flex-col justify-between gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ type: "spring", stiffness: 280, damping: 24 }}
+            className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b0f] p-5 flex flex-col justify-between gap-4 hover:border-white/25 transition-colors"
           >
             <Spotlight size={280} />
             <div className="relative z-10 space-y-2">
@@ -636,81 +598,15 @@ export function ArticleMarkup({
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Free Engineering Newsletter */}
-          <div
+          {/* Animated Free Engineering Newsletter */}
+          <NewsletterSignupBox
             id="article-newsletter"
-            className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b0f] p-5 flex flex-col justify-between gap-4"
-          >
-            <Spotlight size={280} />
-            <div className="relative z-10 space-y-2">
-              <div className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
-                <Mail className="w-3.5 h-3.5 text-zinc-300" />
-                <span>
-                  {isTr ? "ÜCRETSİZ HAFTALIK BÜLTEN" : "FREE ENGINEERING DISPATCH"}
-                </span>
-              </div>
-              <h2 className="font-archivo font-[800] text-lg text-white leading-snug">
-                {isTr
-                  ? "Yeni mimari otopsiler gelen kutunuzda"
-                  : "Get new architectural autopsies via email"}
-              </h2>
-              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                {isTr
-                  ? "Spam yok. Yalnızca gerçek üretim sistemleri, güvenlik vakaları ve AI maliyet analizleri."
-                  : "Zero spam. Only production post-mortems, security advisories, and AI unit economics."}
-              </p>
-            </div>
-
-            <form
-              onSubmit={handleNewsletterSubmit}
-              className="relative z-10 space-y-2 pt-1"
-            >
-              <div className="flex items-center gap-2">
-                <input
-                  type="email"
-                  required
-                  value={newsletterEmail}
-                  onChange={(e) => {
-                    setNewsletterEmail(e.target.value);
-                    if (newsletterStatus !== "idle") setNewsletterStatus("idle");
-                  }}
-                  placeholder={isTr ? "ornek@sirket.com" : "you@company.com"}
-                  aria-label="Email address for newsletter"
-                  className="flex-1 min-w-0 h-10 rounded-full border border-white/15 bg-black/70 px-4 text-xs font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 transition-colors"
-                />
-                <button
-                  type="submit"
-                  disabled={newsletterStatus === "loading"}
-                  className="h-10 px-4 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 disabled:opacity-60 transition-colors shrink-0 inline-flex items-center gap-1.5"
-                >
-                  {newsletterStatus === "loading" ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : newsletterStatus === "success" ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>{isTr ? "Abone Olundu" : "Subscribed"}</span>
-                    </>
-                  ) : (
-                    <span>{isTr ? "Katıl" : "Subscribe"}</span>
-                  )}
-                </button>
-              </div>
-              {newsletterStatus === "error" && newsletterError && (
-                <p className="text-[11px] font-mono text-red-400 px-1">
-                  {newsletterError}
-                </p>
-              )}
-              {newsletterStatus === "success" && (
-                <p className="text-[11px] font-mono text-emerald-400 px-1">
-                  {isTr
-                    ? "Kaydınız alındı. Teşekkürler."
-                    : "You're subscribed. Welcome aboard."}
-                </p>
-              )}
-            </form>
-          </div>
+            source={post.slug}
+            activeLang={activeLang}
+            delay={0.08}
+          />
         </section>
 
         {/* AEO Interactive Technical Q&A / FAQ Accordion */}
