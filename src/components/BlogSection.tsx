@@ -1,19 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { ArrowUpRight, Rss } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { getLocalizedSummary, type BlogPostSummary } from "@/data/blogIndex";
-import {
-  LinkedinIcon,
-  TwitterXIcon,
-  DevtoIcon,
-  MediumIcon,
-  GithubIcon,
-} from "./Icons";
 import { Spotlight } from "./core/spotlight";
 import { CoverflowGallery, CoverflowEssay } from "./core/coverflow";
+import PublishingNetworkGrid from "./PublishingNetworkGrid";
 
 export default function BlogSection({
   summaries = [],
@@ -101,55 +94,10 @@ export default function BlogSection({
             </p>
           </div>
 
-          <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 w-full">
-            {[
-              {
-                label: "LinkedIn",
-                href: "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
-                icon: <LinkedinIcon className="w-3.5 h-3.5 shrink-0" />,
-              },
-              {
-                label: "X",
-                href: "https://x.com/DevKursat",
-                icon: <TwitterXIcon className="w-3 h-3 shrink-0" />,
-              },
-              {
-                label: "DEV.to",
-                href: "https://dev.to/devkursat",
-                icon: <DevtoIcon className="w-3.5 h-3.5 shrink-0" />,
-              },
-              {
-                label: "Medium",
-                href: "https://medium.com/@ykursat054",
-                icon: <MediumIcon className="w-3.5 h-3.5 shrink-0" />,
-              },
-              {
-                label: "GitHub",
-                href: "https://github.com/DevKursat",
-                icon: <GithubIcon className="w-3.5 h-3.5 shrink-0" />,
-              },
-              {
-                label: "RSS",
-                href: lang === "tr" ? "/rss.xml" : `/rss.xml?lang=${lang}`,
-                icon: <Rss className="w-3.5 h-3.5 shrink-0" />,
-              },
-            ].map((channel) => (
-              <a
-                key={channel.label}
-                href={channel.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={channel.label}
-                className="flex h-10 px-3.5 items-center justify-between gap-2 rounded-xl border border-white/12 bg-white/[0.03] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all group/item"
-              >
-                <span className="inline-flex items-center gap-2 min-w-0 truncate">
-                  {channel.icon}
-                  <span className="truncate">{channel.label}</span>
-                </span>
-                <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover/item:opacity-100 transition-opacity shrink-0" />
-              </a>
-            ))}
-          </div>
+          <PublishingNetworkGrid
+            lang={lang}
+            rssHref={lang === "tr" ? "/rss.xml" : `/rss.xml?lang=${lang}`}
+          />
         </div>
       </motion.div>
     </section>

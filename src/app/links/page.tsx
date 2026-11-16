@@ -79,68 +79,77 @@ const KISISEL_LINKS: LinkBanner[] = [
     glow: "from-emerald-500/10 via-transparent to-transparent",
   },
   {
-    id: "github",
-    title: "GitHub",
-    handle: "github.com/DevKursat • Açık Kaynak & Sistemler",
-    url: "https://github.com/DevKursat",
-    watermark: <GithubIcon className="w-full h-full fill-current" />,
-    icon: <GithubIcon className="w-4 h-4 fill-current" />,
-    glow: "from-white/10 via-transparent to-transparent",
-  },
-  {
-    id: "linkedin",
-    title: "LinkedIn",
-    handle: "linkedin.com/in/kürşatyılmaz",
-    url: "https://www.linkedin.com/in/kürşatyılmaz/",
-    watermark: <LinkedinIcon className="w-full h-full fill-current" />,
-    icon: <LinkedinIcon className="w-4 h-4 fill-current text-blue-400" />,
-    glow: "from-blue-600/15 via-transparent to-transparent",
-  },
-  {
-    id: "twitter-kisisel",
-    title: "X (Twitter)",
-    handle: "@DevKursat • Yapay Zeka & Sistem Mühendisliği",
-    url: "https://x.com/DevKursat",
-    watermark: <TwitterXIcon className="w-full h-full fill-current" />,
-    icon: <TwitterXIcon className="w-4 h-4 fill-current" />,
-    glow: "from-zinc-400/10 via-transparent to-transparent",
-  },
-  {
     id: "instagram-kisisel",
     title: "Instagram",
     handle: "@kursat.yz • Kişisel Profil",
     url: "https://www.instagram.com/kursat.yz/",
     watermark: <InstagramIcon className="w-full h-full fill-current" />,
     icon: <InstagramIcon className="w-4 h-4 fill-current text-pink-400" />,
+    badge: "KİŞİSEL",
     glow: "from-pink-500/15 via-transparent to-transparent",
   },
-  {
-    id: "devto",
-    title: "DEV.to",
-    handle: "dev.to/devkursat • Teknik Makaleler & Mimariler",
-    url: "https://dev.to/devkursat",
-    watermark: <DevtoIcon className="w-full h-full fill-current" />,
-    icon: <DevtoIcon className="w-4 h-4 fill-current" />,
-    glow: "from-zinc-300/10 via-transparent to-transparent",
-  },
-  {
-    id: "medium",
-    title: "Medium",
-    handle: "medium.com/@ykursat054 • Global English Essays",
-    url: "https://medium.com/@ykursat054",
-    watermark: <MediumIcon className="w-full h-full fill-current" />,
-    icon: <MediumIcon className="w-4 h-4 fill-current" />,
-    glow: "from-zinc-400/10 via-transparent to-transparent",
-  },
+];
+
+const YAZILAR_LINKS: LinkBanner[] = [
   {
     id: "blog",
     title: "Teknik Günlük / Blog",
     handle: "kursat.itibar.app/blog • 9 Dilli Mühendislik Analizleri",
     url: "/blog",
     watermark: <FileText className="w-full h-full" />,
-    icon: <FileText className="w-4 h-4 text-zinc-200" />,
+    icon: <FileText className="w-4 h-4 text-emerald-400" />,
     badge: "9 DİL",
-    glow: "from-emerald-500/10 via-transparent to-transparent",
+    glow: "from-emerald-500/15 via-transparent to-transparent",
+  },
+  {
+    id: "devto",
+    title: "DEV.to",
+    handle: "dev.to/devkursat • Teknik Makaleler & Sistem Mimarileri",
+    url: "https://dev.to/devkursat",
+    watermark: <DevtoIcon className="w-full h-full fill-current" />,
+    icon: <DevtoIcon className="w-4 h-4 fill-current" />,
+    badge: "CODE",
+    glow: "from-zinc-300/10 via-transparent to-transparent",
+  },
+  {
+    id: "medium",
+    title: "Medium",
+    handle: "medium.com/@ykursat054 • Derinlemesine AI & Ürün Denemeleri",
+    url: "https://medium.com/@ykursat054",
+    watermark: <MediumIcon className="w-full h-full fill-current" />,
+    icon: <MediumIcon className="w-4 h-4 fill-current" />,
+    badge: "ESSAYS",
+    glow: "from-emerald-400/15 via-transparent to-transparent",
+  },
+  {
+    id: "linkedin",
+    title: "LinkedIn",
+    handle: "linkedin.com/in/kürşatyılmaz • Mühendislik Notları & Bülten",
+    url: "https://www.linkedin.com/in/kürşatyılmaz/",
+    watermark: <LinkedinIcon className="w-full h-full fill-current" />,
+    icon: <LinkedinIcon className="w-4 h-4 fill-current text-blue-400" />,
+    badge: "NETWORK",
+    glow: "from-blue-600/15 via-transparent to-transparent",
+  },
+  {
+    id: "twitter-kisisel",
+    title: "X (Twitter)",
+    handle: "@DevKursat • Yapay Zeka & Anlık Teknik Thread'ler",
+    url: "https://x.com/DevKursat",
+    watermark: <TwitterXIcon className="w-full h-full fill-current" />,
+    icon: <TwitterXIcon className="w-4 h-4 fill-current" />,
+    badge: "THREADS",
+    glow: "from-zinc-400/10 via-transparent to-transparent",
+  },
+  {
+    id: "github",
+    title: "GitHub",
+    handle: "github.com/DevKursat • Açık Kaynak & Mimari Repolar",
+    url: "https://github.com/DevKursat",
+    watermark: <GithubIcon className="w-full h-full fill-current" />,
+    icon: <GithubIcon className="w-4 h-4 fill-current" />,
+    badge: "OSS",
+    glow: "from-white/10 via-transparent to-transparent",
   },
 ];
 
@@ -195,7 +204,7 @@ const ANIMASYON_LINKS: LinkBanner[] = [
 ];
 
 export default function LinksPage() {
-  const [activeTab, setActiveTab] = useState<"kisisel" | "animasyon">("kisisel");
+  const [activeTab, setActiveTab] = useState<"kisisel" | "yazilar" | "animasyon">("kisisel");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [isCrumpling, setIsCrumpling] = useState(false);
 
@@ -206,12 +215,14 @@ export default function LinksPage() {
     setIsCrumpling(true);
   };
 
-  // Hash Routing support (#kisisel and #animasyon)
+  // Hash Routing support (#kisisel, #yazilar, #animasyon)
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.toLowerCase().replace("#", "");
       if (hash === "animasyon" || hash === "animation" || hash === "mizah") {
         setActiveTab("animasyon");
+      } else if (hash === "yazilar" || hash === "writing" || hash === "blog") {
+        setActiveTab("yazilar");
       } else if (hash === "kisisel" || hash === "personal") {
         setActiveTab("kisisel");
       }
@@ -222,7 +233,7 @@ export default function LinksPage() {
     return () => window.removeEventListener("hashchange", handleHash);
   }, []);
 
-  const switchTab = (tab: "kisisel" | "animasyon") => {
+  const switchTab = (tab: "kisisel" | "yazilar" | "animasyon") => {
     setActiveTab(tab);
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", `#${tab}`);
@@ -235,7 +246,12 @@ export default function LinksPage() {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const currentLinks = activeTab === "kisisel" ? KISISEL_LINKS : ANIMASYON_LINKS;
+  const currentLinks =
+    activeTab === "kisisel"
+      ? KISISEL_LINKS
+      : activeTab === "yazilar"
+      ? YAZILAR_LINKS
+      : ANIMASYON_LINKS;
 
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black font-sans antialiased overflow-x-hidden relative">
@@ -370,31 +386,29 @@ export default function LinksPage() {
                   </span>
                 </div>
 
-                {/* UNIFIED TOOLBAR: TOGGLE + 3D TAKTİL "ÖZÜNE DÖN" BUTONU (MOBİLDE VE MASAÜSTÜNDE KUSURSUZ ÖLÇEKLENEN DENGELİ TASARIM) */}
-                <div className="flex flex-row items-center justify-between gap-2.5 sm:gap-4 py-2 sm:py-3.5">
-                  {/* Segmented Switch: KİŞİSEL vs ANİMASYON */}
+                {/* UNIFIED TOOLBAR: 3-TAB SWITCHER + 3D TAKTİL "ÖZÜNE DÖN" BUTONU */}
+                <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 py-2 sm:py-3.5">
+                  {/* Segmented Switch: KİŞİSEL | YAZILAR | ANİMASYON */}
                   <div className="inline-flex p-0.5 sm:p-1 rounded-lg sm:rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
-                    <button
-                      onClick={() => switchTab("kisisel")}
-                      className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-mono tracking-wide sm:tracking-wider transition-all duration-200 ${
-                        activeTab === "kisisel"
-                          ? "bg-white text-black font-bold shadow-lg"
-                          : "text-zinc-400 hover:text-white"
-                      }`}
-                    >
-                      KİŞİSEL
-                    </button>
-
-                    <button
-                      onClick={() => switchTab("animasyon")}
-                      className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-mono tracking-wide sm:tracking-wider transition-all duration-200 ${
-                        activeTab === "animasyon"
-                          ? "bg-white text-black font-bold shadow-lg"
-                          : "text-zinc-400 hover:text-white"
-                      }`}
-                    >
-                      ANİMASYON
-                    </button>
+                    {(
+                      [
+                        { id: "kisisel", label: "KİŞİSEL" },
+                        { id: "yazilar", label: "YAZILAR" },
+                        { id: "animasyon", label: "ANİMASYON" },
+                      ] as const
+                    ).map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => switchTab(tab.id)}
+                        className={`px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-mono tracking-tight sm:tracking-wider transition-all duration-200 whitespace-nowrap ${
+                          activeTab === tab.id
+                            ? "bg-white text-black font-bold shadow-lg"
+                            : "text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
                   </div>
 
                   {/* 3D TAKTİL MEKANİK "ÖZÜNE DÖN" BUTONU (MOBİLDE ZARİF VE TAM ORANTILI) */}

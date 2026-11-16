@@ -21,6 +21,8 @@ import BlogLanguageSwitcher, {
 } from "@/components/BlogLanguageSwitcher";
 import NewsletterSignupBox from "@/components/NewsletterSignupBox";
 import TypeformContactModal from "@/components/TypeformContactModal";
+import PublishingNetworkGrid from "@/components/PublishingNetworkGrid";
+import { PUBLISHING_CHANNELS } from "@/data/publishingChannels";
 import {
   LinkedinIcon,
   TwitterXIcon,
@@ -227,6 +229,34 @@ function BlogArchiveContent({
           <p className="text-zinc-400 text-sm sm:text-base max-w-2xl font-normal leading-relaxed pt-1">
             {ui.archiveDesc}
           </p>
+
+          {/* Syndication Hub: Cross-Platform Writing Network */}
+          <div className="flex flex-wrap items-center gap-2 pt-3">
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 mr-1">
+              {activeLang === "tr" ? "YAYIN AĞI:" : "SYNDICATION:"}
+            </span>
+            {PUBLISHING_CHANNELS.map((channel) => {
+              const href = channel.id === "rss" ? rssHref : channel.href;
+              return (
+                <a
+                  key={channel.id}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black hover:border-white text-[11px] font-mono text-zinc-300 transition-all group/hub"
+                >
+                  {channel.id === "devto" && <DevtoIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "medium" && <MediumIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "linkedin" && <LinkedinIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "x" && <TwitterXIcon className="w-2.5 h-2.5 shrink-0" />}
+                  {channel.id === "github" && <GithubIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "rss" && <Rss className="w-3 h-3 shrink-0" />}
+                  <span>{channel.label}</span>
+                  <ArrowUpRight className="w-2.5 h-2.5 opacity-40 group-hover/hub:opacity-100 transition-opacity" />
+                </a>
+              );
+            })}
+          </div>
         </header>
 
         {/* Filter & Search Bar */}
@@ -446,61 +476,7 @@ function BlogArchiveContent({
             </p>
           </div>
 
-          <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 w-full">
-            {[
-              {
-                label: "LinkedIn",
-                ariaLabel: "LinkedIn",
-                href: "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
-                icon: <LinkedinIcon className="w-3.5 h-3.5 shrink-0" />,
-              },
-              {
-                label: "X",
-                ariaLabel: "X (Twitter)",
-                href: "https://x.com/DevKursat",
-                icon: <TwitterXIcon className="w-3 h-3 shrink-0" />,
-              },
-              {
-                label: "DEV.to",
-                ariaLabel: "DEV.to",
-                href: "https://dev.to/devkursat",
-                icon: <DevtoIcon className="w-3.5 h-3.5 shrink-0" />,
-              },
-              {
-                label: "Medium",
-                ariaLabel: "Medium",
-                href: "https://medium.com/@ykursat054",
-                icon: <MediumIcon className="w-3.5 h-3.5 shrink-0" />,
-              },
-              {
-                label: "GitHub",
-                ariaLabel: "GitHub",
-                href: "https://github.com/DevKursat",
-                icon: <GithubIcon className="w-3.5 h-3.5 shrink-0" />,
-              },
-              {
-                label: "RSS",
-                ariaLabel: ui.rssFeed,
-                href: rssHref,
-                icon: <Rss className="w-3.5 h-3.5 shrink-0" />,
-              },
-            ].map((channel) => (
-              <a
-                key={channel.label}
-                href={channel.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={channel.ariaLabel}
-                className="flex h-10 px-3.5 items-center justify-between gap-2 rounded-xl border border-white/12 bg-white/[0.03] text-xs font-mono text-zinc-200 hover:bg-white hover:text-black hover:border-white transition-all group"
-              >
-                <span className="inline-flex items-center gap-2 min-w-0 truncate">
-                  {channel.icon}
-                  <span className="truncate">{channel.label}</span>
-                </span>
-                <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 transition-opacity shrink-0" />
-              </a>
-            ))}
-          </div>
+          <PublishingNetworkGrid lang={activeLang} rssHref={rssHref} />
         </div>
       </div>
     </main>

@@ -1,5 +1,32 @@
 [
   {
+    "id": "sub_1794767114429_rjm0h",
+    "type": "newsletter",
+    "createdAt": "2026-11-15T18:25:14.429Z",
+    "email": "archive-test@example.com",
+    "source": "blog-archive",
+    "lang": "tr",
+    "read": false
+  },
+  {
+    "id": "sub_1794767085294_gxxkh",
+    "type": "newsletter",
+    "createdAt": "2026-11-15T18:24:45.294Z",
+    "email": "archive-test@example.com",
+    "source": "blog-archive",
+    "lang": "tr",
+    "read": false
+  },
+  {
+    "id": "sub_1794764305034_kgr57",
+    "type": "newsletter",
+    "createdAt": "2026-11-15T17:38:25.034Z",
+    "email": "test@example.com",
+    "source": "openai-chatgpt-wallet-ve-lovable-veri-sizintisi",
+    "lang": "tr",
+    "read": false
+  },
+  {
     "id": "msg_1794536471996_qdax0",
     "createdAt": "2026-11-13T02:21:11.996Z",
     "name": "Ahmet Yılmaz",
