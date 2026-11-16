@@ -1,5 +1,15 @@
 export interface PublishingChannel {
-  id: "devto" | "medium" | "linkedin" | "x" | "rss";
+  id:
+    | "devto"
+    | "medium"
+    | "hashnode"
+    | "hackernoon"
+    | "indiehackers"
+    | "aposto"
+    | "linkedin"
+    | "x"
+    | "bluesky"
+    | "rss";
   label: string;
   handle: string;
   href: string;
@@ -17,18 +27,58 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     href: "https://dev.to/devkursat",
     focusTr: "Teknik Makaleler & Sistem Mimarileri",
     focusEn: "Technical Articles & Architectures",
-    badge: "CODE",
+    badge: "EN / TR",
     glow: "from-zinc-300/15 via-transparent to-transparent",
+  },
+  {
+    id: "hashnode",
+    label: "Hashnode",
+    handle: "@devkursat",
+    href: "https://hashnode.com/@devkursat",
+    focusTr: "Canonical Teknik Derin Analizler",
+    focusEn: "Canonical Engineering Deep-Dives",
+    badge: "EN",
+    glow: "from-blue-500/15 via-transparent to-transparent",
   },
   {
     id: "medium",
     label: "Medium",
     handle: "@ykursat054",
     href: "https://medium.com/@ykursat054",
-    focusTr: "Derinlemesine AI & Ürün Denemeleri",
+    focusTr: "AI & Ürün Denemeleri (TR/EN Yayınlar)",
     focusEn: "Global AI & Product Essays",
-    badge: "ESSAYS",
+    badge: "TR / EN",
     glow: "from-emerald-400/15 via-transparent to-transparent",
+  },
+  {
+    id: "hackernoon",
+    label: "HackerNoon",
+    handle: "hackernoon.com/u/devkursat",
+    href: "https://hackernoon.com/u/devkursat",
+    focusTr: "Editör Onaylı AI & Mimari İncelemeler",
+    focusEn: "Editorial AI & Systems Features",
+    badge: "EN",
+    glow: "from-lime-400/15 via-transparent to-transparent",
+  },
+  {
+    id: "indiehackers",
+    label: "Indie Hackers",
+    handle: "indiehackers.com/devkursat",
+    href: "https://www.indiehackers.com/devkursat",
+    focusTr: "İtibar & Unutma. Ürün Geliştirme Günlükleri",
+    focusEn: "Building in Public & SaaS Revenue",
+    badge: "EN",
+    glow: "from-sky-400/15 via-transparent to-transparent",
+  },
+  {
+    id: "aposto",
+    label: "Aposto!",
+    handle: "aposto.com",
+    href: "https://aposto.com",
+    focusTr: "Türkiye Odaklı Teknoloji & AI Bülteni",
+    focusEn: "Turkey Tech & AI Editorial Dispatch",
+    badge: "TR",
+    glow: "from-rose-400/15 via-transparent to-transparent",
   },
   {
     id: "linkedin",
@@ -37,8 +87,8 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     href: "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
     focusTr: "Mühendislik Notları & Bülten",
     focusEn: "Engineering Notes & Newsletter",
-    badge: "NETWORK",
-    glow: "from-blue-500/15 via-transparent to-transparent",
+    badge: "TR / EN",
+    glow: "from-blue-600/15 via-transparent to-transparent",
   },
   {
     id: "x",
@@ -47,17 +97,27 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     href: "https://x.com/DevKursat",
     focusTr: "Anlık AI Analizleri & Thread'ler",
     focusEn: "Real-Time AI Threads & Notes",
-    badge: "THREADS",
+    badge: "TR / EN",
     glow: "from-zinc-400/15 via-transparent to-transparent",
+  },
+  {
+    id: "bluesky",
+    label: "Bluesky",
+    handle: "@devkursat.bsky.social",
+    href: "https://bsky.app/profile/devkursat.bsky.social",
+    focusTr: "Açık Kaynak & AI Araştırma Akışı",
+    focusEn: "Open Source & AI Research Feed",
+    badge: "EN",
+    glow: "from-cyan-400/15 via-transparent to-transparent",
   },
   {
     id: "rss",
     label: "RSS",
     handle: "/rss.xml",
     href: "/rss.xml",
-    focusTr: "Doğrudan Sindikasyon Akışı",
-    focusEn: "Direct Syndication Feed",
-    badge: "FEED",
+    focusTr: "Doğrudan 9 Dilli Sindikasyon Akışı",
+    focusEn: "Direct 9-Language Syndication Feed",
+    badge: "9 DİL",
     glow: "from-amber-400/15 via-transparent to-transparent",
   },
 ];

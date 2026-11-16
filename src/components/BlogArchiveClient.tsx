@@ -24,9 +24,14 @@ import TypeformContactModal from "@/components/TypeformContactModal";
 import PublishingNetworkGrid from "@/components/PublishingNetworkGrid";
 import { PUBLISHING_CHANNELS } from "@/data/publishingChannels";
 import {
+  ApostoIcon,
+  BlueskyIcon,
   LinkedinIcon,
   TwitterXIcon,
   DevtoIcon,
+  HackerNoonIcon,
+  HashnodeIcon,
+  IndieHackersIcon,
   MediumIcon,
   GithubIcon,
 } from "@/components/Icons";
@@ -246,9 +251,14 @@ function BlogArchiveContent({
                   className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black hover:border-white text-[11px] font-mono text-zinc-300 transition-all group/hub"
                 >
                   {channel.id === "devto" && <DevtoIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "hashnode" && <HashnodeIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "medium" && <MediumIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "hackernoon" && <HackerNoonIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "indiehackers" && <IndieHackersIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "aposto" && <ApostoIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "linkedin" && <LinkedinIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "x" && <TwitterXIcon className="w-2.5 h-2.5 shrink-0" />}
+                  {channel.id === "bluesky" && <BlueskyIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "rss" && <Rss className="w-3 h-3 shrink-0" />}
                   <span>{channel.label}</span>
                   <ArrowUpRight className="w-2.5 h-2.5 opacity-40 group-hover/hub:opacity-100 transition-opacity" />
