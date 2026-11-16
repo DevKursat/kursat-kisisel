@@ -271,9 +271,9 @@ function BlogArchiveContent({
         </header>
 
         {/* Filter & Search Bar */}
-        <div className="mb-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+        <div className="mb-10 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5 pb-6 border-b border-white/10">
           {/* Category Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden whitespace-nowrap lg:flex-wrap pb-0.5 lg:pb-0">
             {[
               { id: "all", label: `${ui.catAll} (${posts.length})` },
               { id: "mimari", label: ui.catMimari },
@@ -285,7 +285,7 @@ function BlogArchiveContent({
                 key={cat.id}
                 type="button"
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all ${
+                className={`shrink-0 px-3.5 py-2 lg:py-1.5 rounded-full text-xs font-mono transition-all ${
                   selectedCategory === cat.id
                     ? "bg-white text-black font-semibold"
                     : "border border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white hover:border-white/20"
@@ -297,22 +297,22 @@ function BlogArchiveContent({
           </div>
 
           {/* Quick Search Input */}
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
+          <div className="relative w-full lg:w-72 shrink-0">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={ui.searchPlaceholder}
               aria-label={ui.searchPlaceholder}
-              className="w-full bg-[#0c0c0e] border border-white/10 rounded-full pl-9 pr-8 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 font-mono transition-colors"
+              className="w-full bg-white/[0.03] border border-white/12 rounded-xl lg:rounded-full pl-9 pr-9 py-2.5 lg:py-2 text-sm lg:text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:bg-[#0c0c0e] font-mono transition-colors"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
                 aria-label={ui.clearFilters}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-zinc-400 hover:text-white transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-white transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
