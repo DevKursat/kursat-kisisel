@@ -7,9 +7,11 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowUpRight,
+  Flame,
   Search,
   BookOpen,
   Rss,
+  Sparkles,
   Terminal,
   X,
 } from "lucide-react";
@@ -29,7 +31,6 @@ import {
   LinkedinIcon,
   TwitterXIcon,
   DevtoIcon,
-  HackerNoonIcon,
   HashnodeIcon,
   IndieHackersIcon,
   MediumIcon,
@@ -254,8 +255,9 @@ function BlogArchiveContent({
                   {channel.id === "devto" && <DevtoIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "hashnode" && <HashnodeIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "medium" && <MediumIcon className="w-3 h-3 shrink-0" />}
-                  {channel.id === "hackernoon" && <HackerNoonIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "dailydev" && <Sparkles className="w-3 h-3 shrink-0" />}
                   {channel.id === "indiehackers" && <IndieHackersIcon className="w-3 h-3 shrink-0" />}
+                  {channel.id === "hackernews" && <Flame className="w-3 h-3 shrink-0" />}
                   {channel.id === "aposto" && <ApostoIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "linkedin" && <LinkedinIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "x" && <TwitterXIcon className="w-2.5 h-2.5 shrink-0" />}

@@ -3,8 +3,9 @@ export interface PublishingChannel {
     | "devto"
     | "medium"
     | "hashnode"
-    | "hackernoon"
+    | "dailydev"
     | "indiehackers"
+    | "hackernews"
     | "aposto"
     | "linkedin"
     | "x"
@@ -34,8 +35,8 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
   {
     id: "hashnode",
     label: "Hashnode",
-    handle: "@devkursat",
-    href: "https://hashnode.com/@devkursat",
+    handle: "@kursatyz",
+    href: "https://hashnode.com/@kursatyz",
     focusTr: "Canonical Teknik Derin Analizler",
     focusEn: "Canonical Engineering Deep-Dives",
     badge: "EN",
@@ -52,24 +53,34 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     glow: "from-emerald-400/15 via-transparent to-transparent",
   },
   {
-    id: "hackernoon",
-    label: "HackerNoon",
-    handle: "hackernoon.com/u/devkursat",
-    href: "https://hackernoon.com/u/devkursat",
-    focusTr: "Editör Onaylı AI & Mimari İncelemeler",
-    focusEn: "Editorial AI & Systems Features",
+    id: "dailydev",
+    label: "daily.dev",
+    handle: "@kursatyz",
+    href: "https://app.daily.dev/",
+    focusTr: "Geliştirici RSS & Keşif Akışı",
+    focusEn: "Global Developer Discovery Feed",
     badge: "EN",
-    glow: "from-lime-400/15 via-transparent to-transparent",
+    glow: "from-purple-500/15 via-transparent to-transparent",
   },
   {
     id: "indiehackers",
     label: "Indie Hackers",
-    handle: "indiehackers.com/devkursat",
-    href: "https://www.indiehackers.com/devkursat",
+    handle: "indiehackers.com/kursatyz",
+    href: "https://www.indiehackers.com/kursatyz",
     focusTr: "İtibar & Unutma. Ürün Geliştirme Günlükleri",
     focusEn: "Building in Public & SaaS Revenue",
     badge: "EN",
     glow: "from-sky-400/15 via-transparent to-transparent",
+  },
+  {
+    id: "hackernews",
+    label: "Hacker News",
+    handle: "id=kursatyz",
+    href: "https://news.ycombinator.com/user?id=kursatyz",
+    focusTr: "Show HN & Mimari Tartışmalar",
+    focusEn: "Show HN & Systems Discussions",
+    badge: "EN",
+    glow: "from-orange-500/15 via-transparent to-transparent",
   },
   {
     id: "aposto",
@@ -114,8 +125,8 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
   {
     id: "bluesky",
     label: "Bluesky",
-    handle: "@devkursat.bsky.social",
-    href: "https://bsky.app/profile/devkursat.bsky.social",
+    handle: "@kursatyz.bsky.social",
+    href: "https://bsky.app/profile/kursatyz.bsky.social",
     focusTr: "Açık Kaynak & AI Araştırma Akışı",
     focusEn: "Open Source & AI Research Feed",
     badge: "EN",

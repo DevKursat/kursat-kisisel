@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Check, Mail, FileText, Sparkles, RotateCcw } from "lucide-react";
+import { ArrowUpRight, Check, Mail, FileText, Flame, Sparkles, RotateCcw } from "lucide-react";
 import {
   ApostoIcon,
   BlueskyIcon,
@@ -13,7 +13,6 @@ import {
   LinkedinIcon,
   InstagramIcon,
   DevtoIcon,
-  HackerNoonIcon,
   HashnodeIcon,
   IndieHackersIcon,
   RedditIcon,
@@ -130,8 +129,8 @@ const YAZILAR_LINKS: LinkBanner[] = [
   {
     id: "hashnode",
     title: "Hashnode",
-    handle: "hashnode.com/@devkursat • Canonical Teknik Derin Analizler",
-    url: "https://hashnode.com/@devkursat",
+    handle: "hashnode.com/@kursatyz • Canonical Teknik Derin Analizler",
+    url: "https://hashnode.com/@kursatyz",
     watermark: <HashnodeIcon className="w-full h-full fill-current" />,
     icon: <HashnodeIcon className="w-4 h-4 fill-current text-blue-400" />,
     badge: "EN",
@@ -148,24 +147,34 @@ const YAZILAR_LINKS: LinkBanner[] = [
     glow: "from-emerald-400/15 via-transparent to-transparent",
   },
   {
-    id: "hackernoon",
-    title: "HackerNoon",
-    handle: "hackernoon.com/u/devkursat • Editör Onaylı AI & Mimari",
-    url: "https://hackernoon.com/u/devkursat",
-    watermark: <HackerNoonIcon className="w-full h-full fill-current" />,
-    icon: <HackerNoonIcon className="w-4 h-4 fill-current text-lime-400" />,
+    id: "dailydev",
+    title: "daily.dev",
+    handle: "@kursatyz • Global Developer Discovery Feed",
+    url: "https://app.daily.dev/",
+    watermark: <Sparkles className="w-full h-full" />,
+    icon: <Sparkles className="w-4 h-4 text-purple-400" />,
     badge: "EN",
-    glow: "from-lime-400/15 via-transparent to-transparent",
+    glow: "from-purple-500/15 via-transparent to-transparent",
   },
   {
     id: "indiehackers",
     title: "Indie Hackers",
-    handle: "indiehackers.com/devkursat • İtibar & Unutma. Gelir Günlükleri",
-    url: "https://www.indiehackers.com/devkursat",
+    handle: "indiehackers.com/kursatyz • İtibar & Unutma. Gelir Günlükleri",
+    url: "https://www.indiehackers.com/kursatyz",
     watermark: <IndieHackersIcon className="w-full h-full fill-current" />,
     icon: <IndieHackersIcon className="w-4 h-4 fill-current text-sky-400" />,
     badge: "EN",
     glow: "from-sky-400/15 via-transparent to-transparent",
+  },
+  {
+    id: "hackernews",
+    title: "Hacker News",
+    handle: "news.ycombinator.com/user?id=kursatyz • Show HN & Mimari",
+    url: "https://news.ycombinator.com/user?id=kursatyz",
+    watermark: <Flame className="w-full h-full" />,
+    icon: <Flame className="w-4 h-4 text-orange-400" />,
+    badge: "EN",
+    glow: "from-orange-500/15 via-transparent to-transparent",
   },
   {
     id: "aposto",
@@ -210,8 +219,8 @@ const YAZILAR_LINKS: LinkBanner[] = [
   {
     id: "bluesky",
     title: "Bluesky",
-    handle: "@devkursat.bsky.social • Açık Kaynak & AI Araştırma Akışı",
-    url: "https://bsky.app/profile/devkursat.bsky.social",
+    handle: "@kursatyz.bsky.social • Açık Kaynak & AI Araştırma Akışı",
+    url: "https://bsky.app/profile/kursatyz.bsky.social",
     watermark: <BlueskyIcon className="w-full h-full fill-current" />,
     icon: <BlueskyIcon className="w-4 h-4 fill-current text-cyan-400" />,
     badge: "EN",

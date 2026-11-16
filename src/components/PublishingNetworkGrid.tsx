@@ -1,12 +1,11 @@
 "use client";
 
-import { ArrowUpRight, Rss } from "lucide-react";
+import { ArrowUpRight, Flame, Rss, Sparkles } from "lucide-react";
 import { PUBLISHING_CHANNELS, type PublishingChannel } from "@/data/publishingChannels";
 import {
   ApostoIcon,
   BlueskyIcon,
   DevtoIcon,
-  HackerNoonIcon,
   HashnodeIcon,
   IndieHackersIcon,
   LinkedinIcon,
@@ -23,10 +22,12 @@ function renderChannelIcon(id: PublishingChannel["id"]) {
       return <HashnodeIcon className="w-4 h-4 shrink-0 text-blue-400 group-hover/item:text-current transition-colors" />;
     case "medium":
       return <MediumIcon className="w-4 h-4 shrink-0" />;
-    case "hackernoon":
-      return <HackerNoonIcon className="w-4 h-4 shrink-0 text-lime-400 group-hover/item:text-current transition-colors" />;
+    case "dailydev":
+      return <Sparkles className="w-4 h-4 shrink-0 text-purple-400 group-hover/item:text-current transition-colors" />;
     case "indiehackers":
       return <IndieHackersIcon className="w-4 h-4 shrink-0 text-sky-400 group-hover/item:text-current transition-colors" />;
+    case "hackernews":
+      return <Flame className="w-4 h-4 shrink-0 text-orange-400 group-hover/item:text-current transition-colors" />;
     case "aposto":
       return <ApostoIcon className="w-4 h-4 shrink-0 text-rose-400 group-hover/item:text-current transition-colors" />;
     case "linkedin":
