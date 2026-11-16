@@ -6,6 +6,8 @@ import {
   type BlogPostSummaryTranslation,
 } from "./blogIndex";
 
+import post00a from "./posts/anthropic-ipo-26-milyar-dongusel-sermaye";
+import post00b from "./posts/alibaba-qwen4-max-kapali-model-carki";
 import post01 from "./posts/openai-chatgpt-wallet-ve-lovable-veri-sizintisi";
 import post02 from "./posts/nvidia-jensen-huang-megaspeed-skandali";
 import post03 from "./posts/claude-code-secret-leak-gitignore-skandali";
@@ -23,6 +25,8 @@ import post13 from "./posts/10-kasim-teknolojik-egemenlik-ve-ataturk";
 export * from "./blogIndex";
 
 export const BLOG_POSTS: BlogPostItem[] = [
+  post00a,
+  post00b,
   post01,
   post02,
   post03,
