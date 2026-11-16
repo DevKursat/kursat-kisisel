@@ -78,7 +78,7 @@ const translations: Record<Language, Record<string, string>> = {
     "blog.titleEnd": "deneyimler.",
     "blog.read": "Yazıyı Oku",
     "blog.close": "Kapat",
-    "blog.linkedin.title": "10.000+ Takipçi ile Günlük Teknoloji Gündemi",
+    "blog.linkedin.title": "100.000+ Takipçi ile Günlük Teknoloji Gündemi",
     "blog.linkedin.desc":
       "LinkedIn üzerinde her gün yapay zekâ mimarisi, otonom sistemler ve teknoloji dünyasındaki kırılma noktalarını analiz eden derinlemesine yayınlar.",
     "blog.linkedin.btn": "LinkedIn'de İncele",
@@ -183,7 +183,7 @@ const translations: Record<Language, Record<string, string>> = {
     "blog.titleEnd": "insights.",
     "blog.read": "Read Essay",
     "blog.close": "Close",
-    "blog.linkedin.title": "10,000+ Followers & Daily Tech Dispatches",
+    "blog.linkedin.title": "100,000+ Followers & Daily Tech Dispatches",
     "blog.linkedin.desc":
       "Daily analytical publications decoding autonomous AI architecture, distributed systems, and frontier technology breakthroughs on LinkedIn.",
     "blog.linkedin.btn": "Connect on LinkedIn",

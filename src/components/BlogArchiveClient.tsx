@@ -237,8 +237,8 @@ function BlogArchiveContent({
           </p>
 
           {/* Syndication Hub: Cross-Platform Writing Network */}
-          <div className="flex flex-wrap items-center gap-2 pt-3">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 mr-1">
+          <div className="flex items-center gap-1.5 pt-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden whitespace-nowrap">
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 mr-1 shrink-0">
               {activeLang === "tr" ? "YAYIN AĞI:" : "SYNDICATION:"}
             </span>
             {PUBLISHING_CHANNELS.map((channel) => {
@@ -249,7 +249,7 @@ function BlogArchiveContent({
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black hover:border-white text-[11px] font-mono text-zinc-300 transition-all group/hub"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white hover:text-black hover:border-white text-[11px] font-mono text-zinc-300 transition-all group/hub shrink-0"
                 >
                   {channel.id === "devto" && <DevtoIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "hashnode" && <HashnodeIcon className="w-3 h-3 shrink-0" />}
@@ -475,7 +475,13 @@ function BlogArchiveContent({
         </motion.section>
 
         {/* Community Banner at bottom (LinkedIn, X, DEV.to, Medium, GitHub, RSS) */}
-        <div className="mt-8 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141416] to-[#0a0a0c] p-5 sm:p-7 flex flex-col gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ type: "spring", stiffness: 260, damping: 24 }}
+          className="mt-8 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141416] to-[#0a0a0c] p-5 sm:p-7 flex flex-col gap-5"
+        >
           <Spotlight size={420} />
 
           <div className="relative z-10 max-w-2xl space-y-1.5">
@@ -488,7 +494,7 @@ function BlogArchiveContent({
           </div>
 
           <PublishingNetworkGrid lang={activeLang} rssHref={rssHref} />
-        </div>
+        </motion.div>
       </div>
     </main>
   );

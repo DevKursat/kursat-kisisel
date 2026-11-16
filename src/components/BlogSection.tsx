@@ -82,7 +82,13 @@ export default function BlogSection({
         </div>
 
         {/* Social & Publishing Channels Portal */}
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141416] to-[#0a0a0c] p-5 sm:p-7 flex flex-col gap-5 group hover:border-white/25 transition-all">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ type: "spring", stiffness: 260, damping: 24 }}
+          className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141416] to-[#0a0a0c] p-5 sm:p-7 flex flex-col gap-5 group hover:border-white/25 transition-all"
+        >
           <Spotlight size={420} />
 
           <div className="relative z-10 max-w-2xl space-y-1.5">
@@ -98,7 +104,7 @@ export default function BlogSection({
             lang={lang}
             rssHref={lang === "tr" ? "/rss.xml" : `/rss.xml?lang=${lang}`}
           />
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   );
