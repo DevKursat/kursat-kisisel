@@ -33,6 +33,7 @@ import {
   HashnodeIcon,
   IndieHackersIcon,
   MediumIcon,
+  RedditIcon,
   GithubIcon,
 } from "@/components/Icons";
 import {
@@ -258,6 +259,7 @@ function BlogArchiveContent({
                   {channel.id === "aposto" && <ApostoIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "linkedin" && <LinkedinIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "x" && <TwitterXIcon className="w-2.5 h-2.5 shrink-0" />}
+                  {channel.id === "reddit" && <RedditIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "bluesky" && <BlueskyIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "rss" && <Rss className="w-3 h-3 shrink-0" />}
                   <span>{channel.label}</span>

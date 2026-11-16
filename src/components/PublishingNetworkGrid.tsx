@@ -11,6 +11,7 @@ import {
   IndieHackersIcon,
   LinkedinIcon,
   MediumIcon,
+  RedditIcon,
   TwitterXIcon,
 } from "./Icons";
 
@@ -32,6 +33,8 @@ function renderChannelIcon(id: PublishingChannel["id"]) {
       return <LinkedinIcon className="w-4 h-4 shrink-0 text-blue-400 group-hover/item:text-current transition-colors" />;
     case "x":
       return <TwitterXIcon className="w-3.5 h-3.5 shrink-0" />;
+    case "reddit":
+      return <RedditIcon className="w-4 h-4 shrink-0 text-orange-500 group-hover/item:text-current transition-colors" />;
     case "bluesky":
       return <BlueskyIcon className="w-4 h-4 shrink-0 text-cyan-400 group-hover/item:text-current transition-colors" />;
     case "rss":

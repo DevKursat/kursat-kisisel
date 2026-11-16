@@ -8,6 +8,7 @@ export interface PublishingChannel {
     | "aposto"
     | "linkedin"
     | "x"
+    | "reddit"
     | "bluesky"
     | "rss";
   label: string;
@@ -99,6 +100,16 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     focusEn: "Real-Time AI Threads & Notes",
     badge: "TR / EN",
     glow: "from-zinc-400/15 via-transparent to-transparent",
+  },
+  {
+    id: "reddit",
+    label: "Reddit",
+    handle: "u/DevKursat",
+    href: "https://www.reddit.com/user/DevKursat/",
+    focusTr: "r/LocalLLaMA & Teknik Topluluk Tartışmaları",
+    focusEn: "r/LocalLLaMA & Engineering Discussions",
+    badge: "TR / EN",
+    glow: "from-orange-500/15 via-transparent to-transparent",
   },
   {
     id: "bluesky",
