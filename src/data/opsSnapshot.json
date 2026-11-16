@@ -1,0 +1,232 @@
+{
+  "syncedAt": "2026-11-16T10:59:34.672Z",
+  "performanceLog": [
+    {
+      "date": "2026-10-15",
+      "topic": "Apple Ekosistem & Mühendislik Analizi",
+      "platform": "linkedin",
+      "vse": 96,
+      "publishTime": "12:35",
+      "impressions": 127466,
+      "comments": 142,
+      "notes": "Tier-1 launch window benchmark"
+    },
+    {
+      "date": "2026-10-28",
+      "topic": "Claude Code Trojan & Tedarik Zinciri Güvenliği",
+      "platform": "linkedin",
+      "vse": 91,
+      "publishTime": "18:30",
+      "impressions": 40000,
+      "comments": 64,
+      "notes": "Strong developer tribalism & security urgency"
+    },
+    {
+      "date": "2026-11-02",
+      "topic": "Sam Altman & Compute Tekelleri",
+      "platform": "linkedin",
+      "vse": 90,
+      "publishTime": "18:30",
+      "impressions": 36000,
+      "comments": 51,
+      "notes": "High executive dwell time"
+    },
+    {
+      "date": "2026-11-15",
+      "slug": "openai-chatgpt-wallet-ve-lovable-veri-sizintisi",
+      "topic": "ChatGPT Wallet & Lovable RLS Sızıntısı",
+      "platform": "all",
+      "vse": 92,
+      "publishTime": "18:30",
+      "impressions": null,
+      "comments": null,
+      "notes": "Awaiting 24h metrics update"
+    }
+  ],
+  "radarLog": [],
+  "radarState": {
+    "date": "2026-11-16",
+    "repliesCountToday": 8,
+    "repliedTweetIds": [
+      "https://x.com/svpino/status/1610984481342771200",
+      "https://x.com/simonw/status/2121695097674981849",
+      "https://x.com/garrytan/status/1690019429965537281",
+      "https://x.com/mitchellh/status/2121681502316757065",
+      "https://x.com/swyx/status/1281424520100737025",
+      "https://x.com/lexfridman/status/2122015845031264350",
+      "https://x.com/paulg/status/2122114597494866218",
+      "https://x.com/bindureddy/status/2122103295410094466"
+    ],
+    "repliedTargetsToday": [
+      "svpino",
+      "simonw",
+      "garrytan",
+      "mitchellh",
+      "swyx",
+      "lexfridman",
+      "paulg",
+      "bindureddy"
+    ],
+    "lastActionTimestamp": 1794801036440,
+    "devtoCommentsCountToday": 5,
+    "commentedArticleUrls": [
+      "https://dev.to/earlgreyhot1701d/ghost-rovers-i-called-12-machines-nasa-left-behind-one-picked-up-2575",
+      "https://dev.to/amananandrai/avengers-doomsday-is-5-weeks-away-so-i-built-hexagon-readme-badges-what-are-you-building-32d6",
+      "https://dev.to/canad1an/numbering-photos-is-easy-letting-people-reorder-them-is-not-2d99",
+      "https://dev.to/ben/long-live-rails-3p21",
+      "https://dev.to/mishmanners/how-to-deploy-to-azure-when-you-built-something-with-ai-4mk3"
+    ]
+  },
+  "latestPublish": {
+    "id": "post-2026-11-13-microsoft-claude-cokus",
+    "title": "Bulutun %99.99 SLA Yalanı: Microsoft ve Claude Aynı Gün Çökünce Korkan CTO'lar",
+    "scheduledDate": "2026-11-13",
+    "scheduledWindow": "18:30",
+    "status": "published",
+    "publishedAt": "2026-11-13T15:31:44.140Z",
+    "blogSlug": "microsoft-ve-claude-cokus-bulut-sla-yalani",
+    "publishedUrls": {
+      "blog": null,
+      "x": "https://x.com/DevKursat",
+      "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+      "devto": "https://dev.to/devkursat/the-9999-cloud-sla-lie-when-microsoft-and-claude-go-down-together-5e11"
+    }
+  },
+  "queue": [
+    {
+      "id": "post-2026-11-02-altman-ram",
+      "title": "Sam Altman RAM Skandalı & Donanım Egemenliği",
+      "scheduledDate": "2026-11-02",
+      "scheduledWindow": null,
+      "status": "published",
+      "publishedAt": "2026-11-02T14:24:00+03:00",
+      "blogSlug": null,
+      "publishedUrls": {
+        "blog": "https://devkursat.github.io/blog/sam-altman-ram-krizi.html",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/feed/update/urn:li:activity:7522981375197474816/",
+        "devto": "https://dev.to/devkursat/sam-altmans-hardware-gaslighting-why-local-inference-terrifies-cloud-ai-monopolies-4gb9"
+      }
+    },
+    {
+      "id": "post-2026-11-03-ollama-tax",
+      "title": "Ollama'nın 'Kolaylık Vergisi' ve vLLM / llama.cpp İsyanı",
+      "scheduledDate": "2026-11-03",
+      "scheduledWindow": null,
+      "status": "published",
+      "publishedAt": "2026-11-03T12:53:44.560Z",
+      "blogSlug": "ollama-performans-vergisi-vllm",
+      "publishedUrls": {
+        "blog": "https://devkursat.github.io/blog/ollama-performans-vergisi-vllm.html",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/devkursat/the-40-performance-tax-of-ollama-why-developers-are-moving-back-to-raw-llamacpp-and-vllm-2ccn"
+      }
+    },
+    {
+      "id": "post-2026-11-04-qwen-open-source",
+      "title": "Alibaba'dan Resmi Rest: Qwen Sonuna Kadar Açık Kaynak Kalacak",
+      "scheduledDate": "2026-11-04",
+      "scheduledWindow": null,
+      "status": "published",
+      "publishedAt": "2026-11-04T11:16:16.165Z",
+      "blogSlug": "qwen-acik-kaynak-silikon-vadisi",
+      "publishedUrls": {
+        "blog": "https://devkursat.github.io/blog/qwen-acik-kaynak-silikon-vadisi.html",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/devkursat/alibabas-sovereign-ai-gambit-why-qwens-open-source-forever-pledge-is-shaking-silicon-valley-2gbe"
+      }
+    },
+    {
+      "id": "post-2026-11-05-ai-boomerang",
+      "title": "AI Bumerangı: Şirketlerin Sessizce Mühendislere Teslim Oluşu",
+      "scheduledDate": "2026-11-05",
+      "scheduledWindow": "16:45",
+      "status": "published",
+      "publishedAt": "2026-11-05T13:46:04.456Z",
+      "blogSlug": "ai-bumerangi-muhendislerin-donusu",
+      "publishedUrls": {
+        "blog": "https://devkursat.github.io/blog/ai-bumerangi-muhendislerin-donusu.html",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/devkursat/the-ai-layoff-boomerang-why-companies-are-quietly-rehiring-the-engineers-they-fired-3po3"
+      }
+    },
+    {
+      "id": "post-2026-11-07-openai-linux-exploit",
+      "title": "OpenAI'ın 1.2 Milyon Dolarlık Linux Exploit Şovu ve Açık Kaynağın Çilesi",
+      "scheduledDate": "2026-11-07",
+      "scheduledWindow": "14:30",
+      "status": "published",
+      "publishedAt": "2026-11-07T17:50:00+03:00",
+      "blogSlug": "openai-1-2-milyon-dolarlik-linux-exploit-skandali",
+      "publishedUrls": {
+        "blog": "https://devkursat.github.io/blog/openai-1-2-milyon-dolarlik-linux-exploit-skandali.html",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "x": "https://x.com/DevKursat",
+        "devto": "https://dev.to/devkursat/openais-12m-linux-exploit-run-why-automated-vulnerability-flooding-is-an-open-source-tax-53ab"
+      }
+    },
+    {
+      "id": "post-2026-11-09-nvidia-jensen-honeypot",
+      "title": "Nvidia 3.5 Trilyonluk Bal Tuzağı Skandalı & Donanım Zafiyeti",
+      "scheduledDate": "2026-11-09",
+      "scheduledWindow": "16:45",
+      "status": "published",
+      "publishedAt": "2026-11-09T18:58:44.129Z",
+      "blogSlug": "nvidia-jensen-huang-cin-casusluk-skandali",
+      "publishedUrls": {
+        "blog": "https://devkursat.github.io/blog/nvidia-jensen-huang-cin-casusluk-skandali.html",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/devkursat/the-35-trillion-single-point-of-failure-why-hardware-monopolies-always-break-at-the-human-layer-491b"
+      }
+    },
+    {
+      "id": "post-2026-11-10-ataturk-bagimsizlik",
+      "title": "10 Kasım ve Teknolojik Egemenlik: İstikbal Göklerdedir'den Amerikan API Bayiliğine",
+      "scheduledDate": "2026-11-10",
+      "scheduledWindow": "09:20",
+      "status": "published",
+      "publishedAt": "2026-11-10T06:22:31.179Z",
+      "blogSlug": "10-kasim-teknolojik-egemenlik-ve-ataturk",
+      "publishedUrls": {
+        "blog": "https://devkursat.github.io/blog/10-kasim-teknolojik-egemenlik-ve-ataturk.html",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/devkursat/digital-colonialism-the-architecture-of-sovereign-compute-what-early-aviation-teaches-us-about-3la"
+      }
+    },
+    {
+      "id": "post-2026-11-11-meta-ai-fragile-codebase",
+      "title": "Meta Mühendisinin AI İtirafı: \"Kodun %90'ını Yapay Zekâya Yazdırdık, Canlı Ortam Çöktü\"",
+      "scheduledDate": "2026-11-11",
+      "scheduledWindow": "18:00",
+      "status": "published",
+      "publishedAt": "2026-11-11T17:22:28.761Z",
+      "blogSlug": "meta-muhendisi-yapay-zeka-kod-itirafi-ve-kirilgan-mimari",
+      "publishedUrls": {
+        "blog": "https://devkursat.github.io/blog/meta-muhendisi-yapay-zeka-kod-itirafi-ve-kirilgan-mimari.html",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": null
+      }
+    },
+    {
+      "id": "post-2026-11-13-microsoft-claude-cokus",
+      "title": "Bulutun %99.99 SLA Yalanı: Microsoft ve Claude Aynı Gün Çökünce Korkan CTO'lar",
+      "scheduledDate": "2026-11-13",
+      "scheduledWindow": "18:30",
+      "status": "published",
+      "publishedAt": "2026-11-13T15:31:44.140Z",
+      "blogSlug": "microsoft-ve-claude-cokus-bulut-sla-yalani",
+      "publishedUrls": {
+        "blog": null,
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/devkursat/the-9999-cloud-sla-lie-when-microsoft-and-claude-go-down-together-5e11"
+      }
+    }
+  ]
+}
