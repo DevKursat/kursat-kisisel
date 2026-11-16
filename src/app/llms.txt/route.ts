@@ -27,7 +27,7 @@ export async function GET() {
     "- **İtibar** (https://itibar.app): AI-powered reputation intelligence, brand visibility monitoring across LLMs, and sentiment tracking platform.",
     "- **Unutma.** (https://unutma.itibar.app): AI-assisted civic memory, temporal tracking, and accountability archive platform.",
     "",
-    "## Supported Blog Languages (9 Languages)",
+    `## Supported Blog Languages (${BLOG_LANGUAGES.length} Languages)`,
     ...BLOG_LANGUAGES.map(
       (lang) =>
         `- **${lang.nativeName} (${lang.englishName}, \`${lang.hreflang}\`)**: ${lang.code === "tr" ? `${SITE_URL}/blog` : `${SITE_URL}/blog?lang=${lang.code}`}`

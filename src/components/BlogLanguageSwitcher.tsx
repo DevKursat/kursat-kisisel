@@ -310,7 +310,7 @@ export default function BlogLanguageSwitcher({
   if (variant === "navbar") {
     return (
       <div ref={dropdownRef} className="relative" dir="ltr">
-        {/* Keep 9 hreflang language links crawlable even when the popover is closed */}
+        {/* Keep hreflang language links crawlable even when the popover is closed */}
         <nav aria-label={ui.readingLanguage} className="sr-only">
           {languages.map((item) => (
             <Link

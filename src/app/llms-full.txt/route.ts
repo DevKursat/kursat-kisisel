@@ -10,7 +10,7 @@ export async function GET() {
   const lines: string[] = [
     "# Kürşat Yılmaz — Complete Technical Engineering Corpus (llms-full.txt)",
     "",
-    "> Full structured technical knowledge base for Generative Engine Optimization (GEO) and Answer Engine Optimization (AEO). Contains complete canonical articles, verified engineering benchmarks, structured Q&A pairs, and multilingual edition links across 9 languages.",
+    `> Full structured technical knowledge base for Generative Engine Optimization (GEO) and Answer Engine Optimization (AEO). Contains complete canonical articles, verified engineering benchmarks, structured Q&A pairs, and multilingual edition links across ${BLOG_LANGUAGES.length} languages.`,
     "",
     `- **Author**: Kürşat Yılmaz (${SITE_URL})`,
     `- **Concise Index**: ${SITE_URL}/llms.txt`,

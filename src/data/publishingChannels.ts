@@ -126,9 +126,9 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     label: "RSS",
     handle: "/rss.xml",
     href: "/rss.xml",
-    focusTr: "Doğrudan 9 Dilli Sindikasyon Akışı",
-    focusEn: "Direct 9-Language Syndication Feed",
-    badge: "9 DİL",
+    focusTr: "Doğrudan 4 Dilli Sindikasyon Akışı",
+    focusEn: "Direct 4-Language Syndication Feed",
+    badge: "4 DİL",
     glow: "from-amber-400/15 via-transparent to-transparent",
   },
 ];

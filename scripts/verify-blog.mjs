@@ -9,7 +9,7 @@ const ts = require("typescript");
 const ROOT_DIR = process.cwd();
 const BLOG_INDEX_PATH = path.join(ROOT_DIR, "src", "data", "blogIndex.ts");
 const BLOG_POSTS_PATH = path.join(ROOT_DIR, "src", "data", "blogPosts.ts");
-const REQUIRED_TRANSLATIONS = ["en", "zh", "hi", "es", "ar", "pt", "de", "ja"];
+const REQUIRED_TRANSLATIONS = ["en", "de", "es"];
 const ALLOWED_CATEGORIES = new Set(["mimari", "donanim", "llm", "guvenlik"]);
 
 function loadTsModule(filePath, customRequire) {
@@ -35,6 +35,13 @@ function main() {
   const blogIndexExports = loadTsModule(BLOG_INDEX_PATH, require);
   const blogPostsExports = loadTsModule(BLOG_POSTS_PATH, (spec) => {
     if (spec === "./blogIndex") return blogIndexExports;
+    if (spec.startsWith("./posts/")) {
+      const postPath = path.join(ROOT_DIR, "src", "data", `${spec.slice(2)}.ts`);
+      return loadTsModule(postPath, (nestedSpec) => {
+        if (nestedSpec === "../blogIndex") return blogIndexExports;
+        return require(nestedSpec);
+      });
+    }
     return require(spec);
   });
 

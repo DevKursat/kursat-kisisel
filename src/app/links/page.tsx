@@ -108,11 +108,11 @@ const YAZILAR_LINKS: LinkBanner[] = [
   {
     id: "blog",
     title: "Teknik Günlük / Blog",
-    handle: "kursat.itibar.app/blog • 9 Dilli Mühendislik Analizleri",
+    handle: "kursat.itibar.app/blog • 4 Dilli Mühendislik Analizleri",
     url: "/blog",
     watermark: <FileText className="w-full h-full" />,
     icon: <FileText className="w-4 h-4 text-emerald-400" />,
-    badge: "9 DİL",
+    badge: "4 DİL",
     glow: "from-emerald-500/15 via-transparent to-transparent",
   },
   {
