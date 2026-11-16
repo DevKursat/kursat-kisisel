@@ -200,8 +200,8 @@ const YAZILAR_LINKS: LinkBanner[] = [
   {
     id: "reddit",
     title: "Reddit",
-    handle: "u/DevKursat • r/LocalLLaMA & Teknik Tartışmalar",
-    url: "https://www.reddit.com/user/DevKursat/",
+    handle: "u/Delicious_Character6 • r/LocalLLaMA & Teknik Tartışmalar",
+    url: "https://www.reddit.com/user/Delicious_Character6/",
     watermark: <RedditIcon className="w-full h-full fill-current" />,
     icon: <RedditIcon className="w-4 h-4 fill-current text-orange-500" />,
     badge: "TR / EN",

@@ -104,8 +104,8 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
   {
     id: "reddit",
     label: "Reddit",
-    handle: "u/DevKursat",
-    href: "https://www.reddit.com/user/DevKursat/",
+    handle: "u/Delicious_Character6",
+    href: "https://www.reddit.com/user/Delicious_Character6/",
     focusTr: "r/LocalLLaMA & Teknik Topluluk Tartışmaları",
     focusEn: "r/LocalLLaMA & Engineering Discussions",
     badge: "TR / EN",

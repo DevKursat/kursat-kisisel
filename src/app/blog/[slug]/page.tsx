@@ -189,6 +189,7 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
             "https://github.com/DevKursat",
             "https://dev.to/devkursat",
             "https://medium.com/@ykursat054",
+            "https://www.reddit.com/user/Delicious_Character6/",
           ],
         },
         publisher: {

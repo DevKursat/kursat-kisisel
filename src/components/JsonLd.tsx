@@ -15,6 +15,8 @@ export default function JsonLd() {
       "https://x.com/DevKursat",
       "https://dev.to/devkursat",
       "https://medium.com/@ykursat054",
+      "https://www.reddit.com/user/Delicious_Character6/",
+      "https://contra.com/kursat_yilmaz_ei1ue08l/work",
       "https://bionluk.com/kurstayilmaz",
       "https://www.fiverr.com/kurs_tt",
     ],

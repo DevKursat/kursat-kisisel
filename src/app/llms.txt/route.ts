@@ -16,6 +16,8 @@ export async function GET() {
     "- **X / Twitter**: https://x.com/DevKursat",
     "- **LinkedIn**: https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
     "- **Dev.to**: https://dev.to/devkursat",
+    "- **Medium**: https://medium.com/@ykursat054",
+    "- **Reddit**: https://www.reddit.com/user/Delicious_Character6/",
     "",
     "## Flagship Products",
     "- **İtibar** (https://itibar.app): AI-powered reputation intelligence, brand visibility monitoring across LLMs, and sentiment tracking platform.",
