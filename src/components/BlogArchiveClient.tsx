@@ -338,7 +338,7 @@ function BlogArchiveContent({
                 <img
                   src={post.imageUrl}
                   alt={post.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-cover scale-[1.03] transition-transform duration-700 ease-out group-hover:scale-[1.08]"
                 />
 
                 {/* Progressive Blur Layer over the lower 58% */}
