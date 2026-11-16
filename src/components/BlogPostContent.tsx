@@ -939,7 +939,7 @@ export function ArticleMarkup({
               },
               {
                 label: "DEV.to",
-                href: "https://dev.to/devkursat",
+                href: "https://dev.to/kursatyz",
                 icon: <DevtoIcon className="w-3.5 h-3.5 shrink-0" />,
               },
               {

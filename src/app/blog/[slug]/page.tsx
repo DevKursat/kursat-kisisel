@@ -187,7 +187,7 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
             "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
             "https://x.com/DevKursat",
             "https://github.com/DevKursat",
-            "https://dev.to/devkursat",
+            "https://dev.to/kursatyz",
             "https://medium.com/@ykursat054",
             "https://www.reddit.com/user/Delicious_Character6/",
           ],

@@ -40,7 +40,7 @@ export default function BlogSection({
       links: {
         linkedin: "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
         twitter: "https://x.com/DevKursat",
-        devto: "https://dev.to/devkursat",
+        devto: "https://dev.to/kursatyz",
       },
     };
   });

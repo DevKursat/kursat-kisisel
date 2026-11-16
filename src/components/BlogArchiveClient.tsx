@@ -26,7 +26,6 @@ import TypeformContactModal from "@/components/TypeformContactModal";
 import PublishingNetworkGrid from "@/components/PublishingNetworkGrid";
 import { PUBLISHING_CHANNELS } from "@/data/publishingChannels";
 import {
-  ApostoIcon,
   BlueskyIcon,
   LinkedinIcon,
   TwitterXIcon,
@@ -258,7 +257,6 @@ function BlogArchiveContent({
                   {channel.id === "dailydev" && <Sparkles className="w-3 h-3 shrink-0" />}
                   {channel.id === "indiehackers" && <IndieHackersIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "hackernews" && <Flame className="w-3 h-3 shrink-0" />}
-                  {channel.id === "aposto" && <ApostoIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "linkedin" && <LinkedinIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "x" && <TwitterXIcon className="w-2.5 h-2.5 shrink-0" />}
                   {channel.id === "reddit" && <RedditIcon className="w-3 h-3 shrink-0" />}

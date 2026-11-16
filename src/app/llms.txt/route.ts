@@ -15,7 +15,7 @@ export async function GET() {
     "- **GitHub**: https://github.com/DevKursat",
     "- **X / Twitter**: https://x.com/DevKursat",
     "- **LinkedIn**: https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
-    "- **Dev.to**: https://dev.to/devkursat",
+    "- **Dev.to**: https://dev.to/kursatyz",
     "- **Hashnode**: https://hashnode.com/@kursatyz",
     "- **Medium**: https://medium.com/@ykursat054",
     "- **Indie Hackers**: https://www.indiehackers.com/kursatyz",

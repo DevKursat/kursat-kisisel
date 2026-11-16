@@ -6,7 +6,6 @@ export interface PublishingChannel {
     | "dailydev"
     | "indiehackers"
     | "hackernews"
-    | "aposto"
     | "linkedin"
     | "x"
     | "reddit"
@@ -25,8 +24,8 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
   {
     id: "devto",
     label: "DEV.to",
-    handle: "dev.to/devkursat",
-    href: "https://dev.to/devkursat",
+    handle: "dev.to/kursatyz",
+    href: "https://dev.to/kursatyz",
     focusTr: "Teknik Makaleler & Sistem Mimarileri",
     focusEn: "Technical Articles & Architectures",
     badge: "EN / TR",
@@ -81,16 +80,6 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     focusEn: "Show HN & Systems Discussions",
     badge: "EN",
     glow: "from-orange-500/15 via-transparent to-transparent",
-  },
-  {
-    id: "aposto",
-    label: "Aposto!",
-    handle: "aposto.com",
-    href: "https://aposto.com",
-    focusTr: "Türkiye Odaklı Teknoloji & AI Bülteni",
-    focusEn: "Turkey Tech & AI Editorial Dispatch",
-    badge: "TR",
-    glow: "from-rose-400/15 via-transparent to-transparent",
   },
   {
     id: "linkedin",

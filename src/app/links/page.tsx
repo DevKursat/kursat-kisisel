@@ -6,7 +6,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Check, Mail, FileText, Flame, Sparkles, RotateCcw } from "lucide-react";
 import {
-  ApostoIcon,
   BlueskyIcon,
   GithubIcon,
   TwitterXIcon,
@@ -119,8 +118,8 @@ const YAZILAR_LINKS: LinkBanner[] = [
   {
     id: "devto",
     title: "DEV.to",
-    handle: "dev.to/devkursat • Teknik Makaleler & Sistem Mimarileri",
-    url: "https://dev.to/devkursat",
+    handle: "dev.to/kursatyz • Teknik Makaleler & Sistem Mimarileri",
+    url: "https://dev.to/kursatyz",
     watermark: <DevtoIcon className="w-full h-full fill-current" />,
     icon: <DevtoIcon className="w-4 h-4 fill-current" />,
     badge: "EN / TR",
@@ -175,16 +174,6 @@ const YAZILAR_LINKS: LinkBanner[] = [
     icon: <Flame className="w-4 h-4 text-orange-400" />,
     badge: "EN",
     glow: "from-orange-500/15 via-transparent to-transparent",
-  },
-  {
-    id: "aposto",
-    title: "Aposto!",
-    handle: "aposto.com • Türkiye Odaklı Teknoloji & AI Bülteni",
-    url: "https://aposto.com",
-    watermark: <ApostoIcon className="w-full h-full fill-current" />,
-    icon: <ApostoIcon className="w-4 h-4 fill-current text-rose-400" />,
-    badge: "TR",
-    glow: "from-rose-400/15 via-transparent to-transparent",
   },
   {
     id: "linkedin",

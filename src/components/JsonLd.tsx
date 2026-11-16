@@ -13,7 +13,7 @@ export default function JsonLd() {
       "https://github.com/DevKursat",
       "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
       "https://x.com/DevKursat",
-      "https://dev.to/devkursat",
+      "https://dev.to/kursatyz",
       "https://hashnode.com/@kursatyz",
       "https://medium.com/@ykursat054",
       "https://www.indiehackers.com/kursatyz",

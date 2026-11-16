@@ -373,7 +373,7 @@ export default function ContactSection() {
 
               {/* Dev.to Pure Logo Orb */}
               <motion.a
-                href="https://dev.to/devkursat"
+                href="https://dev.to/kursatyz"
                 target="_blank"
                 rel="noopener noreferrer"
                 animate={{ y: [0, -11, 0], rotate: [0, -1.5, 0] }}
@@ -496,7 +496,7 @@ export default function ContactSection() {
                 <InstagramIcon className="w-3.5 h-3.5" />
               </a>
               <a
-                href="https://dev.to/devkursat"
+                href="https://dev.to/kursatyz"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:text-black hover:bg-white transition-all active:scale-95"
