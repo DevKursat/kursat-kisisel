@@ -333,21 +333,21 @@ function BlogArchiveContent({
               <Link
                 href={getPostHref(post.slug)}
                 hrefLang={langMeta.hreflang}
-                className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3"
+                className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden isolate [transform:translateZ(0)] bg-zinc-950 block select-none mb-3"
               >
                 <img
                   src={post.imageUrl}
                   alt={post.title}
-                  className="absolute inset-0 w-full h-full object-cover scale-[1.03] transition-transform duration-700 ease-out group-hover:scale-[1.08]"
+                  className="absolute inset-0 w-full h-full object-cover rounded-2xl scale-[1.03] transition-transform duration-700 ease-out group-hover:scale-[1.08]"
                 />
 
                 {/* Progressive Blur Layer over the lower 58% */}
                 <ProgressiveBlur
-                  className="pointer-events-none absolute bottom-0 left-0 h-[58%] w-full"
+                  className="pointer-events-none absolute bottom-0 left-0 h-[58%] w-full rounded-b-2xl overflow-hidden"
                   blurIntensity={7}
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
 
                 {/* Open Article Arrow Pill */}
                 <div className="absolute top-3.5 right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 group-hover:text-white group-hover:border-white/30 transition-all">
