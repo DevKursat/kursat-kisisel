@@ -176,10 +176,7 @@ function BlogArchiveContent({
           </Link>
 
           <div className="font-archivo font-[800] text-sm tracking-tight text-white truncate">
-            KÜRŞAT YILMAZ{" "}
-            <span className="font-mono text-zinc-500 font-normal text-xs ml-1.5 hidden sm:inline">
-              // {ui.journalBadge}
-            </span>
+            KÜRŞAT YILMAZ
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
@@ -200,13 +197,13 @@ function BlogArchiveContent({
               <LinkedinIcon className="w-3.5 h-3.5" />
             </a>
             <a
-              href="https://x.com/DevKursat"
+              href="https://github.com/DevKursat"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:bg-white hover:text-black transition-all"
-              aria-label="X"
+              aria-label="GitHub"
             >
-              <TwitterXIcon className="w-3 h-3" />
+              <GithubIcon className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
@@ -333,7 +330,7 @@ function BlogArchiveContent({
               <Link
                 href={getPostHref(post.slug)}
                 hrefLang={langMeta.hreflang}
-                className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden isolate [transform:translateZ(0)] bg-zinc-950 block select-none mb-3"
+                className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden isolate [transform:translateZ(0)] [clip-path:inset(0_round_1rem)] bg-zinc-950 block select-none mb-3"
               >
                 <img
                   src={post.imageUrl}

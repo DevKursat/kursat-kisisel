@@ -133,14 +133,14 @@ export default function NewsletterSignupBox({
                   }}
                   placeholder={isTr ? "ornek@sirket.com" : "you@company.com"}
                   aria-label="Email address for newsletter"
-                  className="flex-1 min-w-0 h-10 rounded-full border border-white/15 bg-black/70 px-4 text-xs font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 transition-colors"
+                  className="flex-1 min-w-0 h-11 sm:h-12 rounded-full border border-white/15 bg-black/70 px-5 text-xs sm:text-sm font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 transition-colors"
                 />
                 <motion.button
                   type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.96 }}
                   disabled={status === "loading"}
-                  className="h-10 px-4 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 disabled:opacity-60 transition-colors shrink-0 inline-flex items-center gap-1.5 cursor-pointer"
+                  className="h-11 sm:h-12 px-5 sm:px-6 rounded-full bg-white text-black text-xs sm:text-sm font-semibold hover:bg-zinc-200 disabled:opacity-60 transition-colors shrink-0 inline-flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   {status === "loading" ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />

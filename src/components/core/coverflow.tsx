@@ -319,12 +319,12 @@ function CardItem({ item, isActive, onClick }: CardItemProps) {
       {isActive ? (
         <Link
           href={articleHref}
-          className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3"
+          className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden isolate [transform:translateZ(0)] [clip-path:inset(0_round_1rem)] bg-zinc-950 block select-none mb-3"
         >
           {visualInner}
         </Link>
       ) : (
-        <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-zinc-950 block select-none mb-3">
+        <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden isolate [transform:translateZ(0)] [clip-path:inset(0_round_1rem)] bg-zinc-950 block select-none mb-3">
           {visualInner}
         </div>
       )}

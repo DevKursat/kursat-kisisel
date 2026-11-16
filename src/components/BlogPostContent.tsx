@@ -510,10 +510,7 @@ export function ArticleMarkup({
             href="/"
             className="font-archivo font-[800] text-sm tracking-tight text-white hover:opacity-80 transition-opacity truncate"
           >
-            KÜRŞAT YILMAZ{" "}
-            <span className="font-mono text-zinc-500 font-normal text-xs ml-1.5 hidden sm:inline">
-              // {ui.journalBadge}
-            </span>
+            KÜRŞAT YILMAZ
           </Link>
 
           <div className="flex items-center gap-2 shrink-0">
@@ -535,13 +532,13 @@ export function ArticleMarkup({
               <LinkedinIcon className="w-3.5 h-3.5" />
             </a>
             <a
-              href="https://x.com/DevKursat"
+              href="https://github.com/DevKursat"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:bg-white hover:text-black transition-all"
-              aria-label="X"
+              aria-label="GitHub"
             >
-              <TwitterXIcon className="w-3 h-3" />
+              <GithubIcon className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
