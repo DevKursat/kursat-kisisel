@@ -66,7 +66,7 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     label: "Indie Hackers",
     handle: "indiehackers.com/kursatyz",
     href: "https://www.indiehackers.com/kursatyz",
-    focusTr: "İtibar & Unutma. Ürün Geliştirme Günlükleri",
+    focusTr: "Açık Ürün Geliştirme & SaaS Günlükleri",
     focusEn: "Building in Public & SaaS Revenue",
     badge: "EN",
     glow: "from-sky-400/15 via-transparent to-transparent",
