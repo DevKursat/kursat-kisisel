@@ -79,6 +79,16 @@ const KISISEL_LINKS: LinkBanner[] = [
     glow: "from-emerald-500/10 via-transparent to-transparent",
   },
   {
+    id: "github",
+    title: "GitHub",
+    handle: "github.com/DevKursat • Açık Kaynak & Sistemler",
+    url: "https://github.com/DevKursat",
+    watermark: <GithubIcon className="w-full h-full fill-current" />,
+    icon: <GithubIcon className="w-4 h-4 fill-current" />,
+    badge: "OSS",
+    glow: "from-white/10 via-transparent to-transparent",
+  },
+  {
     id: "instagram-kisisel",
     title: "Instagram",
     handle: "@kursat.yz • Kişisel Profil",
@@ -140,16 +150,6 @@ const YAZILAR_LINKS: LinkBanner[] = [
     icon: <TwitterXIcon className="w-4 h-4 fill-current" />,
     badge: "THREADS",
     glow: "from-zinc-400/10 via-transparent to-transparent",
-  },
-  {
-    id: "github",
-    title: "GitHub",
-    handle: "github.com/DevKursat • Açık Kaynak & Mimari Repolar",
-    url: "https://github.com/DevKursat",
-    watermark: <GithubIcon className="w-full h-full fill-current" />,
-    icon: <GithubIcon className="w-4 h-4 fill-current" />,
-    badge: "OSS",
-    glow: "from-white/10 via-transparent to-transparent",
   },
 ];
 

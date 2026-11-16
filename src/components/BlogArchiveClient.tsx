@@ -249,7 +249,6 @@ function BlogArchiveContent({
                   {channel.id === "medium" && <MediumIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "linkedin" && <LinkedinIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "x" && <TwitterXIcon className="w-2.5 h-2.5 shrink-0" />}
-                  {channel.id === "github" && <GithubIcon className="w-3 h-3 shrink-0" />}
                   {channel.id === "rss" && <Rss className="w-3 h-3 shrink-0" />}
                   <span>{channel.label}</span>
                   <ArrowUpRight className="w-2.5 h-2.5 opacity-40 group-hover/hub:opacity-100 transition-opacity" />

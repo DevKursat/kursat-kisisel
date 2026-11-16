@@ -4,7 +4,6 @@ import { ArrowUpRight, Rss } from "lucide-react";
 import { PUBLISHING_CHANNELS, type PublishingChannel } from "@/data/publishingChannels";
 import {
   DevtoIcon,
-  GithubIcon,
   LinkedinIcon,
   MediumIcon,
   TwitterXIcon,
@@ -20,8 +19,6 @@ function renderChannelIcon(id: PublishingChannel["id"]) {
       return <LinkedinIcon className="w-4 h-4 shrink-0 text-blue-400 group-hover/item:text-current transition-colors" />;
     case "x":
       return <TwitterXIcon className="w-3.5 h-3.5 shrink-0" />;
-    case "github":
-      return <GithubIcon className="w-4 h-4 shrink-0" />;
     case "rss":
       return <Rss className="w-4 h-4 shrink-0 text-amber-400 group-hover/item:text-current transition-colors" />;
   }
@@ -37,7 +34,7 @@ export default function PublishingNetworkGrid({
   const isTr = lang === "tr";
 
   return (
-    <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 w-full">
+    <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 w-full">
       {PUBLISHING_CHANNELS.map((channel) => {
         const href =
           channel.id === "rss" && rssHref ? rssHref : channel.href;

@@ -1,5 +1,5 @@
 export interface PublishingChannel {
-  id: "devto" | "medium" | "linkedin" | "x" | "github" | "rss";
+  id: "devto" | "medium" | "linkedin" | "x" | "rss";
   label: string;
   handle: string;
   href: string;
@@ -49,16 +49,6 @@ export const PUBLISHING_CHANNELS: PublishingChannel[] = [
     focusEn: "Real-Time AI Threads & Notes",
     badge: "THREADS",
     glow: "from-zinc-400/15 via-transparent to-transparent",
-  },
-  {
-    id: "github",
-    label: "GitHub",
-    handle: "github.com/DevKursat",
-    href: "https://github.com/DevKursat",
-    focusTr: "Açık Kaynak & Referans Repolar",
-    focusEn: "Open Source & Architecture Repos",
-    badge: "OSS",
-    glow: "from-white/15 via-transparent to-transparent",
   },
   {
     id: "rss",
