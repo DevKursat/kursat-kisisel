@@ -6,6 +6,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { isOpsAuthenticated } from "@/lib/opsAuth";
 import {
+  addOpsTrigger,
   updateCommentFields,
   updateEmailFields,
   updateJobFields,
@@ -100,6 +101,11 @@ export async function POST(request: Request) {
 
       const ok = await updateSuggestionFields(id, { status: "rejected" });
       if (!ok) return NextResponse.json({ error: "Suggestion not found" }, { status: 404 });
+      return NextResponse.json({ ok: true });
+    }
+
+    if (action === "request_suggestions" || action === "request_sync_now") {
+      await addOpsTrigger(action === "request_suggestions" ? "new_suggestions" : "sync_now");
       return NextResponse.json({ ok: true });
     }
 

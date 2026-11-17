@@ -162,6 +162,11 @@ export interface OpsSummaryDoc {
     highPriorityCount: number;
     lastCheckAt: string | null;
   };
+  pendingTriggers?: Array<{
+    id: string;
+    type: "new_suggestions" | "sync_now";
+    createdAt: string;
+  }>;
   platforms: OpsPlatformCard[];
   updatedAt: string;
 }
@@ -591,6 +596,53 @@ export async function updateSuggestionFields(
   if (!snap.exists) return false;
   await ref.update({ ...patch, updatedAt });
   return true;
+}
+
+export async function addOpsTrigger(type: "new_suggestions" | "sync_now"): Promise<void> {
+  const item = {
+    id: `trig_${Date.now()}`,
+    type,
+    createdAt: new Date().toISOString(),
+  };
+  const db = getFirestoreDb();
+  if (!db) {
+    const store = await readLocalStore();
+    const list = store.summary.pendingTriggers || [];
+    list.push(item);
+    store.summary.pendingTriggers = list.slice(-10);
+    await writeLocalStore(store);
+    return;
+  }
+
+  const ref = db.collection("ops_state").doc("summary");
+  const snap = await ref.get();
+  const prev = snap.exists
+    ? ((snap.data()?.pendingTriggers as OpsSummaryDoc["pendingTriggers"]) || [])
+    : [];
+  await ref.set({ pendingTriggers: [...prev, item].slice(-10) }, { merge: true });
+}
+
+export async function clearOpsTriggers(ids: string[]): Promise<void> {
+  if (!ids.length) return;
+  const idSet = new Set(ids);
+  const db = getFirestoreDb();
+  if (!db) {
+    const store = await readLocalStore();
+    store.summary.pendingTriggers = (store.summary.pendingTriggers || []).filter(
+      (t) => !idSet.has(t.id)
+    );
+    await writeLocalStore(store);
+    return;
+  }
+
+  const ref = db.collection("ops_state").doc("summary");
+  const snap = await ref.get();
+  if (!snap.exists) return;
+  const prev = (snap.data()?.pendingTriggers as OpsSummaryDoc["pendingTriggers"]) || [];
+  await ref.set(
+    { pendingTriggers: prev.filter((t) => !idSet.has(t.id)) },
+    { merge: true }
+  );
 }
 
 export async function syncWorkerPayload(payload: {

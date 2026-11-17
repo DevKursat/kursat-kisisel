@@ -908,17 +908,34 @@ export default function VaultDashboardClient() {
               </section>
             )}
 
-            {/* Sync freshness bar */}
+            {/* Sync freshness bar + instant trigger */}
             <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-400">
               <span>
-                Otonom Tarama Sıklığı: <strong className="text-zinc-200">2 saatte bir</strong> (EgoBrowser + Radar) · DEV.to verisi her yenilemede canlı çekilir
+                Otonom Tarama: <strong className="text-zinc-200">2 saatte bir</strong> · Onayların
+                anlık kuyruğa düşer
               </span>
-              <span>
-                Son Senkron:{" "}
-                {summary?.contentStats.lastSyncAt
-                  ? new Date(summary.contentStats.lastSyncAt).toLocaleString("tr-TR")
-                  : "Henüz sync yok"}
-              </span>
+              <div className="flex items-center gap-3">
+                <span>
+                  Son Senkron:{" "}
+                  {summary?.contentStats.lastSyncAt
+                    ? new Date(summary.contentStats.lastSyncAt).toLocaleString("tr-TR")
+                    : "Henüz sync yok"}
+                </span>
+                <button
+                  disabled={actionBusyId === "request_suggestions"}
+                  onClick={() =>
+                    runAction(
+                      "request_suggestions",
+                      { action: "request_suggestions" },
+                      "Yeni Blog & Böcek önerisi isteği kuyruğa alındı."
+                    )
+                  }
+                  className="inline-flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1 text-[11px] font-medium text-emerald-300 transition"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  Yeni Öneri İste
+                </button>
+              </div>
             </div>
 
             {/* Clickable Platform Breakdown Grid */}

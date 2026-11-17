@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isOpsAuthenticated } from "@/lib/opsAuth";
 import {
+  clearOpsTriggers,
   loadOpsStore,
   syncWorkerPayload,
   updateCommentFields,
@@ -28,6 +29,7 @@ export async function GET(request: Request) {
       approvedComments: store.comments.filter((c) => c.status === "approved"),
       approvedEmails: store.emails.filter((e) => e.status === "approved"),
       selectedSuggestions: store.suggestions.filter((s) => s.status === "selected"),
+      pendingTriggers: store.summary.pendingTriggers || [],
     },
     { headers: { "Cache-Control": "no-store, max-age=0" } }
   );
@@ -52,7 +54,12 @@ export async function POST(request: Request) {
       markSentCommentIds?: string[];
       markSentEmailIds?: string[];
       markProducedSuggestionIds?: string[];
+      clearTriggerIds?: string[];
     };
+
+    if (body.clearTriggerIds?.length) {
+      await clearOpsTriggers(body.clearTriggerIds);
+    }
 
     for (const jobId of body.markSentJobIds || []) {
       await updateJobFields(jobId, { status: "sent" });
