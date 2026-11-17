@@ -2,17 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Activity,
   Briefcase,
   CheckCircle2,
-  Database,
   ExternalLink,
   Lock,
   LogOut,
   Mail,
   MessageSquare,
   Plus,
-  Radio,
   RefreshCw,
   Send,
   ShieldCheck,
@@ -66,7 +63,7 @@ interface UnifiedPayload {
   telemetry: TelemetryLite;
 }
 
-type TabId = "freelance" | "comments" | "mail" | "radar" | "system";
+type TabId = "freelance" | "comments" | "mail";
 
 const JOB_STATUS_LABELS: Record<JobStatus, string> = {
   discovered: "Keşfedildi",
@@ -287,27 +284,6 @@ export default function VaultDashboardClient() {
     });
   }, [data, brandFilter, statusFilter, platformFilter]);
 
-  const combinedRadar = useMemo(() => {
-    const storeRadar = data?.store.radarActions || [];
-    const logRadar = (data?.telemetry.radarLogs || []).map((r, i) => ({
-      id: `log-${i}-${r.ts}`,
-      ts: r.ts,
-      platform: r.platform as "x" | "devto",
-      target: r.target,
-      title: r.title,
-      url: r.url,
-      replyPreview: r.replyPreview,
-      engagementStatus: "log",
-    }));
-    const merged = [...storeRadar];
-    for (const item of logRadar) {
-      if (!merged.some((m) => m.url === item.url && m.ts === item.ts)) {
-        merged.push(item);
-      }
-    }
-    return merged.sort((a, b) => b.ts.localeCompare(a.ts));
-  }, [data]);
-
   if (!authChecked) {
     return (
       <main className="min-h-screen bg-[#08090c] text-zinc-100 flex items-center justify-center">
@@ -423,10 +399,10 @@ export default function VaultDashboardClient() {
         {/* Navigation Tabs */}
         <div className="mx-auto max-w-6xl px-4 flex gap-1 overflow-x-auto">
           {[
-            { id: "freelance" as TabId, label: "1. Freelance & İşler", icon: Briefcase },
+            { id: "freelance" as TabId, label: "1. Freelance & İş Arama", icon: Briefcase },
             {
               id: "comments" as TabId,
-              label: `2. Yorum & Onay (${summary?.contentStats.pendingReplies || 0})`,
+              label: `2. Blog & Böcek Analizleri (${summary?.contentStats.pendingReplies || 0})`,
               icon: MessageSquare,
             },
             {
@@ -434,8 +410,6 @@ export default function VaultDashboardClient() {
               label: `3. Mail Özeti (${summary?.mailStats?.unreadCount || 0})`,
               icon: Mail,
             },
-            { id: "radar" as TabId, label: "4. Günlük Radar", icon: Radio },
-            { id: "system" as TabId, label: "5. Sistem & Telemetri", icon: Activity },
           ].map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -1306,126 +1280,6 @@ export default function VaultDashboardClient() {
           </div>
         )}
 
-        {/* TAB 4: RADAR */}
-        {activeTab === "radar" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                Gün İçi Radar Gönderimleri ({combinedRadar.length})
-              </h2>
-              <span className="text-xs text-zinc-400">
-                Bugün: {data?.telemetry.summary.radarTodayCount ?? 0} aksiyon
-              </span>
-            </div>
-
-            {!combinedRadar.length ? (
-              <div className="rounded-xl border border-dashed border-zinc-800 p-8 text-center text-xs text-zinc-400">
-                Henüz radar aksiyonu yok.
-              </div>
-            ) : (
-              <div className="space-y-2.5">
-                {combinedRadar.map((r) => (
-                  <div
-                    key={r.id}
-                    className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-3.5 flex flex-col gap-1.5"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="rounded bg-zinc-900 border border-zinc-700 px-1.5 py-0.5 text-[10px] uppercase font-semibold text-zinc-300">
-                          {r.platform}
-                        </span>
-                        <span className="text-xs font-medium text-zinc-200">{r.target}</span>
-                      </div>
-                      <span className="text-[11px] text-zinc-500">
-                        {new Date(r.ts).toLocaleString("tr-TR")}
-                      </span>
-                    </div>
-                    {r.title && <p className="text-xs text-zinc-400">{r.title}</p>}
-                    {r.replyPreview && (
-                      <p className="text-xs text-zinc-300 bg-zinc-900/60 rounded-lg p-2 border border-zinc-800/80">
-                        {r.replyPreview}
-                      </p>
-                    )}
-                    <a
-                      href={r.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] text-emerald-400 hover:underline w-fit"
-                    >
-                      Gönderiye Git <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB 4: SYSTEM & TELEMETRY */}
-        {activeTab === "system" && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200">
-                  <Database className="w-4 h-4 text-emerald-400" />
-                  Veritabanı Modu
-                </div>
-                <p className="mt-2 text-xs text-zinc-400">
-                  {data?.store.storageMode === "firestore"
-                    ? "Firebase Firestore (Spark Ücretsiz Plan) aktif."
-                    : "Yerel JSON deposu aktif. Firebase Service Account env değişkenleri girildiğinde otomatik buluta geçer."}
-                </p>
-              </div>
-              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4">
-                <p className="text-xs font-semibold text-zinc-200">Blog Kalite Denetimi</p>
-                <p className="mt-2 text-lg font-semibold text-emerald-400">
-                  {data?.telemetry.summary.blogQualityPassCount ?? 0} /{" "}
-                  {data?.telemetry.summary.blogCount ?? 0} Geçti
-                </p>
-              </div>
-              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4">
-                <p className="text-xs font-semibold text-zinc-200">DEV.to Etkileşimi</p>
-                <p className="mt-2 text-xs text-zinc-300">
-                  {data?.telemetry.summary.devtoPublishedCount ?? 0} yazı ·{" "}
-                  {data?.telemetry.summary.devtoTotalReactions ?? 0} reaksiyon ·{" "}
-                  {data?.telemetry.summary.devtoTotalComments ?? 0} yorum
-                </p>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-semibold text-zinc-300">Son Blog Yazıları Kalite Durumu</h3>
-                {data?.telemetry.mode === "local" && (
-                  <button
-                    disabled={actionBusyId === "sync_snapshot"}
-                    onClick={() =>
-                      runAction(
-                        "sync_snapshot",
-                        { action: "sync_snapshot" },
-                        "Yerel snapshot senkronize edildi."
-                      )
-                    }
-                    className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1 text-[11px] text-zinc-200 hover:bg-zinc-800"
-                  >
-                    Snapshot Senkronize Et
-                  </button>
-                )}
-              </div>
-              <div className="divide-y divide-zinc-800/70">
-                {(data?.telemetry.blogAudit || []).slice(0, 8).map((b) => (
-                  <div key={b.slug} className="py-2 flex items-center justify-between gap-3 text-xs">
-                    <span className="text-zinc-200 truncate">{b.title}</span>
-                    <span className="shrink-0 text-[11px] text-zinc-400">
-                      {b.wordCountTr} kelime · {b.langCount} dil ·{" "}
-                      {b.qualityPass ? "✅" : "⚠️"}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </main>
   );
