@@ -6,8 +6,8 @@ const post: BlogPostItem = {
   "category": "llm",
   "title": "12 Günlük Açık Kaynak Sözü: Alibaba'nın Qwen4-Max İle Kapalı API Çarkı",
   "excerpt": "Alibaba 'sonuna kadar açık kaynak' açıklamasından 12 gün sonra 2.4T parametreli amiral gemisi Qwen4-Max'i tamamen kapalı ağırlıklarla $1.50/$4.50 fiyatlı API'ye kilitledi.",
-  "date": "16 Kas 2026",
-  "isoDate": "2026-11-16",
+  "date": "17 Kas 2026",
+  "isoDate": "2026-11-17",
   "readTime": "3 dk okuma",
   "imageUrl": "/blog/alibaba-qwen4-max-kapali-model-carki.png",
   "metrics": [
@@ -32,7 +32,7 @@ const post: BlogPostItem = {
       "tag": "LLM & INFERENCE AUTOPSY",
       "title": "The 12-Day Open-Source Pledge: Alibaba Locks Qwen4-Max Behind a Closed API",
       "excerpt": "Twelve days after pledging to stick with open source to the end, Alibaba launched its 2.4T MoE flagship Qwen4-Max as a closed-weight API priced at $1.50/$4.50 per 1M tokens.",
-      "date": "Nov 16, 2026",
+      "date": "Nov 17, 2026",
       "readTime": "3 min read",
       "metrics": [
         {
@@ -56,7 +56,7 @@ const post: BlogPostItem = {
       "tag": "LLM & INFERENZ-AUTOPSIE",
       "title": "Zwölf Tage Open-Source-Versprechen: Alibaba sperrt Qwen4-Max in eine geschlossene API",
       "excerpt": "Nur zwölf Tage nach dem Bekenntnis zu Open Source startet Alibaba sein 2,4-Bio.-Flaggschiff Qwen4-Max als Closed-Weight-API für 1,50 $/4,50 $ pro Million Token.",
-      "date": "16. Nov. 2026",
+      "date": "17. Nov. 2026",
       "readTime": "3 Min. Lesezeit",
       "metrics": [
         {
@@ -80,7 +80,7 @@ const post: BlogPostItem = {
       "tag": "AUTOPSIA DE LLM E INFERENCIA",
       "title": "La promesa de 12 días: Alibaba encierra Qwen4-Max tras una API cerrada",
       "excerpt": "Doce días después de prometer código abierto hasta el final, Alibaba lanza su modelo insignia Qwen4-Max (2,4T MoE) con pesos cerrados a $1,50/$4,50 por millón de tokens.",
-      "date": "16 nov 2026",
+      "date": "17 nov 2026",
       "readTime": "3 min lectura",
       "metrics": [
         {

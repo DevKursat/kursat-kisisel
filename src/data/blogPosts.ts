@@ -6,8 +6,8 @@ import {
   type BlogPostSummaryTranslation,
 } from "./blogIndex";
 
-import post00a from "./posts/anthropic-ipo-26-milyar-dongusel-sermaye";
-import post00b from "./posts/alibaba-qwen4-max-kapali-model-carki";
+import post00a from "./posts/alibaba-qwen4-max-kapali-model-carki";
+import post00b from "./posts/anthropic-ipo-26-milyar-dongusel-sermaye";
 import post01 from "./posts/openai-chatgpt-wallet-ve-lovable-veri-sizintisi";
 import post02 from "./posts/nvidia-jensen-huang-megaspeed-skandali";
 import post03 from "./posts/claude-code-secret-leak-gitignore-skandali";
