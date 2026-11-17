@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { verifyOpsToken } from "@/lib/opsAuth";
+import { isOpsAuthenticated } from "@/lib/opsAuth";
 import { collectOpsTelemetry } from "@/lib/opsTelemetry";
 
 export async function GET(request: Request) {
-  if (!verifyOpsToken(request)) {
+  if (!(await isOpsAuthenticated(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

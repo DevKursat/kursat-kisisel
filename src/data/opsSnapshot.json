@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-11-16T10:59:34.672Z",
+  "syncedAt": "2026-11-16T15:58:42.493Z",
   "performanceLog": [
     {
       "date": "2026-10-15",
@@ -41,6 +41,17 @@
       "impressions": null,
       "comments": null,
       "notes": "Awaiting 24h metrics update"
+    },
+    {
+      "date": "2026-11-16",
+      "slug": "anthropic-ipo-26-milyar-dongusel-sermaye",
+      "topic": "Anthropic IPO & $26B Döngüsel Sermaye",
+      "platform": "all",
+      "vse": 91,
+      "publishTime": "18:30",
+      "impressions": null,
+      "comments": null,
+      "notes": "Weekly Roast Day — queued for 18:30 LinkedIn; Blog/X/DEV.to live at 16:22"
     }
   ],
   "radarLog": [],
@@ -78,18 +89,18 @@
     ]
   },
   "latestPublish": {
-    "id": "post-2026-11-13-microsoft-claude-cokus",
-    "title": "Bulutun %99.99 SLA Yalanı: Microsoft ve Claude Aynı Gün Çökünce Korkan CTO'lar",
-    "scheduledDate": "2026-11-13",
+    "id": "post-2026-11-16-anthropic-ipo-circular",
+    "title": "Sağ Cepten Sol Cebe $26 Milyar: Anthropic IPO ve Döngüsel Compute Tiyatrosu",
+    "scheduledDate": "2026-11-16",
     "scheduledWindow": "18:30",
     "status": "published",
-    "publishedAt": "2026-11-13T15:31:44.140Z",
-    "blogSlug": "microsoft-ve-claude-cokus-bulut-sla-yalani",
+    "publishedAt": "2026-11-16T15:30:45.272Z",
+    "blogSlug": "anthropic-ipo-26-milyar-dongusel-sermaye",
     "publishedUrls": {
-      "blog": null,
-      "x": "https://x.com/DevKursat",
+      "blog": "https://kursat.itibar.app/blog/anthropic-ipo-26-milyar-dongusel-sermaye",
+      "x": null,
       "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
-      "devto": "https://dev.to/devkursat/the-9999-cloud-sla-lie-when-microsoft-and-claude-go-down-together-5e11"
+      "devto": "https://dev.to/kursatyz/the-26b-circular-loop-anthropics-14t-nasdaq-ipo-and-silicon-valleys-compute-theater-4f4g"
     }
   },
   "queue": [
@@ -226,6 +237,21 @@
         "x": "https://x.com/DevKursat",
         "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
         "devto": "https://dev.to/devkursat/the-9999-cloud-sla-lie-when-microsoft-and-claude-go-down-together-5e11"
+      }
+    },
+    {
+      "id": "post-2026-11-16-anthropic-ipo-circular",
+      "title": "Sağ Cepten Sol Cebe $26 Milyar: Anthropic IPO ve Döngüsel Compute Tiyatrosu",
+      "scheduledDate": "2026-11-16",
+      "scheduledWindow": "18:30",
+      "status": "published",
+      "publishedAt": "2026-11-16T15:30:45.272Z",
+      "blogSlug": "anthropic-ipo-26-milyar-dongusel-sermaye",
+      "publishedUrls": {
+        "blog": "https://kursat.itibar.app/blog/anthropic-ipo-26-milyar-dongusel-sermaye",
+        "x": "https://x.com/DevKursat/status/2122358529889571225",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/kursatyz/the-26b-circular-loop-anthropics-14t-nasdaq-ipo-and-silicon-valleys-compute-theater-4f4g"
       }
     }
   ]
