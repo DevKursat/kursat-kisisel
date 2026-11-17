@@ -20,6 +20,7 @@ import {
   XCircle,
 } from "lucide-react";
 import type {
+  CommentPlatform,
   JobPlatform,
   JobStatus,
   OpsCommentItem,
@@ -103,7 +104,9 @@ export default function VaultDashboardClient() {
   const [actionBusyId, setActionBusyId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
-  const [commentFilter, setCommentFilter] = useState<"pending" | "blog" | "bocek" | "all">("pending");
+  const [brandFilter, setBrandFilter] = useState<"all" | "blog" | "bocek">("all");
+  const [statusFilter, setStatusFilter] = useState<"pending" | "approved" | "sent" | "all">("pending");
+  const [platformFilter, setPlatformFilter] = useState<"all" | CommentPlatform>("all");
   const [draftEdits, setDraftEdits] = useState<Record<string, string>>({});
   const [selectedImages, setSelectedImages] = useState<Record<string, string>>({});
 
@@ -232,13 +235,57 @@ export default function VaultDashboardClient() {
     setShowAddJob(false);
   };
 
+  const platformBreakdown = useMemo(() => {
+    const defs: Array<{
+      platform: CommentPlatform;
+      label: string;
+      brandGroup: "blog" | "bocek";
+      handle: string;
+      url: string;
+    }> = [
+      { platform: "instagram", label: "Instagram", brandGroup: "bocek", handle: "@kursatsi", url: "https://www.instagram.com/kursatsi/" },
+      { platform: "tiktok", label: "TikTok", brandGroup: "bocek", handle: "@kursat.yz", url: "https://www.tiktok.com/@kursat.yz" },
+      { platform: "youtube", label: "YouTube", brandGroup: "bocek", handle: "@kursatsi", url: "https://studio.youtube.com/" },
+      { platform: "x", label: "X", brandGroup: "bocek", handle: "@kursatsi / @DevKursat", url: "https://x.com/kursatsi" },
+      { platform: "facebook", label: "Facebook", brandGroup: "bocek", handle: "@kursatsi", url: "https://www.facebook.com/kursatsi" },
+      { platform: "kursat_blog", label: "Kürşat Blog", brandGroup: "blog", handle: "kursat.itibar.app", url: "https://kursat.itibar.app/blog" },
+      { platform: "devto", label: "DEV.to", brandGroup: "blog", handle: "@kursatyz", url: "https://dev.to/kursatyz" },
+      { platform: "linkedin", label: "LinkedIn", brandGroup: "blog", handle: "Kürşat Yılmaz", url: "https://www.linkedin.com/in/kursatyilmaz/" },
+      { platform: "hashnode", label: "Hashnode", brandGroup: "blog", handle: "@kursatyz", url: "https://hashnode.com/" },
+    ];
+
+    const comments = data?.store.comments || [];
+    const serverStats = data?.store.summary.platformStats || [];
+
+    return defs.map((d) => {
+      const platComments = comments.filter((c) => c.platform === d.platform);
+      const pending = platComments.filter((c) => c.status === "pending").length;
+      const sent = platComments.filter((c) => c.status === "sent").length;
+      const approved = platComments.filter((c) => c.status === "approved").length;
+      const stat = serverStats.find((s) => s.platform === d.platform);
+      const devtoExtraComments =
+        d.platform === "devto" ? data?.telemetry.summary.devtoTotalComments ?? 0 : 0;
+
+      return {
+        ...d,
+        views: stat?.views ?? 0,
+        totalComments: Math.max(stat?.comments ?? 0, platComments.length, devtoExtraComments),
+        pending,
+        approved,
+        sent,
+        lastActivityAt: stat?.lastActivityAt || platComments[0]?.createdAt || null,
+      };
+    });
+  }, [data]);
+
   const filteredComments = useMemo(() => {
-    const list = data?.store.comments || [];
-    if (commentFilter === "pending") return list.filter((c) => c.status === "pending");
-    if (commentFilter === "blog") return list.filter((c) => c.brandGroup === "blog");
-    if (commentFilter === "bocek") return list.filter((c) => c.brandGroup === "bocek");
-    return list;
-  }, [data, commentFilter]);
+    return (data?.store.comments || []).filter((c) => {
+      if (brandFilter !== "all" && c.brandGroup !== brandFilter) return false;
+      if (statusFilter !== "all" && c.status !== statusFilter) return false;
+      if (platformFilter !== "all" && c.platform !== platformFilter) return false;
+      return true;
+    });
+  }, [data, brandFilter, statusFilter, platformFilter]);
 
   const combinedRadar = useMemo(() => {
     const storeRadar = data?.store.radarActions || [];
@@ -861,26 +908,157 @@ export default function VaultDashboardClient() {
               </section>
             )}
 
-            {/* Filter */}
-            <div className="flex flex-wrap gap-2">
-              {[
-                { id: "pending", label: "Onay Bekleyenler" },
-                { id: "blog", label: "Blog & Teknik" },
-                { id: "bocek", label: "Böcek (@kursatsi)" },
-                { id: "all", label: "Tümü" },
-              ].map((f) => (
-                <button
-                  key={f.id}
-                  onClick={() => setCommentFilter(f.id as typeof commentFilter)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-medium border transition ${
-                    commentFilter === f.id
-                      ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                      : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-zinc-200"
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
+            {/* Sync freshness bar */}
+            <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-400">
+              <span>
+                Otonom Tarama Sıklığı: <strong className="text-zinc-200">2 saatte bir</strong> (EgoBrowser + Radar) · DEV.to verisi her yenilemede canlı çekilir
+              </span>
+              <span>
+                Son Senkron:{" "}
+                {summary?.contentStats.lastSyncAt
+                  ? new Date(summary.contentStats.lastSyncAt).toLocaleString("tr-TR")
+                  : "Henüz sync yok"}
+              </span>
+            </div>
+
+            {/* Clickable Platform Breakdown Grid */}
+            <section className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  Platform Bazlı Durum (Detay İçin Tıkla)
+                </h2>
+                {platformFilter !== "all" && (
+                  <button
+                    onClick={() => setPlatformFilter("all")}
+                    className="text-[11px] text-emerald-400 hover:underline"
+                  >
+                    Tüm Platformları Göster
+                  </button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+                {platformBreakdown
+                  .filter((p) => brandFilter === "all" || p.brandGroup === brandFilter)
+                  .map((p) => {
+                    const selected = platformFilter === p.platform;
+                    return (
+                      <button
+                        key={p.platform}
+                        type="button"
+                        onClick={() =>
+                          setPlatformFilter((prev) => (prev === p.platform ? "all" : p.platform))
+                        }
+                        className={`text-left rounded-xl border p-3 transition ${
+                          selected
+                            ? "border-emerald-400 bg-emerald-500/10 ring-1 ring-emerald-400/30"
+                            : "border-zinc-800/80 bg-zinc-950 hover:border-zinc-700"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-xs font-semibold text-zinc-100">{p.label}</span>
+                          <span
+                            className={`rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase ${
+                              p.brandGroup === "bocek"
+                                ? "bg-pink-500/15 text-pink-300"
+                                : "bg-sky-500/15 text-sky-300"
+                            }`}
+                          >
+                            {p.brandGroup === "bocek" ? "Böcek" : "Blog"}
+                          </span>
+                        </div>
+                        <p className="mt-0.5 text-[10px] text-zinc-500 truncate">{p.handle}</p>
+                        <div className="mt-2 flex items-center justify-between text-[11px]">
+                          <span className="text-zinc-300">{p.totalComments} yorum</span>
+                          {p.pending > 0 ? (
+                            <span className="text-amber-400 font-semibold">
+                              {p.pending} bekliyor
+                            </span>
+                          ) : (
+                            <span className="text-zinc-500">{p.sent} yanıt</span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+              </div>
+            </section>
+
+            {/* Selected Platform Detail Drawer */}
+            {platformFilter !== "all" && (() => {
+              const activePlat = platformBreakdown.find((p) => p.platform === platformFilter);
+              if (!activePlat) return null;
+              return (
+                <div className="rounded-xl border border-emerald-500/30 bg-zinc-950 p-4 flex flex-wrap items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm font-semibold text-emerald-300">
+                        {activePlat.label} Detayı ({activePlat.handle})
+                      </h3>
+                    </div>
+                    <p className="text-xs text-zinc-300">
+                      İzlenme/Okunma: <strong>{activePlat.views.toLocaleString()}</strong> · Toplam Yorum:{" "}
+                      <strong>{activePlat.totalComments}</strong> · Onay Bekleyen:{" "}
+                      <strong className="text-amber-300">{activePlat.pending}</strong> · Gönderilen:{" "}
+                      <strong className="text-emerald-300">{activePlat.sent}</strong>
+                    </p>
+                  </div>
+                  <a
+                    href={activePlat.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 px-3 py-1.5 text-xs text-zinc-100"
+                  >
+                    {activePlat.label} Aç <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              );
+            })()}
+
+            {/* Multi-Axis Filters (Brand + Status) */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { id: "all", label: "Tüm Markalar" },
+                  { id: "blog", label: "Blog & Teknik" },
+                  { id: "bocek", label: "Böcek (@kursatsi)" },
+                ].map((b) => (
+                  <button
+                    key={b.id}
+                    onClick={() => {
+                      setBrandFilter(b.id as typeof brandFilter);
+                      setPlatformFilter("all");
+                    }}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-medium border transition ${
+                      brandFilter === b.id
+                        ? "border-sky-500/40 bg-sky-500/10 text-sky-300"
+                        : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-zinc-200"
+                    }`}
+                  >
+                    {b.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { id: "pending", label: "Onay Bekleyenler" },
+                  { id: "approved", label: "Kuyruktakiler" },
+                  { id: "sent", label: "Gönderilenler" },
+                  { id: "all", label: "Tüm Durumlar" },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setStatusFilter(s.id as typeof statusFilter)}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-medium border transition ${
+                      statusFilter === s.id
+                        ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                        : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-zinc-200"
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Comment Cards */}

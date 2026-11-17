@@ -128,6 +128,16 @@ export interface OpsEmailItem {
   updatedAt: string;
 }
 
+export interface PlatformContentStat {
+  platform: CommentPlatform;
+  brandGroup: BrandGroup;
+  label: string;
+  views: number;
+  comments: number;
+  pendingReplies: number;
+  lastActivityAt?: string;
+}
+
 export interface OpsSummaryDoc {
   freelanceStats: {
     totalApplied: number;
@@ -146,6 +156,7 @@ export interface OpsSummaryDoc {
     radarTodayCount: number;
     lastSyncAt: string | null;
   };
+  platformStats?: PlatformContentStat[];
   mailStats: {
     unreadCount: number;
     highPriorityCount: number;
