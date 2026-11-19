@@ -6,6 +6,7 @@ import {
   type BlogPostSummaryTranslation,
 } from "./blogIndex";
 
+import post00_neon from "./posts/google-gemini-4-neon-fiyat-arbitraji-ve-harness-gercegi";
 import post00 from "./posts/microsoft-agent-framework-pypi-trojani";
 import post00a from "./posts/alibaba-qwen4-max-kapali-model-carki";
 import post00b from "./posts/anthropic-ipo-26-milyar-dongusel-sermaye";
@@ -26,6 +27,7 @@ import post13 from "./posts/10-kasim-teknolojik-egemenlik-ve-ataturk";
 export * from "./blogIndex";
 
 export const BLOG_POSTS: BlogPostItem[] = [
+  post00_neon,
   post00,
   post00a,
   post00b,
