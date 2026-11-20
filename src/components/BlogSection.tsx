@@ -86,13 +86,13 @@ export default function BlogSection({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ type: "spring", stiffness: 260, damping: 24 }}
-          className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0c0d10] p-6 sm:p-8 flex flex-col gap-6"
+          className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0c0d10] p-4 sm:p-5 flex flex-col gap-3.5"
         >
-          <div className="relative z-10 max-w-2xl space-y-2">
-            <h3 className="font-archivo font-bold text-xl sm:text-2xl text-white tracking-tight">
+          <div className="relative z-10 max-w-2xl space-y-1">
+            <h3 className="font-archivo font-bold text-base sm:text-lg text-white tracking-tight">
               {t("blog.linkedin.title")}
             </h3>
-            <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-normal">
+            <p className="text-zinc-400 text-xs leading-relaxed font-normal">
               {t("blog.linkedin.desc")}
             </p>
           </div>
