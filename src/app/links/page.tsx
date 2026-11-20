@@ -42,9 +42,9 @@ const KISISEL_LINKS: LinkBanner[] = [
     handle: "kursat.itibar.app/sponsor • 127.4K+ Tekil Erişim & API/GPU Ar-Ge Partnerliği",
     url: "/sponsor",
     watermark: <Sparkles className="w-full h-full" />,
-    icon: <Sparkles className="w-4 h-4 text-emerald-400" />,
+    icon: <Sparkles className="w-4 h-4 text-zinc-200" />,
     badge: "SPONSOR",
-    glow: "from-emerald-500/20 via-transparent to-transparent",
+    glow: "from-white/15 via-transparent to-transparent",
   },
   {
     id: "itibar",
@@ -121,9 +121,9 @@ const YAZILAR_LINKS: LinkBanner[] = [
     handle: "kursat.itibar.app/sponsor • B2B Benchmark Sponsorluğu & Kredi Hibeleri",
     url: "/sponsor",
     watermark: <Sparkles className="w-full h-full" />,
-    icon: <Sparkles className="w-4 h-4 text-emerald-400" />,
+    icon: <Sparkles className="w-4 h-4 text-zinc-200" />,
     badge: "SPONSOR",
-    glow: "from-emerald-500/20 via-transparent to-transparent",
+    glow: "from-white/15 via-transparent to-transparent",
   },
   {
     id: "blog",

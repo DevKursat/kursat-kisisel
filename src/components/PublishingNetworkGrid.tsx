@@ -28,25 +28,25 @@ import {
 function renderChannelIcon(id: PublishingChannel["id"]) {
   switch (id) {
     case "linkedin":
-      return <LinkedinIcon className="w-4 h-4 shrink-0 text-blue-400" />;
+      return <LinkedinIcon className="w-4 h-4 shrink-0 text-white" />;
     case "x":
       return <TwitterXIcon className="w-3.5 h-3.5 shrink-0 text-zinc-200" />;
     case "devto":
       return <DevtoIcon className="w-4 h-4 shrink-0 text-zinc-200" />;
     case "reddit":
-      return <RedditIcon className="w-4 h-4 shrink-0 text-orange-400/90" />;
+      return <RedditIcon className="w-4 h-4 shrink-0 text-zinc-200" />;
     case "hackernews":
-      return <Flame className="w-4 h-4 shrink-0 text-orange-400/90" />;
+      return <Flame className="w-4 h-4 shrink-0 text-zinc-200" />;
     case "medium":
       return <MediumIcon className="w-4 h-4 shrink-0 text-zinc-200" />;
     case "hashnode":
-      return <HashnodeIcon className="w-4 h-4 shrink-0 text-blue-400/90" />;
+      return <HashnodeIcon className="w-4 h-4 shrink-0 text-zinc-200" />;
     case "dailydev":
       return <Sparkles className="w-4 h-4 shrink-0 text-zinc-200" />;
     case "indiehackers":
-      return <IndieHackersIcon className="w-4 h-4 shrink-0 text-sky-400/90" />;
+      return <IndieHackersIcon className="w-4 h-4 shrink-0 text-zinc-200" />;
     case "bluesky":
-      return <BlueskyIcon className="w-4 h-4 shrink-0 text-cyan-400/90" />;
+      return <BlueskyIcon className="w-4 h-4 shrink-0 text-zinc-200" />;
     case "rss":
       return <Rss className="w-4 h-4 shrink-0 text-zinc-300" />;
   }
