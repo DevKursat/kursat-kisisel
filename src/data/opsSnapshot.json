@@ -1,5 +1,12 @@
 {
-  "syncedAt": "2026-11-16T15:58:42.493Z",
+  "syncedAt": "2026-11-20T00:00:21.351Z",
+  "authorityMetrics": {
+    "peakLinkedInImpressions": 127466,
+    "top3FlagshipAvgImpressions": 67822,
+    "verifiedB2BImpressions": 211930,
+    "shortFormEcosystemViews": 109200,
+    "cumulativeEcosystemReach": 321130
+  },
   "performanceLog": [
     {
       "date": "2026-10-15",
@@ -32,6 +39,50 @@
       "notes": "High executive dwell time"
     },
     {
+      "date": "2026-11-17",
+      "slug": "alibaba-qwen4-max-kapali-model-carki",
+      "topic": "Alibaba Qwen4-Max & Kapalı API Çarkı",
+      "platform": "all",
+      "vse": 93,
+      "publishTime": "18:30",
+      "impressions": 5505,
+      "comments": 7,
+      "notes": "Hacker News #2 trend; queued for 18:30 LinkedIn; Blog/X/DEV.to pipeline staged"
+    },
+    {
+      "date": "2026-11-16",
+      "slug": "anthropic-ipo-26-milyar-dongusel-sermaye",
+      "topic": "Anthropic IPO & $26B Döngüsel Sermaye",
+      "platform": "all",
+      "vse": 91,
+      "publishTime": "18:30",
+      "impressions": 1497,
+      "comments": 0,
+      "notes": "Weekly Roast Day — queued for 18:30 LinkedIn; Blog/X/DEV.to live at 16:22"
+    },
+    {
+      "date": "2026-11-18",
+      "slug": "microsoft-agent-framework-pypi-trojani",
+      "topic": "Microsoft agent-framework PyPI .pth Supply-Chain Trojan",
+      "platform": "all",
+      "vse": 95,
+      "publishTime": "19:13",
+      "impressions": 845,
+      "comments": 4,
+      "notes": "Wednesday flagship; blog + X + LinkedIn + DEV.to"
+    },
+    {
+      "date": "2026-11-19",
+      "slug": "google-gemini-4-neon-fiyat-arbitraji-ve-harness-gercegi",
+      "topic": "Google Gemini 4 Neon: Fiyat Arbitrajı, Periyodik Tablo Enflasyonu ve 3x Harness Gerçeği",
+      "platform": "all",
+      "vse": 94,
+      "publishTime": "18:12",
+      "impressions": 617,
+      "comments": 18,
+      "notes": "Thursday flagship; blog + LinkedIn + X + DEV.to + Reddit r/artificial"
+    },
+    {
       "date": "2026-11-15",
       "slug": "openai-chatgpt-wallet-ve-lovable-veri-sizintisi",
       "topic": "ChatGPT Wallet & Lovable RLS Sızıntısı",
@@ -41,66 +92,359 @@
       "impressions": null,
       "comments": null,
       "notes": "Awaiting 24h metrics update"
-    },
-    {
-      "date": "2026-11-16",
-      "slug": "anthropic-ipo-26-milyar-dongusel-sermaye",
-      "topic": "Anthropic IPO & $26B Döngüsel Sermaye",
-      "platform": "all",
-      "vse": 91,
-      "publishTime": "18:30",
-      "impressions": null,
-      "comments": null,
-      "notes": "Weekly Roast Day — queued for 18:30 LinkedIn; Blog/X/DEV.to live at 16:22"
     }
   ],
-  "radarLog": [],
+  "radarLog": [
+    {
+      "ts": "2026-11-17T00:21:19.719Z",
+      "platform": "x",
+      "target": "@hwchase17",
+      "url": "https://x.com/hwchase17/status/2122391663889039828",
+      "targetAgeMinutes": 371,
+      "replyPreview": "The real architectural challenge right now isn't raw parameter scale, but grounding and deterministic execution in multi-agent workflows. Le"
+    },
+    {
+      "ts": "2026-11-17T00:21:40.760Z",
+      "platform": "devto",
+      "target": "remdore",
+      "title": "Deploying new Temporal workflow code while workflows are running",
+      "url": "https://dev.to/remdore/deploying-new-temporal-workflow-code-while-workflows-are-running-4150",
+      "replyPreview": "Distributed orchestration frameworks fail when failure states are masked behind optimistic retry loops.\n\nIf execution guarantees aren't cras"
+    },
+    {
+      "ts": "2026-11-17T00:52:00.125Z",
+      "platform": "x",
+      "target": "@mitchellh",
+      "url": "https://x.com/mitchellh/status/2122475070635622458",
+      "targetAgeMinutes": 71,
+      "replyPreview": "Native execution, instant startup, and zero runtime bloat will always feel like magic compared to sluggish web-based developer tooling. Craf"
+    },
+    {
+      "ts": "2026-11-17T01:22:28.692Z",
+      "platform": "x",
+      "target": "@garrytan",
+      "url": "https://x.com/garrytan/status/2122487869780742304",
+      "targetAgeMinutes": 50,
+      "replyPreview": "The real architectural challenge right now isn't raw parameter scale, but grounding and deterministic execution in multi-agent workflows. Le"
+    },
+    {
+      "ts": "2026-11-17T01:52:55.974Z",
+      "platform": "x",
+      "target": "@rauchg",
+      "url": "https://x.com/rauchg/status/2122458782294847807",
+      "targetAgeMinutes": 196,
+      "replyPreview": "Simplicity and raw execution speed always defeat enterprise feature bloat. Tooling should vanish behind developer velocity."
+    },
+    {
+      "ts": "2026-11-17T01:53:14.041Z",
+      "platform": "devto",
+      "target": "willpeixoto",
+      "title": "Is multi-cloud more resilient? The math says no",
+      "url": "https://dev.to/aws-builders/is-multi-cloud-more-resilient-the-math-says-no-221i",
+      "replyPreview": "Clean architecture is easy to maintain in a slide deck; the real test is how gracefully the system degrades under cascading production failu"
+    },
+    {
+      "ts": "2026-11-17T02:23:33.818Z",
+      "platform": "x",
+      "target": "@simonw",
+      "url": "https://x.com/simonw/status/2122500307557265651",
+      "targetAgeMinutes": 62,
+      "replyPreview": "Treating untrusted LLM outputs with defensive boundary isolation is still the most underrated engineering practice. Defensive sandbox execut"
+    },
+    {
+      "ts": "2026-11-17T02:54:03.314Z",
+      "platform": "x",
+      "target": "@swyx",
+      "url": "https://x.com/swyx/status/2122418961107284083",
+      "targetAgeMinutes": 416,
+      "replyPreview": "The shift from wrapper startups to durable cognitive architectures is finally happening. Context window expansion solved ingestion; determin"
+    },
+    {
+      "ts": "2026-11-17T02:54:21.266Z",
+      "platform": "devto",
+      "target": "litprotocol",
+      "title": "How to build a Hyperliquid trading bot without keeping the private key on your server",
+      "url": "https://dev.to/litprotocol/how-to-build-a-hyperliquid-trading-bot-without-keeping-the-private-key-on-your-server-10d7",
+      "replyPreview": "Clean architecture is easy to maintain in a slide deck; the real test is how gracefully the system degrades under cascading production failu"
+    },
+    {
+      "ts": "2026-11-17T03:24:41.551Z",
+      "platform": "x",
+      "target": "@paulg",
+      "url": "https://x.com/paulg/status/2122445700105445886",
+      "targetAgeMinutes": 340,
+      "replyPreview": "The real architectural challenge right now isn't raw parameter scale, but grounding and deterministic execution in multi-agent workflows. Le"
+    },
+    {
+      "ts": "2026-11-17T03:55:09.510Z",
+      "platform": "x",
+      "target": "@bindureddy",
+      "url": "https://x.com/bindureddy/status/2122535822377578589",
+      "targetAgeMinutes": 12,
+      "replyPreview": "Open-weights distillation is moving faster than proprietary enterprise releases. Local quantizations running on commodity hardware are alrea"
+    },
+    {
+      "ts": "2026-11-18T00:25:41.148Z",
+      "platform": "x",
+      "target": "@bindureddy",
+      "url": "https://x.com/bindureddy/status/2122818383968350601",
+      "targetAgeMinutes": 120,
+      "replyPreview": "Open-weights distillation is moving faster than proprietary enterprise releases. Local quantizations running on commodity hardware are alrea"
+    },
+    {
+      "ts": "2026-11-18T00:26:01.694Z",
+      "platform": "devto",
+      "target": "elidoapp",
+      "title": "What a short-link redirect costs: about 4 microseconds in Go",
+      "url": "https://dev.to/elidoapp/what-a-short-link-redirect-costs-about-4-microseconds-in-go-njf",
+      "replyPreview": "Memory safety and zero-cost abstractions only deliver their promise when you understand the underlying cache hierarchy and syscall overhead."
+    },
+    {
+      "ts": "2026-11-18T00:56:20.407Z",
+      "platform": "x",
+      "target": "@levelsio",
+      "url": "https://x.com/levelsio/status/2122818385570337275",
+      "targetAgeMinutes": 151,
+      "replyPreview": "Vanilla stacks and pure shipping velocity keep outperforming over-engineered corporate architecture. Ship fast, charge immediately, keep inf"
+    },
+    {
+      "ts": "2026-11-18T00:56:41.481Z",
+      "platform": "devto",
+      "target": "sarvar_04",
+      "title": "AI agents open 17 million pull requests a month. I built a gate that rejects the ones that lie.",
+      "url": "https://dev.to/aws-builders/ai-agents-open-17-million-pull-requests-a-month-i-built-a-gate-that-rejects-the-ones-that-lie-46n7",
+      "replyPreview": "The obsession with wrapping remote APIs into multi-layered agent abstractions is creating massive hidden latency and failure cascades in pro"
+    },
+    {
+      "ts": "2026-11-18T01:27:00.262Z",
+      "platform": "x",
+      "target": "@sama",
+      "url": "https://x.com/sama/status/2122798039899263456",
+      "targetAgeMinutes": 262,
+      "replyPreview": "Local inference and hybrid deployment topologies are proving to be the only sustainable hedge against centralized API rate volatility and pr"
+    },
+    {
+      "ts": "2026-11-18T01:27:18.739Z",
+      "platform": "devto",
+      "target": "ndcodes",
+      "title": "Day 85: A Task That Always Changes and Two Halves",
+      "url": "https://dev.to/ndcodes/day-85-one-direction-and-two-halves-5cic",
+      "replyPreview": "Clean architecture is easy to maintain in a slide deck; the real test is how gracefully the system degrades under cascading production failu"
+    },
+    {
+      "ts": "2026-11-18T01:57:43.273Z",
+      "platform": "x",
+      "target": "@simonw",
+      "url": "https://x.com/simonw/status/2122822310428279136",
+      "targetAgeMinutes": 197,
+      "replyPreview": "Treating untrusted LLM outputs with defensive boundary isolation is still the most underrated engineering practice. Defensive sandbox execut"
+    },
+    {
+      "ts": "2026-11-18T02:28:18.455Z",
+      "platform": "x",
+      "target": "@OfficialLoganK",
+      "url": "https://x.com/OfficialLoganK/status/2122818500763009273",
+      "targetAgeMinutes": 242,
+      "replyPreview": "The rate of capability iteration is wild, but benchmark saturation is real. Real-world edge case resilience in autonomous agents is where th"
+    },
+    {
+      "ts": "2026-11-18T02:58:41.942Z",
+      "platform": "x",
+      "target": "@swyx",
+      "url": "https://x.com/swyx/status/2122862646265520150",
+      "targetAgeMinutes": 97,
+      "replyPreview": "The shift from wrapper startups to durable cognitive architectures is finally happening. Context window expansion solved ingestion; determin"
+    },
+    {
+      "ts": "2026-11-18T03:29:05.000Z",
+      "platform": "x",
+      "target": "@rauchg",
+      "url": "https://x.com/rauchg/status/2122846434177531945",
+      "targetAgeMinutes": 192,
+      "replyPreview": "Simplicity and raw execution speed always defeat enterprise feature bloat. Tooling should vanish behind developer velocity."
+    },
+    {
+      "ts": "2026-11-18T03:59:26.451Z",
+      "platform": "x",
+      "target": "@hwchase17",
+      "url": "https://x.com/hwchase17/status/2122757916398862740",
+      "targetAgeMinutes": 574,
+      "replyPreview": "The real architectural challenge right now isn't raw parameter scale, but grounding and deterministic execution in multi-agent workflows. Le"
+    },
+    {
+      "ts": "2026-11-19T00:30:11.798Z",
+      "platform": "x",
+      "target": "@paulg",
+      "url": "https://x.com/paulg/status/2123122026932007233",
+      "targetAgeMinutes": 358,
+      "replyPreview": "The real architectural challenge right now isn't raw parameter scale, but grounding and deterministic execution in multi-agent workflows. Le"
+    },
+    {
+      "ts": "2026-11-19T00:30:33.345Z",
+      "platform": "devto",
+      "target": "tacuns_firewall",
+      "title": "I Built an Open-Source Android Firewall Because My \"Offline\" Apps Were Making 4,000+ Silent Connections a Day",
+      "url": "https://dev.to/tacuns_firewall/i-built-an-open-source-android-firewall-because-my-offline-apps-were-making-4000-silent-9lc",
+      "replyPreview": "The obsession with wrapping remote APIs into multi-layered agent abstractions is creating massive hidden latency and failure cascades in pro"
+    },
+    {
+      "ts": "2026-11-19T01:00:53.227Z",
+      "platform": "x",
+      "target": "@hwchase17",
+      "url": "https://x.com/hwchase17/status/2123127685455249854",
+      "targetAgeMinutes": 366,
+      "replyPreview": "The real architectural challenge right now isn't raw parameter scale, but grounding and deterministic execution in multi-agent workflows. Le"
+    },
+    {
+      "ts": "2026-11-19T01:01:13.690Z",
+      "platform": "devto",
+      "target": "nyaomaru",
+      "title": "Why I Rewrote type-tune from TypeScript to Rust 🦀",
+      "url": "https://dev.to/necoz/why-i-rewrote-type-tune-from-typescript-to-rust-1egg",
+      "replyPreview": "Memory safety and zero-cost abstractions only deliver their promise when you understand the underlying cache hierarchy and syscall overhead."
+    },
+    {
+      "ts": "2026-11-19T01:31:45.957Z",
+      "platform": "x",
+      "target": "@OfficialLoganK",
+      "url": "https://x.com/OfficialLoganK/status/2123216422122016965",
+      "targetAgeMinutes": 45,
+      "replyPreview": "The rate of capability iteration is wild, but benchmark saturation is real. Real-world edge case resilience in autonomous agents is where th"
+    },
+    {
+      "ts": "2026-11-19T01:32:04.273Z",
+      "platform": "devto",
+      "target": "kangchanghwan",
+      "title": "Passing a Room Key with 4 Pictures: Implementing SPAKE2 (RFC 9382) in the Browser",
+      "url": "https://dev.to/kangchanghwan/passing-a-room-key-with-4-pictures-implementing-spake2-rfc-9382-in-the-browser-ah9",
+      "replyPreview": "Clean architecture is easy to maintain in a slide deck; the real test is how gracefully the system degrades under cascading production failu"
+    },
+    {
+      "ts": "2026-11-19T02:02:37.438Z",
+      "platform": "x",
+      "target": "@svpino",
+      "url": "https://x.com/svpino/status/2123133958829613496",
+      "targetAgeMinutes": 403,
+      "replyPreview": "The real architectural challenge right now isn't raw parameter scale, but grounding and deterministic execution in multi-agent workflows. Le"
+    },
+    {
+      "ts": "2026-11-19T02:32:58.859Z",
+      "platform": "x",
+      "target": "@rauchg",
+      "url": "https://x.com/rauchg/status/2123237505810178434",
+      "targetAgeMinutes": 22,
+      "replyPreview": "Software sovereignty starts with compute ownership. Thin middleware wrappers are getting squeezed out—builders want bare-metal throughput an"
+    },
+    {
+      "ts": "2026-11-19T03:03:18.188Z",
+      "platform": "x",
+      "target": "@sama",
+      "url": "https://x.com/sama/status/2123103873166381287",
+      "targetAgeMinutes": 583,
+      "replyPreview": "Long-horizon autonomous execution will break traditional API pricing models. Compute sovereignty is going to be the real bottleneck for inde"
+    },
+    {
+      "ts": "2026-11-19T03:34:00.687Z",
+      "platform": "x",
+      "target": "@garrytan",
+      "url": "https://x.com/garrytan/status/2123146532497268847",
+      "targetAgeMinutes": 445,
+      "replyPreview": "The real architectural challenge right now isn't raw parameter scale, but grounding and deterministic execution in multi-agent workflows. Le"
+    },
+    {
+      "ts": "2026-11-19T04:04:50.178Z",
+      "platform": "x",
+      "target": "@bindureddy",
+      "url": "https://x.com/bindureddy/status/2123265459072245982",
+      "targetAgeMinutes": 3,
+      "replyPreview": "Open-weights distillation is moving faster than proprietary enterprise releases. Local quantizations running on commodity hardware are alrea"
+    },
+    {
+      "ts": "2026-11-19T18:59:40.538Z",
+      "platform": "linkedin_news",
+      "target": "Anthropic's market cap soars past $2T as public trading begins 46 dakika önce • 28.867 okuyucu",
+      "url": "https://www.linkedin.com/news/story/anthropics-market-cap-soars-past-2t-as-public-trading-begins-7799932/",
+      "replyPreview": "$83 halka arz fiyatıyla toplanan $81,3 milyarlık sermaye, yeni nesil eğitim kümeleri ve özel silikon yatırımları için devasa bir kaynak yara"
+    },
+    {
+      "ts": "2026-11-19T19:00:09.910Z",
+      "platform": "reddit_rising",
+      "target": "r/artificial",
+      "title": "It's Official! Voyager 1 Is The First Spacecraft To Reach One Light-Day From Earth",
+      "url": "https://old.reddit.com/r/artificial/comments/1y024o3/its_official_voyager_1_is_the_first_spacecraft_to/",
+      "replyPreview": "A 48-hour round-trip light delay on kilobytes of 1970s memory forces real systems engineering, where every bit of bandwidth and watt of powe"
+    },
+    {
+      "ts": "2026-11-19T19:01:51.496Z",
+      "platform": "linkedin_news",
+      "target": "Nvidia eyes Arm CEO as potential Huang successor 1 saat önce • 3.656 okuyucu",
+      "url": "https://www.linkedin.com/news/story/nvidia-eyes-arm-ceo-as-potential-huang-successor-7796484/",
+      "replyPreview": "Contacting Arm CEO Rene Haas signals a potential tilt toward IP-level ecosystem diplomacy, whereas Nvidia’s unit economics depend on tight v"
+    },
+    {
+      "ts": "2026-11-19T19:02:20.311Z",
+      "platform": "reddit_rising",
+      "target": "r/LocalLLaMA",
+      "title": "Cloudflare releases the weights of Clairic, its AI that reads invoices and receipts",
+      "url": "https://old.reddit.com/r/LocalLLaMA/comments/1y03byh/cloudflare_releases_the_weights_of_clairic_its_ai/",
+      "replyPreview": "Open weights for document extraction are only half the story when high-res vision encoders still turn a single dense invoice into thousands "
+    }
+  ],
   "radarState": {
-    "date": "2026-11-16",
+    "date": "2026-11-19",
     "repliesCountToday": 8,
     "repliedTweetIds": [
-      "https://x.com/svpino/status/1610984481342771200",
-      "https://x.com/simonw/status/2121695097674981849",
-      "https://x.com/garrytan/status/1690019429965537281",
-      "https://x.com/mitchellh/status/2121681502316757065",
-      "https://x.com/swyx/status/1281424520100737025",
-      "https://x.com/lexfridman/status/2122015845031264350",
-      "https://x.com/paulg/status/2122114597494866218",
-      "https://x.com/bindureddy/status/2122103295410094466"
+      "https://x.com/paulg/status/2123122026932007233",
+      "https://x.com/hwchase17/status/2123127685455249854",
+      "https://x.com/OfficialLoganK/status/2123216422122016965",
+      "https://x.com/svpino/status/2123133958829613496",
+      "https://x.com/rauchg/status/2123237505810178434",
+      "https://x.com/sama/status/2123103873166381287",
+      "https://x.com/garrytan/status/2123146532497268847",
+      "https://x.com/bindureddy/status/2123265459072245982"
     ],
     "repliedTargetsToday": [
-      "svpino",
-      "simonw",
-      "garrytan",
-      "mitchellh",
-      "swyx",
-      "lexfridman",
       "paulg",
+      "hwchase17",
+      "OfficialLoganK",
+      "svpino",
+      "rauchg",
+      "sama",
+      "garrytan",
       "bindureddy"
     ],
-    "lastActionTimestamp": 1794801036440,
-    "devtoCommentsCountToday": 5,
+    "lastActionTimestamp": 1795114940310,
+    "devtoCommentsCountToday": 3,
     "commentedArticleUrls": [
-      "https://dev.to/earlgreyhot1701d/ghost-rovers-i-called-12-machines-nasa-left-behind-one-picked-up-2575",
-      "https://dev.to/amananandrai/avengers-doomsday-is-5-weeks-away-so-i-built-hexagon-readme-badges-what-are-you-building-32d6",
-      "https://dev.to/canad1an/numbering-photos-is-easy-letting-people-reorder-them-is-not-2d99",
-      "https://dev.to/ben/long-live-rails-3p21",
-      "https://dev.to/mishmanners/how-to-deploy-to-azure-when-you-built-something-with-ai-4mk3"
-    ]
+      "https://dev.to/tacuns_firewall/i-built-an-open-source-android-firewall-because-my-offline-apps-were-making-4000-silent-9lc",
+      "https://dev.to/necoz/why-i-rewrote-type-tune-from-typescript-to-rust-1egg",
+      "https://dev.to/kangchanghwan/passing-a-room-key-with-4-pictures-implementing-spake2-rfc-9382-in-the-browser-ah9"
+    ],
+    "commentedStorylineUrls": [
+      "https://www.linkedin.com/news/story/anthropics-market-cap-soars-past-2t-as-public-trading-begins-7799932/",
+      "https://www.linkedin.com/news/story/nvidia-eyes-arm-ceo-as-potential-huang-successor-7796484/"
+    ],
+    "commentedRedditPostIds": [
+      "t3_1y024o3",
+      "t3_1y03byh"
+    ],
+    "liNewsCommentsCountToday": 2,
+    "redditRisingCountToday": 2
   },
   "latestPublish": {
-    "id": "post-2026-11-16-anthropic-ipo-circular",
-    "title": "Sağ Cepten Sol Cebe $26 Milyar: Anthropic IPO ve Döngüsel Compute Tiyatrosu",
-    "scheduledDate": "2026-11-16",
+    "id": "post-2026-11-19-google-gemini-4-neon-fiyat-arbitraji",
+    "title": "Periyodik Tablo Enflasyonu ve 3x Harness Gerçeği: Google Gemini 4 Neon Otopsisi",
+    "scheduledDate": "2026-11-19",
     "scheduledWindow": "18:30",
     "status": "published",
-    "publishedAt": "2026-11-16T15:30:45.272Z",
-    "blogSlug": "anthropic-ipo-26-milyar-dongusel-sermaye",
+    "publishedAt": "2026-11-19T15:12:10.807Z",
+    "blogSlug": "google-gemini-4-neon-fiyat-arbitraji-ve-harness-gercegi",
     "publishedUrls": {
-      "blog": "https://kursat.itibar.app/blog/anthropic-ipo-26-milyar-dongusel-sermaye",
-      "x": null,
+      "blog": "https://kursat.itibar.app/blog/google-gemini-4-neon-fiyat-arbitraji-ve-harness-gercegi?lang=en",
+      "x": "https://x.com/DevKursat",
       "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
-      "devto": "https://dev.to/kursatyz/the-26b-circular-loop-anthropics-14t-nasdaq-ipo-and-silicon-valleys-compute-theater-4f4g"
+      "devto": "https://dev.to/kursatyz/periodic-table-inflation-and-the-3x-harness-truth-a-google-gemini-4-neon-autopsy-12p2",
+      "reddit": "https://www.reddit.com/r/artificial/comments/1y0btfc/gemini_4_neon_jumps_3x_on_swesweep_128_to_390/"
     }
   },
   "queue": [
@@ -252,6 +596,52 @@
         "x": "https://x.com/DevKursat/status/2122358529889571225",
         "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
         "devto": "https://dev.to/kursatyz/the-26b-circular-loop-anthropics-14t-nasdaq-ipo-and-silicon-valleys-compute-theater-4f4g"
+      }
+    },
+    {
+      "id": "post-2026-11-17-qwen4-max-kapali-model",
+      "title": "12 Günlük Açık Kaynak Sözü: Alibaba'nın Qwen4-Max İle Kapalı API Çarkı",
+      "scheduledDate": "2026-11-17",
+      "scheduledWindow": "18:30",
+      "status": "published",
+      "publishedAt": "2026-11-17T15:31:43.444Z",
+      "blogSlug": "alibaba-qwen4-max-kapali-model-carki",
+      "publishedUrls": {
+        "blog": "https://kursat.itibar.app/blog/alibaba-qwen4-max-kapali-model-carki",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/kursatyz/the-12-day-open-source-pledge-alibaba-locks-qwen4-max-behind-a-closed-api-1267"
+      }
+    },
+    {
+      "id": "post-2026-11-18-microsoft-agent-framework-pypi-trojani",
+      "title": "Ignite Sahnesinde MAI Şovu, PyPI'da .pth Soygunu: Microsoft Agent Framework Skandalı",
+      "scheduledDate": "2026-11-18",
+      "scheduledWindow": "18:30",
+      "status": "published",
+      "publishedAt": "2026-11-18T16:15:09.697Z",
+      "blogSlug": "microsoft-agent-framework-pypi-trojani",
+      "publishedUrls": {
+        "blog": null,
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/kursatyz/mai-code-2-on-stage-pth-credential-theft-on-pypi-the-microsoft-agent-framework-breach-1c2f"
+      }
+    },
+    {
+      "id": "post-2026-11-19-google-gemini-4-neon-fiyat-arbitraji",
+      "title": "Periyodik Tablo Enflasyonu ve 3x Harness Gerçeği: Google Gemini 4 Neon Otopsisi",
+      "scheduledDate": "2026-11-19",
+      "scheduledWindow": "18:30",
+      "status": "published",
+      "publishedAt": "2026-11-19T15:12:10.807Z",
+      "blogSlug": "google-gemini-4-neon-fiyat-arbitraji-ve-harness-gercegi",
+      "publishedUrls": {
+        "blog": "https://kursat.itibar.app/blog/google-gemini-4-neon-fiyat-arbitraji-ve-harness-gercegi?lang=en",
+        "x": "https://x.com/DevKursat",
+        "linkedin": "https://www.linkedin.com/in/kürşatyılmaz/",
+        "devto": "https://dev.to/kursatyz/periodic-table-inflation-and-the-3x-harness-truth-a-google-gemini-4-neon-autopsy-12p2",
+        "reddit": "https://www.reddit.com/r/artificial/comments/1y0btfc/gemini_4_neon_jumps_3x_on_swesweep_128_to_390/"
       }
     }
   ]

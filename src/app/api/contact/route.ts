@@ -4,6 +4,23 @@ import path from "path";
 
 const MESSAGES_FILE = path.join(process.cwd(), "data", "messages.json");
 const NTFY_TOPIC = "kursat-li-7f3a91";
+const TELEGRAM_BOT_TOKEN = "8852830220:AAHIe0yNdswdq9qYc5mSv4uTtIp_ORpIwvk";
+const TELEGRAM_CHAT_ID = "8262872103";
+
+async function notifyTelegramSafe(text: string) {
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text,
+      }),
+    });
+  } catch (err) {
+    console.error("Telegram notification error:", err);
+  }
+}
 
 async function appendRecordSafe(record: Record<string, unknown>) {
   try {
@@ -90,6 +107,7 @@ export async function POST(request: Request) {
       await Promise.all([
         notifyNtfySafe("New Newsletter Subscriber", summaryText),
         notifyResendSafe(`Yeni Blog Abonesi: ${subscriber.email}`, summaryText),
+        notifyTelegramSafe(`📬 Yeni Bülten Abonesi:\n${summaryText}`),
       ]);
 
       return NextResponse.json({
@@ -122,6 +140,7 @@ export async function POST(request: Request) {
     await appendRecordSafe(newMessage);
 
     const textPayload = `İsim: ${newMessage.name}\nE-posta: ${newMessage.email}\nTelefon: ${newMessage.phone || "-"}\nKategori: ${newMessage.role || "-"}\n\nMesaj:\n${newMessage.message}`;
+    const isSponsor = /sponsor|kredi|grant|partner|media kit/i.test(String(newMessage.role || ""));
     await Promise.all([
       notifyNtfySafe(
         `New Portfolio Message: ${newMessage.role || "General"}`,
@@ -130,6 +149,9 @@ export async function POST(request: Request) {
       notifyResendSafe(
         `Yeni Portfolio Mesajı: ${newMessage.name} [${newMessage.role || "Genel"}]`,
         textPayload
+      ),
+      notifyTelegramSafe(
+        `${isSponsor ? "🤝💼 YENİ SPONSORLUK / PARTNERLİK TALEBİ!" : "📩 Yeni Portfolio İletişim Mesajı:"}\n\n${textPayload}`
       ),
     ]);
 

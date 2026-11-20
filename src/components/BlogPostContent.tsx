@@ -919,6 +919,27 @@ export function ArticleMarkup({
         )}
 
         <footer className="mt-14 pt-8 border-t border-white/10 flex flex-col gap-4">
+          <Link
+            href="/sponsor"
+            className="mb-4 rounded-2xl border border-emerald-500/25 bg-emerald-500/[0.04] hover:bg-emerald-500/[0.09] hover:border-emerald-400/45 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all group"
+          >
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-emerald-400">
+                <Sparkles className="w-3 h-3" />
+                <span>{activeLang === "tr" ? "SPONSORLUK & AR-GE PARTNERLİĞİ" : "SPONSORSHIP & R&D PARTNERSHIP"}</span>
+              </div>
+              <p className="text-xs sm:text-sm text-zinc-200 font-medium">
+                {activeLang === "tr"
+                  ? "127.4K+ zirve mühendislik erişimiyle AI, Cloud & Oyun teknolojinizi öne çıkarın"
+                  : "Put your AI, Cloud, or Game-Dev tool in front of 127.4K+ peak engineering reach"}
+              </p>
+            </div>
+            <span className="inline-flex items-center gap-1.5 shrink-0 px-3.5 py-2 rounded-full bg-white text-black text-xs font-mono font-bold group-hover:bg-emerald-300 transition-colors">
+              <span>{activeLang === "tr" ? "Media Kit" : "Media Kit"}</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </span>
+          </Link>
+
           <div className="text-xs font-mono text-zinc-500">
             {ui.footerSubtitle}
           </div>

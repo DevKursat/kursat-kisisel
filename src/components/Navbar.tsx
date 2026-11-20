@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import AudioController from "./AudioController";
 import { MonochromeTRFlag } from "./Icons";
 import { useLanguage } from "@/context/LanguageContext";
@@ -136,6 +137,12 @@ export default function Navbar() {
             >
               {t("nav.writing")}
             </a>
+            <Link
+              href="/sponsor"
+              className="text-emerald-300/90 hover:text-white transition-colors"
+            >
+              {lang === "tr" ? "Sponsorluk" : "Media Kit"}
+            </Link>
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "contact", t("nav.contact"))}

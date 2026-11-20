@@ -37,6 +37,16 @@ interface LinkBanner {
 
 const KISISEL_LINKS: LinkBanner[] = [
   {
+    id: "sponsor-kisisel",
+    title: "Sponsorluk & Media Kit",
+    handle: "kursat.itibar.app/sponsor • 127.4K+ Tekil Erişim & API/GPU Ar-Ge Partnerliği",
+    url: "/sponsor",
+    watermark: <Sparkles className="w-full h-full" />,
+    icon: <Sparkles className="w-4 h-4 text-emerald-400" />,
+    badge: "SPONSOR",
+    glow: "from-emerald-500/20 via-transparent to-transparent",
+  },
+  {
     id: "itibar",
     title: "İtibar",
     handle: "itibar.app • Yapay Zeka Dijital İtibar Motoru",
@@ -105,6 +115,16 @@ const KISISEL_LINKS: LinkBanner[] = [
 ];
 
 const YAZILAR_LINKS: LinkBanner[] = [
+  {
+    id: "sponsor-yazilar",
+    title: "Sponsorluk & Media Kit",
+    handle: "kursat.itibar.app/sponsor • B2B Benchmark Sponsorluğu & Kredi Hibeleri",
+    url: "/sponsor",
+    watermark: <Sparkles className="w-full h-full" />,
+    icon: <Sparkles className="w-4 h-4 text-emerald-400" />,
+    badge: "SPONSOR",
+    glow: "from-emerald-500/20 via-transparent to-transparent",
+  },
   {
     id: "blog",
     title: "Teknik Günlük / Blog",
