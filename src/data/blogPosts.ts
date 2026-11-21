@@ -6,6 +6,7 @@ import {
   type BlogPostSummaryTranslation,
 } from "./blogIndex";
 
+import post00_riemann from "./posts/levent-alpoge-claude-riemann-hipotezi-17-milyon-satir-lean-kaniti";
 import post00_starlink from "./posts/elon-musk-spacex-25-milyar-starlink-cati-baz-istasyonu";
 import post00_neon from "./posts/google-gemini-4-neon-fiyat-arbitraji-ve-harness-gercegi";
 import post00 from "./posts/microsoft-agent-framework-pypi-trojani";
@@ -28,6 +29,7 @@ import post13 from "./posts/10-kasim-teknolojik-egemenlik-ve-ataturk";
 export * from "./blogIndex";
 
 export const BLOG_POSTS: BlogPostItem[] = [
+  post00_riemann,
   post00_starlink,
   post00_neon,
   post00,
