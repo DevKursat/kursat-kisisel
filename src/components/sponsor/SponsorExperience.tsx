@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check, Download } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import SponsorHeroBackdrop from "@/components/sponsor/SponsorHeroBackdrop";
 import opsSnapshot from "@/data/opsSnapshot.json";
@@ -64,6 +64,20 @@ const DEFAULT_AUTHORITY: AuthorityMetrics = {
   verifiedB2BImpressions: 212444,
   shortFormEcosystemViews: 109200,
   cumulativeEcosystemReach: 321644,
+};
+
+const DISPATCH_OVERRIDES: Record<string, { enTopic: string; slug?: string }> = {
+  "2026-10-15": {
+    enTopic: "Apple Ecosystem & Systems Engineering Autopsy",
+  },
+  "2026-10-28": {
+    enTopic: "Claude Code Trojan & Supply-Chain Security",
+    slug: "claude-code-trojan-npm-analiz",
+  },
+  "2026-11-02": {
+    enTopic: "Sam Altman & AI Compute Monopolies",
+    slug: "sam-altman-ram-krizi",
+  },
 };
 
 function subscribeViewport(callback: () => void) {
@@ -342,6 +356,10 @@ export default function SponsorExperience() {
     }
   };
 
+  const handlePrintMediaKit = () => {
+    window.print();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
@@ -386,21 +404,25 @@ export default function SponsorExperience() {
 
   const heroNavItems = [
     {
+      id: "apply",
       label: isTr ? "Slot Ayırt" : "Lock a Slot",
       href: "#apply",
       variant: "solid" as const,
     },
     {
+      id: "models",
       label: isTr ? "Paketler" : "Deals",
       href: "#models",
       variant: "outline" as const,
     },
     {
+      id: "credits",
       label: isTr ? "Kredi ile Başla" : "Pay in Credits",
       onClick: () => handleSelectPackage(2),
       variant: "outline" as const,
     },
     {
+      id: "email",
       label: copiedEmail ? (isTr ? "Kopyalandı ✓" : "Copied ✓") : "kursat@itibar.app",
       onClick: handleCopyEmail,
       variant: "outline" as const,
@@ -409,22 +431,62 @@ export default function SponsorExperience() {
 
   const proofMetrics = [
     {
+      id: "reach",
+      value: "1M+",
+      label: isTr ? "Kümülatif Kanal Etkileşimi" : "Cumulative Organic Reach",
+    },
+    {
+      id: "peak",
       value: Number(authority.peakLinkedInImpressions).toLocaleString("en-US"),
-      label: isTr ? "Tek Gönderi Organik Zirve" : "Single-Post Organic Peak",
+      label: isTr ? "Tek Gönderi LinkedIn Zirvesi" : "Single LinkedIn Post Peak",
     },
     {
-      value: Number(authority.cumulativeEcosystemReach).toLocaleString("en-US"),
-      label: isTr ? "11 Kanal · 4 Dil Toplam Erişim" : "11 Channels · 4 Languages",
-    },
-    {
+      id: "audience",
       value: isTr ? "%78" : "78%",
       label: isTr ? "CTO · Kurucu · Baş Mühendis" : "CTO · Founder · Principal",
     },
     {
+      id: "terms",
       value: isTr ? "Nakit / Kredi" : "Cash / Credits",
-      label: isTr ? "4 Saatte Dönüş · Aylık Max 4 Slot" : "4h Reply · Max 4 Slots/Mo",
+      label: isTr ? "Kurumsal Fatura · 4 Saatte Dönüş" : "Corporate Invoice · 4h Reply",
     },
   ];
+
+  const procurementTerms = isTr
+    ? [
+        {
+          code: "01 // FATURA & ÖDEME",
+          detail:
+            "Kurumsal fatura, uluslararası USD transferi (SWIFT / Wise / Kart) veya doğrudan API / Cloud GPU kredi hibesi.",
+        },
+        {
+          code: "02 // TESLİM & ONAY",
+          detail:
+            "Onaydan yayına 5–7 iş günü. Yayın öncesi teknik doğruluk ve ürün verisi kontrolü markayla paylaşılır.",
+        },
+        {
+          code: "03 // CANLI RAPORLAMA",
+          detail:
+            "7. gün sonunda LinkedIn, X, DEV.to ve 4 dilli blog indeksleme verilerini içeren net performans özeti teslim edilir.",
+        },
+      ]
+    : [
+        {
+          code: "01 // INVOICING & CREDITS",
+          detail:
+            "Corporate invoicing, international USD settlement (Wire / Wise / Card), or direct API & Cloud GPU credit grants.",
+        },
+        {
+          code: "02 // TURNAROUND & REVIEW",
+          detail:
+            "5–7 business days from kickoff to launch. Pre-publish factual accuracy check shared before going live.",
+        },
+        {
+          code: "03 // POST-CAMPAIGN PROOF",
+          detail:
+            "Day-7 performance summary covering LinkedIn, X, DEV.to, and permanent 4-language + /llms-full.txt indexing.",
+        },
+      ];
 
   const authorityPillars = isTr
     ? [
@@ -540,24 +602,79 @@ export default function SponsorExperience() {
 
   return (
     <div
-      className="min-h-screen bg-[#050505] text-[#F3EFEA] antialiased selection:bg-[#F3EFEA] selection:text-[#050505]"
+      className="sponsor-print-root min-h-screen bg-[#050505] text-[#F3EFEA] antialiased selection:bg-[#F3EFEA] selection:text-[#050505]"
       style={{ fontFamily: "'Outfit', sans-serif" }}
     >
+      <style>{`
+        @media print {
+          @page {
+            size: A4;
+            margin: 12mm;
+          }
+          .sponsor-print-root {
+            background: #ffffff !important;
+            color: #111111 !important;
+          }
+          .sponsor-print-hero {
+            height: auto !important;
+            min-height: 0 !important;
+            padding: 12px 0 20px !important;
+            background: #ffffff !important;
+            overflow: visible !important;
+          }
+          .sponsor-print-stage {
+            position: static !important;
+            width: auto !important;
+            height: auto !important;
+            transform: none !important;
+          }
+          .sponsor-print-stage > div {
+            position: static !important;
+            width: auto !important;
+            left: auto !important;
+            top: auto !important;
+            gap: 12px !important;
+          }
+          .sponsor-print-stage h1 {
+            font-size: 42px !important;
+            line-height: 1.08 !important;
+            color: #111111 !important;
+          }
+          .sponsor-print-strip {
+            position: static !important;
+            margin-top: 18px !important;
+            background: #f8f8f7 !important;
+            border-color: #d4d4d8 !important;
+          }
+          .sponsor-print-root * {
+            opacity: 1 !important;
+            transform: none !important;
+            filter: none !important;
+            color: #111111 !important;
+            border-color: #d4d4d8 !important;
+          }
+          .sponsor-print-root [class*="bg-[#0"] {
+            background: #f8f8f7 !important;
+          }
+        }
+      `}</style>
       {/* ──────────────────────────────────────────────────────────────────────
           1. FULL-VIEWPORT EDITORIAL HERO
          ────────────────────────────────────────────────────────────────────── */}
-      <section className="relative h-screen supports-[height:100svh]:h-[100svh] min-h-[620px] w-full overflow-hidden bg-[#050505]">
+      <section className="sponsor-print-hero relative h-screen supports-[height:100svh]:h-[100svh] min-h-[620px] w-full overflow-hidden bg-[#050505]">
         {/* One-Shot Cinematic Entrance Monolith Backdrop */}
-        <SponsorHeroBackdrop
-          isDesktop={isDesktop}
-          reducedMotion={reducedMotion}
-        />
+        <div className="print:hidden">
+          <SponsorHeroBackdrop
+            isDesktop={isDesktop}
+            reducedMotion={reducedMotion}
+          />
+        </div>
 
         {/* Editorial Contrast Scrims */}
         {isDesktop ? (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-10"
+            className="print:hidden pointer-events-none absolute inset-0 z-10"
             style={{
               background:
                 "linear-gradient(90deg, rgba(5,5,5,0) 0%, rgba(5,5,5,0.06) 40%, rgba(5,5,5,0.62) 60%, rgba(5,5,5,0.9) 100%)",
@@ -566,7 +683,7 @@ export default function SponsorExperience() {
         ) : (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[58%]"
+            className="print:hidden pointer-events-none absolute inset-x-0 top-0 z-10 h-[58%]"
             style={{
               background:
                 "linear-gradient(180deg, rgba(5,5,5,0.86) 0%, rgba(5,5,5,0.48) 52%, rgba(5,5,5,0) 100%)",
@@ -576,7 +693,7 @@ export default function SponsorExperience() {
 
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[34%]"
+          className="print:hidden pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[34%]"
           style={{
             background:
               "linear-gradient(0deg, #050505 0%, rgba(5,5,5,0.45) 42%, rgba(5,5,5,0) 100%)",
@@ -584,7 +701,7 @@ export default function SponsorExperience() {
         />
 
         {/* Minimal Top Utility Bar */}
-        <header className="absolute top-0 inset-x-0 z-30 px-5 sm:px-8 py-5 flex items-center justify-between gap-4">
+        <header className="print:hidden absolute top-0 inset-x-0 z-30 px-5 sm:px-8 py-5 flex items-center justify-between gap-4">
           <Link
             href="/"
             className="group inline-flex items-center gap-2 text-xs font-light tracking-wide text-[#C4BEB4] hover:text-[#F3EFEA] transition-colors"
@@ -594,6 +711,15 @@ export default function SponsorExperience() {
           </Link>
 
           <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={handlePrintMediaKit}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#F3EFEA]/20 bg-[#050505]/50 backdrop-blur-md text-[11px] font-mono text-[#C4BEB4] hover:text-[#F3EFEA] hover:border-[#F3EFEA]/45 transition-colors cursor-pointer"
+            >
+              <Download className="w-3 h-3" />
+              <span>Media Kit PDF</span>
+            </button>
+
             <button
               type="button"
               onClick={handleCopyEmail}
@@ -616,7 +742,7 @@ export default function SponsorExperience() {
         {/* Hero Typography & Pills: Desktop Scaled 1600px Frame vs Mobile Stack */}
         {isDesktop ? (
           <div
-            className="absolute left-0 top-0 z-20 pointer-events-none"
+            className="sponsor-print-stage absolute left-0 top-0 z-20 pointer-events-none"
             style={{
               width: "1600px",
               height: "580px",
@@ -648,12 +774,12 @@ export default function SponsorExperience() {
               >
                 <Reveal delayMs={200}>
                   <span className="block whitespace-nowrap">
-                    {isTr ? "320K+ MÜHENDİS VE CTO" : "320K+ BUILDERS & CTOS."}
+                    {isTr ? "1M+ ORGANİK ETKİLEŞİM." : "1M+ ORGANIC REACH."}
                   </span>
                 </Reveal>
                 <Reveal delayMs={320}>
                   <span className="block whitespace-nowrap">
-                    {isTr ? "ÜRÜNÜNÜZÜ KONUŞSUN." : "PUT YOUR STACK FIRST."}
+                    {isTr ? "ÜRÜNÜNÜZÜ ÖNE ÇIKARIN." : "PUT YOUR STACK FIRST."}
                   </span>
                 </Reveal>
               </h1>
@@ -666,10 +792,13 @@ export default function SponsorExperience() {
                 </p>
               </Reveal>
 
-              <nav aria-label={isTr ? "Sponsorluk Hızlı Erişim" : "Sponsorship Quick Navigation"}>
+              <nav
+                aria-label={isTr ? "Sponsorluk Hızlı Erişim" : "Sponsorship Quick Navigation"}
+                className="print:hidden"
+              >
                 <ul className="flex flex-wrap gap-[12px] list-none p-0 m-0">
                   {heroNavItems.map((item, idx) => (
-                    <li key={item.label}>
+                    <li key={item.id}>
                       <Reveal delayMs={480 + idx * 90}>
                         <RollingPill
                           label={item.label}
@@ -707,12 +836,12 @@ export default function SponsorExperience() {
             >
               <Reveal delayMs={200}>
                 <span className="block">
-                  {isTr ? "320K+ MÜHENDİS VE CTO" : "320K+ BUILDERS & CTOS."}
+                  {isTr ? "1M+ ORGANİK ETKİLEŞİM." : "1M+ ORGANIC REACH."}
                 </span>
               </Reveal>
               <Reveal delayMs={320}>
                 <span className="block">
-                  {isTr ? "ÜRÜNÜNÜZÜ KONUŞSUN." : "PUT YOUR STACK FIRST."}
+                  {isTr ? "ÜRÜNÜNÜZÜ ÖNE ÇIKARIN." : "PUT YOUR STACK FIRST."}
                 </span>
               </Reveal>
             </h1>
@@ -725,10 +854,13 @@ export default function SponsorExperience() {
               </p>
             </Reveal>
 
-            <nav aria-label={isTr ? "Sponsorluk Hızlı Erişim" : "Sponsorship Quick Navigation"} className="mt-[16px]">
+            <nav
+              aria-label={isTr ? "Sponsorluk Hızlı Erişim" : "Sponsorship Quick Navigation"}
+              className="mt-[16px] print:hidden"
+            >
               <ul className="flex flex-wrap gap-[8px] list-none p-0 m-0">
                 {heroNavItems.map((item, idx) => (
-                  <li key={item.label}>
+                  <li key={item.id}>
                     <Reveal delayMs={480 + idx * 90}>
                       <RollingPill
                         label={item.label}
@@ -746,10 +878,10 @@ export default function SponsorExperience() {
         )}
 
         {/* Bottom Live Proof Strip */}
-        <div className="absolute inset-x-0 bottom-0 z-20 border-t border-[#F3EFEA]/10 bg-[#050505]/70 backdrop-blur-md">
+        <div className="sponsor-print-strip absolute inset-x-0 bottom-0 z-20 border-t border-[#F3EFEA]/10 bg-[#050505]/70 backdrop-blur-md">
           <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4 grid grid-cols-2 md:grid-cols-4 gap-y-3 gap-x-6">
             {proofMetrics.map((metric) => (
-              <div key={metric.label} className="space-y-0.5">
+              <div key={metric.id} className="space-y-0.5">
                 <div className="font-mono text-sm sm:text-base font-medium text-[#F3EFEA] tabular-nums">
                   {metric.value}
                 </div>
@@ -807,10 +939,22 @@ export default function SponsorExperience() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {topDispatches.map((item, idx) => {
               const pct = Math.max(12, Math.round((item.impressions / maxImpressions) * 100));
-              const href = item.slug
-                ? `/blog/${item.slug}`
+              const override = DISPATCH_OVERRIDES[item.date];
+              const resolvedSlug = item.slug ?? override?.slug;
+              const displayTopic = !isTr && override?.enTopic ? override.enTopic : item.topic;
+              const href = resolvedSlug
+                ? isTr
+                  ? `/blog/${resolvedSlug}`
+                  : `/blog/${resolvedSlug}?lang=en`
                 : "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/";
-              const isExternal = !item.slug;
+              const isExternal = !resolvedSlug;
+              const badgeText = resolvedSlug
+                ? isTr
+                  ? "TEKNİK ANALİZ"
+                  : "READ ESSAY"
+                : isTr
+                  ? "LINKEDIN ZİRVE"
+                  : "LINKEDIN PEAK";
 
               const cardBody = (
                 <div className="group h-full rounded-2xl border border-[#F3EFEA]/12 bg-[#0A0A0C] p-6 flex flex-col justify-between gap-6 transition-colors duration-300 hover:border-[#F3EFEA]/35 hover:bg-[#0D0D10]">
@@ -820,13 +964,13 @@ export default function SponsorExperience() {
                         0{idx + 1} · {item.date}
                       </span>
                       <span className="inline-flex items-center gap-1 text-[#C4BEB4]">
-                        {isTr ? "ORGANİK YAYIN" : "ORGANIC REACH"}
+                        {badgeText}
                         <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       </span>
                     </div>
 
                     <h3 className="text-base font-normal text-[#F3EFEA] leading-snug">
-                      {item.topic}
+                      {displayTopic}
                     </h3>
                   </div>
 
@@ -925,7 +1069,7 @@ export default function SponsorExperience() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {tierCards.map((card, i) => (
-              <Reveal key={card.code} delayMs={i * 100} className="h-full">
+              <Reveal key={card.idx} delayMs={i * 100} className="h-full">
                 <div
                   className={`h-full rounded-2xl border p-6 sm:p-7 flex flex-col justify-between gap-7 ${
                     card.highlighted
@@ -975,12 +1119,28 @@ export default function SponsorExperience() {
                     onClick={() => handleSelectPackage(card.idx)}
                     variant={card.highlighted ? "solid" : "outline"}
                     size="md"
-                    className="w-full"
+                    className="w-full print:hidden"
                   />
                 </div>
               </Reveal>
             ))}
           </div>
+
+          {/* Corporate Procurement & Guarantee Strip */}
+          <Reveal delayMs={180}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-2xl border border-[#F3EFEA]/12 bg-[#0A0A0C]/80 p-5 sm:p-6">
+              {procurementTerms.map((term) => (
+                <div key={term.code} className="space-y-1.5">
+                  <div className="font-mono text-[11px] tracking-[0.14em] text-[#F3EFEA]">
+                    {term.code}
+                  </div>
+                  <p className="text-xs sm:text-[13px] font-light leading-relaxed text-[#C4BEB4]">
+                    {term.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </section>
 
         {/* ────────────────────────────────────────────────────────────────────
@@ -1028,7 +1188,7 @@ export default function SponsorExperience() {
             </Reveal>
 
             <Reveal delayMs={120}>
-              <div className="flex flex-wrap gap-3 pt-1">
+              <div className="print:hidden flex flex-wrap gap-3 pt-1">
                 <RollingPill
                   label={copiedEmail ? (isTr ? "Kopyalandı ✓" : "Copied ✓") : "kursat@itibar.app"}
                   onClick={handleCopyEmail}
@@ -1042,11 +1202,20 @@ export default function SponsorExperience() {
                   variant="outline"
                   size="md"
                 />
+                <RollingPill
+                  label="Media Kit PDF"
+                  onClick={handlePrintMediaKit}
+                  variant="outline"
+                  size="md"
+                />
+              </div>
+              <div className="hidden print:block pt-2 font-mono text-xs">
+                kursat@itibar.app · https://kursat.itibar.app/sponsor · LinkedIn: /in/kürşatyılmaz
               </div>
             </Reveal>
           </div>
 
-          <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-4">
+          <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-4 print:hidden">
             {/* 3-Pill Tier Selector */}
             <div className="space-y-2">
               <span className="block font-mono text-[11px] uppercase tracking-wider text-[#8E8A84]">
@@ -1057,7 +1226,7 @@ export default function SponsorExperience() {
                   const active = selectedTierIdx === card.idx;
                   return (
                     <button
-                      key={card.code}
+                      key={card.idx}
                       type="button"
                       onClick={() => setSelectedTierIdx(card.idx)}
                       className={`px-3.5 py-2 rounded-full text-xs font-mono transition-colors cursor-pointer ${
@@ -1170,7 +1339,7 @@ export default function SponsorExperience() {
         {/* Minimal Editorial Footer */}
         <footer className="border-t border-[#F3EFEA]/10 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#8E8A84]">
           <span>KÜRŞAT YILMAZ · İSTANBUL · 2026</span>
-          <div className="flex items-center gap-6">
+          <div className="print:hidden flex items-center gap-6">
             <Link href="/" className="hover:text-[#F3EFEA] transition-colors">
               {isTr ? "Ana Sayfa" : "Home"}
             </Link>

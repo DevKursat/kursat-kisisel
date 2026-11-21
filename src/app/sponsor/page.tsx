@@ -2,34 +2,34 @@ import type { Metadata } from "next";
 import SponsorExperience from "@/components/sponsor/SponsorExperience";
 
 export const metadata: Metadata = {
-  title: "Sponsorluk & Partnerlik — Kürşat Yılmaz",
+  title: "Sponsor & Partner — Kürşat Yılmaz | 1M+ Tech Reach",
   description:
-    "127.4K+ tekil erişim, %78 CTO/kurucu kitlesi, 4 dilde teknik benchmark yayınları. Nakit sponsorluk veya API / Cloud GPU kredi ortaklığı.",
+    "1M+ organic reach, 127.4K+ single LinkedIn post peak, 78% CTOs & senior builders. 4-language engineering teardowns via cash sponsorship or API / Cloud GPU credits.",
   alternates: {
     canonical: "https://kursat.itibar.app/sponsor",
   },
   openGraph: {
     type: "website",
     url: "https://kursat.itibar.app/sponsor",
-    title: "Sponsorluk & Partnerlik — Kürşat Yılmaz",
+    title: "Sponsor & Partner — Kürşat Yılmaz | 1M+ Tech Reach",
     description:
-      "127.4K+ tekil erişim, %78 CTO/kurucu kitlesi, 4 dilde teknik benchmark yayınları. Nakit sponsorluk veya API / Cloud GPU kredi ortaklığı.",
+      "1M+ organic reach, 127.4K+ single LinkedIn post peak, 78% CTOs & senior builders. 4-language engineering teardowns via cash sponsorship or API / Cloud GPU credits.",
     siteName: "Kürşat Yılmaz",
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1920,
-        height: 1080,
-        alt: "Kürşat Yılmaz — Sponsorluk & Partnerlik",
+        url: "/api/og?mode=sponsor",
+        width: 1200,
+        height: 630,
+        alt: "Kürşat Yılmaz — Sponsor & Partner Media Kit (1M+ Organic Reach)",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sponsorluk & Partnerlik — Kürşat Yılmaz",
+    title: "Sponsor & Partner — Kürşat Yılmaz | 1M+ Tech Reach",
     description:
-      "127.4K+ tekil erişim, %78 CTO/kurucu kitlesi, 4 dilde teknik benchmark yayınları. Nakit sponsorluk veya API / Cloud GPU kredi ortaklığı.",
-    images: ["/og-image.jpg"],
+      "1M+ organic reach, 127.4K+ single LinkedIn post peak, 78% CTOs & senior builders. 4-language engineering teardowns via cash sponsorship or API / Cloud GPU credits.",
+    images: ["/api/og?mode=sponsor"],
     creator: "@DevKursat",
   },
 };
