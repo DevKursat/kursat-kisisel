@@ -47,7 +47,8 @@ interface OpsSnapshotData {
 interface TierCardSpec {
   idx: number;
   code: string;
-  title: string;
+  titleLead: string;
+  titleAccent: string;
   price: string;
   creditAlt: string;
   badge?: string;
@@ -442,7 +443,8 @@ export default function SponsorExperience() {
         {
           idx: 0,
           code: "01 // LANSMAN",
-          title: "Hızlı Lansman",
+          titleLead: "Hızlı",
+          titleAccent: "Lansman",
           price: "$450 – $750",
           creditAlt: "veya $1,500+ API / Cloud Kredisi",
           bullets: [
@@ -456,7 +458,8 @@ export default function SponsorExperience() {
         {
           idx: 1,
           code: "02 // BENCHMARK",
-          title: "Derin Benchmark",
+          titleLead: "Derin",
+          titleAccent: "Benchmark",
           price: "$950 – $1,800",
           creditAlt: "veya $3,000+ AI / GPU / Oyun Kredisi",
           badge: "EN İYİ ROI",
@@ -472,7 +475,8 @@ export default function SponsorExperience() {
         {
           idx: 2,
           code: "03 // KREDİ & AR-GE",
-          title: "Kredi & Ar-Ge Ortağı",
+          titleLead: "Kredi &",
+          titleAccent: "Ar-Ge",
           price: "Kredi / $2,500 ay",
           creditAlt: "API · Cloud GPU · 3D / Ses Lisansı",
           bullets: [
@@ -488,7 +492,8 @@ export default function SponsorExperience() {
         {
           idx: 0,
           code: "01 // LAUNCH",
-          title: "Launch Spotlight",
+          titleLead: "Launch",
+          titleAccent: "Spotlight",
           price: "$450 – $750",
           creditAlt: "or $1,500+ API / Cloud Credits",
           bullets: [
@@ -502,7 +507,8 @@ export default function SponsorExperience() {
         {
           idx: 1,
           code: "02 // TEARDOWN",
-          title: "Engineering Teardown",
+          titleLead: "Engineering",
+          titleAccent: "Teardown",
           price: "$950 – $1,800",
           creditAlt: "or $3,000+ AI / GPU / Game Credits",
           badge: "HIGHEST ROI",
@@ -518,7 +524,8 @@ export default function SponsorExperience() {
         {
           idx: 2,
           code: "03 // CREDIT & R&D",
-          title: "Credit Grant & R&D",
+          titleLead: "Credit &",
+          titleAccent: "R&D",
           price: "Credits / $2,500 mo",
           creditAlt: "API Tokens · Cloud GPU · 3D / Voice",
           bullets: [
@@ -624,10 +631,14 @@ export default function SponsorExperience() {
               <Reveal delayMs={0}>
                 <a
                   href="#proof"
-                  className="block text-[34px] leading-[44px] tracking-[0.3px] text-[#F3EFEA] hover:opacity-85 transition-opacity"
-                  style={SERIF_FONT}
+                  className="inline-flex items-baseline gap-2.5 hover:opacity-85 transition-opacity"
                 >
-                  KÜRŞAT YILMAZ · PARTNER
+                  <span className="font-archivo font-[800] text-[24px] leading-[32px] tracking-[-0.02em] uppercase text-[#F3EFEA]">
+                    KÜRŞAT YILMAZ
+                  </span>
+                  <span className="font-mono text-[14px] leading-[24px] tracking-[0.22em] uppercase text-[#C4BEB4]">
+                    · PARTNER
+                  </span>
                 </a>
               </Reveal>
 
@@ -679,10 +690,14 @@ export default function SponsorExperience() {
             <Reveal delayMs={0}>
               <a
                 href="#proof"
-                className="block text-[22px] leading-[28px] tracking-[0.2px] text-[#F3EFEA]"
-                style={SERIF_FONT}
+                className="inline-flex items-baseline gap-2 hover:opacity-85 transition-opacity"
               >
-                KÜRŞAT YILMAZ · PARTNER
+                <span className="font-archivo font-[800] text-[15px] leading-[22px] tracking-[-0.02em] uppercase text-[#F3EFEA]">
+                  KÜRŞAT YILMAZ
+                </span>
+                <span className="font-mono text-[11px] leading-[18px] tracking-[0.2em] uppercase text-[#C4BEB4]">
+                  · PARTNER
+                </span>
               </a>
             </Reveal>
 
@@ -759,17 +774,22 @@ export default function SponsorExperience() {
                 <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#8E8A84]">
                   {isTr ? "01 // NEDEN BİZ?" : "01 // WHY PARTNER HERE"}
                 </p>
-                <h2
-                  className="text-3xl sm:text-5xl text-[#F3EFEA] leading-[1.06]"
-                  style={SERIF_FONT}
-                >
+                <h2 className="font-archivo font-[800] text-3xl sm:text-5xl tracking-[-0.03em] leading-[1.1] text-[#F3EFEA]">
                   {isTr ? (
                     <>
-                      İddia değil, <span className="italic">kanıtlanmış etki.</span>
+                      İddia değil,{" "}
+                      <span className="font-instrument italic font-normal text-[1.08em]">
+                        kanıtlanmış
+                      </span>{" "}
+                      etki.
                     </>
                   ) : (
                     <>
-                      Not hype—<span className="italic">verified impact.</span>
+                      Not hype—{" "}
+                      <span className="font-instrument italic font-normal text-[1.08em]">
+                        verified
+                      </span>{" "}
+                      impact.
                     </>
                   )}
                 </h2>
@@ -868,17 +888,22 @@ export default function SponsorExperience() {
               <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#8E8A84]">
                 {isTr ? "02 // NAKİT VEYA KREDİ" : "02 // CASH OR CREDITS"}
               </p>
-              <h2
-                className="text-3xl sm:text-5xl text-[#F3EFEA] leading-[1.06]"
-                style={SERIF_FONT}
-              >
+              <h2 className="font-archivo font-[800] text-3xl sm:text-5xl tracking-[-0.03em] leading-[1.1] text-[#F3EFEA]">
                 {isTr ? (
                   <>
-                    Nakit veya kredi — <span className="italic">işi hemen bağlayalım.</span>
+                    Nakit veya kredi —{" "}
+                    <span className="font-instrument italic font-normal text-[1.08em]">
+                      işi hemen
+                    </span>{" "}
+                    bağlayalım.
                   </>
                 ) : (
                   <>
-                    Cash or credits — <span className="italic">let&apos;s ship it.</span>
+                    Cash or credits —{" "}
+                    <span className="font-instrument italic font-normal text-[1.08em]">
+                      let&apos;s ship
+                    </span>{" "}
+                    it.
                   </>
                 )}
               </h2>
@@ -915,16 +940,16 @@ export default function SponsorExperience() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <h3
-                        className="text-2xl sm:text-[28px] leading-tight text-[#F3EFEA]"
-                        style={SERIF_FONT}
-                      >
-                        {card.title}
+                      <h3 className="font-archivo font-[800] text-2xl sm:text-[26px] tracking-[-0.025em] leading-tight text-[#F3EFEA]">
+                        {card.titleLead}{" "}
+                        <span className="font-instrument italic font-normal text-[1.12em]">
+                          {card.titleAccent}
+                        </span>
                       </h3>
-                      <div className="font-mono text-xl sm:text-[24px] font-medium text-[#F3EFEA] tabular-nums pt-1 whitespace-nowrap">
+                      <div className="font-archivo font-[800] text-xl sm:text-[24px] tracking-[-0.02em] text-[#F3EFEA] tabular-nums pt-1 whitespace-nowrap">
                         {card.price}
                       </div>
-                      <p className="font-mono text-xs text-[#C4BEB4] whitespace-nowrap truncate">{card.creditAlt}</p>
+                      <p className="font-mono text-xs text-[#C4BEB4] whitespace-nowrap">{card.creditAlt}</p>
                     </div>
 
                     <ul className="space-y-2.5 pt-4 border-t border-[#F3EFEA]/10 text-sm font-light text-[#C4BEB4]">
@@ -963,17 +988,20 @@ export default function SponsorExperience() {
                 <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#8E8A84]">
                   {isTr ? "03 // DOĞRUDAN KAPATALIM" : "03 // CLOSE DIRECTLY"}
                 </p>
-                <h2
-                  className="text-3xl sm:text-5xl text-[#F3EFEA] leading-[1.06]"
-                  style={SERIF_FONT}
-                >
+                <h2 className="font-archivo font-[800] text-3xl sm:text-5xl tracking-[-0.03em] leading-[1.1] text-[#F3EFEA]">
                   {isTr ? (
                     <>
-                      Slot kapanmadan <span className="italic">başlayalım.</span>
+                      Slot kapanmadan{" "}
+                      <span className="font-instrument italic font-normal text-[1.08em]">
+                        başlayalım.
+                      </span>
                     </>
                   ) : (
                     <>
-                      Lock your slot <span className="italic">today.</span>
+                      Lock your slot{" "}
+                      <span className="font-instrument italic font-normal text-[1.08em]">
+                        today.
+                      </span>
                     </>
                   )}
                 </h2>
