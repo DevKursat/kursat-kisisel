@@ -777,19 +777,23 @@ export default function SponsorExperience() {
                 <h2 className="font-archivo font-[800] text-3xl sm:text-5xl tracking-[-0.03em] leading-[1.1] text-[#F3EFEA]">
                   {isTr ? (
                     <>
-                      İddia değil,{" "}
-                      <span className="font-instrument italic font-normal text-[1.08em]">
-                        kanıtlanmış
-                      </span>{" "}
-                      etki.
+                      <span className="block">İddia değil,</span>
+                      <span className="block">
+                        <span className="font-instrument italic font-normal text-[1.08em]">
+                          kanıtlanmış
+                        </span>{" "}
+                        etki.
+                      </span>
                     </>
                   ) : (
                     <>
-                      Not hype—{" "}
-                      <span className="font-instrument italic font-normal text-[1.08em]">
-                        verified
-                      </span>{" "}
-                      impact.
+                      <span className="block">Beyond hype,</span>
+                      <span className="block">
+                        <span className="font-instrument italic font-normal text-[1.08em]">
+                          verified
+                        </span>{" "}
+                        impact.
+                      </span>
                     </>
                   )}
                 </h2>
@@ -891,19 +895,23 @@ export default function SponsorExperience() {
               <h2 className="font-archivo font-[800] text-3xl sm:text-5xl tracking-[-0.03em] leading-[1.1] text-[#F3EFEA]">
                 {isTr ? (
                   <>
-                    Nakit veya kredi —{" "}
-                    <span className="font-instrument italic font-normal text-[1.08em]">
-                      işi hemen
-                    </span>{" "}
-                    bağlayalım.
+                    <span className="block">Nakit veya kredi,</span>
+                    <span className="block">
+                      <span className="font-instrument italic font-normal text-[1.08em]">
+                        işi hemen
+                      </span>{" "}
+                      bağlayalım.
+                    </span>
                   </>
                 ) : (
                   <>
-                    Cash or credits —{" "}
-                    <span className="font-instrument italic font-normal text-[1.08em]">
-                      let&apos;s ship
-                    </span>{" "}
-                    it.
+                    <span className="block">Cash or credits,</span>
+                    <span className="block">
+                      <span className="font-instrument italic font-normal text-[1.08em]">
+                        let&apos;s ship
+                      </span>{" "}
+                      it now.
+                    </span>
                   </>
                 )}
               </h2>
@@ -991,15 +999,21 @@ export default function SponsorExperience() {
                 <h2 className="font-archivo font-[800] text-3xl sm:text-5xl tracking-[-0.03em] leading-[1.1] text-[#F3EFEA]">
                   {isTr ? (
                     <>
-                      Slot kapanmadan{" "}
-                      <span className="font-instrument italic font-normal text-[1.08em]">
+                      <span className="block">Slot kapanmadan</span>
+                      <span className="block">
+                        <span className="font-instrument italic font-normal text-[1.08em]">
+                          hemen
+                        </span>{" "}
                         başlayalım.
                       </span>
                     </>
                   ) : (
                     <>
-                      Lock your slot{" "}
-                      <span className="font-instrument italic font-normal text-[1.08em]">
+                      <span className="block">Lock your slot</span>
+                      <span className="block">
+                        <span className="font-instrument italic font-normal text-[1.08em]">
+                          launch
+                        </span>{" "}
                         today.
                       </span>
                     </>
