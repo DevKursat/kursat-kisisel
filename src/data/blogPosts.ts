@@ -6,6 +6,7 @@ import {
   type BlogPostSummaryTranslation,
 } from "./blogIndex";
 
+import post00_microsoft_60k from "./posts/microsoft-60-bin-cikis-11-yazilimci-ai-fabrikasi";
 import post00_signal from "./posts/signal-ai-ajanlari-ekran-goruntusu-kilidi";
 import post00_riemann from "./posts/levent-alpoge-claude-riemann-hipotezi-17-milyon-satir-lean-kaniti";
 import post00_starlink from "./posts/elon-musk-spacex-25-milyar-starlink-cati-baz-istasyonu";
@@ -30,6 +31,7 @@ import post13 from "./posts/10-kasim-teknolojik-egemenlik-ve-ataturk";
 export * from "./blogIndex";
 
 export const BLOG_POSTS: BlogPostItem[] = [
+  post00_microsoft_60k,
   post00_signal,
   post00_riemann,
   post00_starlink,
