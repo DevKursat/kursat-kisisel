@@ -57,7 +57,38 @@ import TypeformContactModal from "@/components/TypeformContactModal";
 const INLINE_TOKEN_REGEX =
   /((?:^|(?<=[\s([{"“—]))(?:'[^'\n]{2,40}'|(?:\$|%)?\d+(?:[.,]\d+)*(?:\+|%|x|K|M|B|ms|GB|TB|MB)?)(?=$|[\s.,:;!?)\]}"”'/]))/g;
 
-function renderFormattedParagraph(text: string): ReactNode {
+const MARKDOWN_TOKEN_REGEX =
+  /(\*\*(?!\s)[^\n]+?(?<!\s)\*\*|`[^`\n]+`|(?<!\*)\*(?!\s)[^*\n]+?(?<!\s)\*(?!\*)|\[[^\]\n]+\]\((?:https?:\/\/[^)\s]+|\/[^)\s]+)\))/g;
+
+const MARKDOWN_LINK_REGEX =
+  /^\[([^\]\n]+)\]\(((?:https?:\/\/[^)\s]+|\/[^)\s]+))\)$/;
+
+function stripInlineMarkdown(text: string): string {
+  const parts = text.split(MARKDOWN_TOKEN_REGEX);
+  if (parts.length <= 1) return text;
+
+  return parts
+    .map((part) => {
+      if (!part) return "";
+      if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+        return stripInlineMarkdown(part.slice(2, -2));
+      }
+      if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
+        return part.slice(1, -1);
+      }
+      if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+        return stripInlineMarkdown(part.slice(1, -1));
+      }
+      const linkMatch = MARKDOWN_LINK_REGEX.exec(part);
+      if (linkMatch) {
+        return linkMatch[1];
+      }
+      return part;
+    })
+    .join("");
+}
+
+function renderPlainSegment(text: string, keyPrefix: string): ReactNode {
   const parts = text.split(INLINE_TOKEN_REGEX);
   if (parts.length <= 1) return text;
 
@@ -68,7 +99,7 @@ function renderFormattedParagraph(text: string): ReactNode {
     if (isQuoted) {
       return (
         <span
-          key={index}
+          key={`${keyPrefix}-q-${index}`}
           className="text-white font-medium bg-white/[0.05] px-1.5 py-0.5 rounded-md border border-white/10"
         >
           {part}
@@ -80,14 +111,81 @@ function renderFormattedParagraph(text: string): ReactNode {
       /^(?:\$|%)?\d+(?:[.,]\d+)*(?:\+|%|x|K|M|B|ms|GB|TB|MB)?$/.test(part);
     if (isMetric) {
       return (
-        <span key={index} className="text-white font-semibold tabular-nums">
+        <span
+          key={`${keyPrefix}-m-${index}`}
+          className="text-white font-semibold tabular-nums"
+        >
           {part}
         </span>
       );
     }
 
-    return <Fragment key={index}>{part}</Fragment>;
+    return <Fragment key={`${keyPrefix}-t-${index}`}>{part}</Fragment>;
   });
+}
+
+function renderInlineMarkdown(text: string, keyPrefix = "md"): ReactNode {
+  const parts = text.split(MARKDOWN_TOKEN_REGEX);
+  if (parts.length <= 1) {
+    return renderPlainSegment(text, keyPrefix);
+  }
+
+  return parts.map((part, index) => {
+    if (!part) return null;
+    const tokenKey = `${keyPrefix}-${index}`;
+
+    if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+      return (
+        <strong key={tokenKey} className="text-white font-semibold">
+          {renderInlineMarkdown(part.slice(2, -2), `${tokenKey}-b`)}
+        </strong>
+      );
+    }
+
+    if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
+      return (
+        <code
+          key={tokenKey}
+          className="font-mono text-[0.88em] text-zinc-100 bg-white/[0.07] px-1.5 py-0.5 rounded-md border border-white/10"
+        >
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+
+    if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+      return (
+        <em key={tokenKey} className="italic text-zinc-100">
+          {renderInlineMarkdown(part.slice(1, -1), `${tokenKey}-i`)}
+        </em>
+      );
+    }
+
+    const linkMatch = MARKDOWN_LINK_REGEX.exec(part);
+    if (linkMatch) {
+      const [, label, href] = linkMatch;
+      const isExternal = href.startsWith("http");
+      return (
+        <a
+          key={tokenKey}
+          href={href}
+          target={isExternal ? "_blank" : undefined}
+          rel={isExternal ? "noopener noreferrer" : undefined}
+          className="text-white underline decoration-white/30 underline-offset-4 hover:decoration-white transition-colors"
+        >
+          {label}
+        </a>
+      );
+    }
+
+    return (
+      <Fragment key={tokenKey}>{renderPlainSegment(part, tokenKey)}</Fragment>
+    );
+  });
+}
+
+function renderFormattedParagraph(text: string): ReactNode {
+  return renderInlineMarkdown(text);
 }
 
 export function BlogPostArticleBody({
@@ -362,7 +460,7 @@ export function ArticleMarkup({
             {
               "@type": ["NewsArticle", "TechArticle"],
               headline: post.title,
-              description: post.excerpt,
+              description: stripInlineMarkdown(post.excerpt),
               image: [`${SITE_URL}${post.imageUrl}`],
               datePublished: `${post.isoDate}T09:00:00+03:00`,
               dateModified: `${post.isoDate}T09:00:00+03:00`,
@@ -420,7 +518,7 @@ export function ArticleMarkup({
                 name: item.question,
                 acceptedAnswer: {
                   "@type": "Answer",
-                  text: item.answer,
+                  text: stripInlineMarkdown(item.answer),
                 },
               })),
             },
@@ -590,7 +688,7 @@ export function ArticleMarkup({
           </h1>
 
           <p className="text-zinc-400 text-base sm:text-lg leading-relaxed font-normal">
-            {post.excerpt}
+            {renderFormattedParagraph(post.excerpt)}
           </p>
 
           <div className="flex flex-wrap items-center gap-6 pt-3 border-t border-white/10 text-xs font-mono text-zinc-400">
@@ -655,7 +753,7 @@ export function ArticleMarkup({
             </div>
 
             <p className="text-sm sm:text-base text-zinc-200 leading-relaxed">
-              {post.excerpt}
+              {renderFormattedParagraph(post.excerpt)}
             </p>
 
             <dl className="grid grid-cols-2 gap-3 pt-3 border-t border-white/10 text-xs font-mono">
@@ -863,7 +961,7 @@ export function ArticleMarkup({
                   <ChevronDown className="w-4 h-4 text-zinc-400 shrink-0 transition-transform duration-200 group-open:rotate-180 group-open:text-white" />
                 </summary>
                 <div className="px-5 pb-4 pt-1 text-sm sm:text-[15px] text-zinc-300 leading-relaxed border-t border-white/[0.06]">
-                  {item.answer}
+                  {renderFormattedParagraph(item.answer)}
                 </div>
               </details>
             ))}
