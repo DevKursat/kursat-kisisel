@@ -18,6 +18,9 @@ export default function Footer() {
           <a href="#writing" className="hover:text-zinc-300 transition-colors">
             {t("nav.writing")}
           </a>
+          <a href="/tools" className="hover:text-zinc-300 transition-colors">
+            {t("nav.tools")}
+          </a>
           <a href="#contact" className="hover:text-zinc-300 transition-colors">
             {t("nav.contact")}
           </a>

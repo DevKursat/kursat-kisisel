@@ -137,6 +137,12 @@ export default function Navbar() {
               {t("nav.writing")}
             </a>
             <a
+              href="/tools"
+              className="hover:text-white transition-colors"
+            >
+              {t("nav.tools")}
+            </a>
+            <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "contact", t("nav.contact"))}
               className="hover:text-white transition-colors"

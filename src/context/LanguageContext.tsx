@@ -16,6 +16,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Nav
     "nav.work": "Projeler",
     "nav.writing": "Yazılar",
+    "nav.tools": "Araçlar",
     "nav.contact": "İletişim",
 
     // Hero Girizgah (Dengeli 2 Satır)
@@ -121,6 +122,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Nav
     "nav.work": "Work",
     "nav.writing": "Writing",
+    "nav.tools": "Tools",
     "nav.contact": "Contact",
 
     // Hero Girizgah (Balanced 2 Lines)

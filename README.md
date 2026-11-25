@@ -36,7 +36,8 @@ bun run build
 | Route | Purpose |
 | :--- | :--- |
 | `/` | Engineering portfolio, selected works & live telemetry terminal |
-| `/blog` | Multilingual technical archive (`tr`, `en`, `de`, `es`) |
+| `/blog` | Multilingual technical archive (`tr`, `en`, `de`, `es`) + 1-click dilemma polls & live thread bridge |
+| `/tools` | Free interactive LLM API vs. Bare-Metal GPU/VRAM calculator, Multi-Agent (`p^N`) simulator & 24-point audit |
 | `/llms.txt` & `/llms-full.txt` | Machine-readable GEO context for AI search engines |
 | `/rss.xml` & `/news-sitemap.xml` | Real-time syndication and news indexing feeds |
 | `/vault-ky` | Authenticated operations, analytics & pipeline trigger console |

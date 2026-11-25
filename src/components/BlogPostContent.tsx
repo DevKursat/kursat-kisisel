@@ -26,6 +26,8 @@ import {
   Terminal,
 } from "lucide-react";
 import NewsletterSignupBox from "@/components/NewsletterSignupBox";
+import ArticleEngagementHub from "@/components/ArticleEngagementHub";
+import { getPostDiscussionData } from "@/data/postDiscussions";
 import {
   BLOG_LANGUAGES,
   SITE_URL,
@@ -262,6 +264,7 @@ export function ArticleMarkup({
   const relatedPosts = relatedSummaries.map((p) =>
     getLocalizedSummary(p, activeLang)
   );
+  const postDiscussion = getPostDiscussionData(post.slug);
 
   const isTr = activeLang === "tr";
 
@@ -821,6 +824,15 @@ export function ArticleMarkup({
           })}
         </div>
 
+        {/* 1-Click Architectural Dilemma Poll + Live Discussion Bridge + Native Comments */}
+        <ArticleEngagementHub
+          slug={post.slug}
+          title={post.title}
+          category={rawPost.category}
+          activeLang={activeLang}
+          articleUrl={articleUrl}
+        />
+
         {/* Interactive Citation & Share Toolbar */}
         <div className="mt-10 p-4 sm:p-5 rounded-2xl border border-white/10 bg-[#0a0a0d] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <span className="text-xs font-mono uppercase tracking-wider text-zinc-400">
@@ -1045,22 +1057,30 @@ export function ArticleMarkup({
             {[
               {
                 label: "LinkedIn",
-                href: "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
+                href:
+                  postDiscussion.links.find((l) => l.id === "linkedin")?.href ??
+                  "https://www.linkedin.com/in/k%C3%BCr%C5%9Faty%C4%B1lmaz/",
                 icon: <LinkedinIcon className="w-3.5 h-3.5 shrink-0" />,
               },
               {
                 label: "X",
-                href: "https://x.com/DevKursat",
+                href:
+                  postDiscussion.links.find((l) => l.id === "x")?.href ??
+                  "https://x.com/DevKursat",
                 icon: <TwitterXIcon className="w-3 h-3 shrink-0" />,
               },
               {
                 label: "DEV.to",
-                href: "https://dev.to/kursatyz",
+                href:
+                  postDiscussion.links.find((l) => l.id === "devto")?.href ??
+                  "https://dev.to/kursatyz",
                 icon: <DevtoIcon className="w-3.5 h-3.5 shrink-0" />,
               },
               {
                 label: "Medium",
-                href: "https://medium.com/@ykursat054",
+                href:
+                  postDiscussion.links.find((l) => l.id === "medium")?.href ??
+                  "https://medium.com/@ykursat054",
                 icon: <MediumIcon className="w-3.5 h-3.5 shrink-0" />,
               },
               {

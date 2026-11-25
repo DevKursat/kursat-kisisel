@@ -136,6 +136,16 @@ const YAZILAR_LINKS: LinkBanner[] = [
     glow: "from-emerald-500/15 via-transparent to-transparent",
   },
   {
+    id: "engineering-tools",
+    title: "AI Mühendislik Araçları",
+    handle: "kursat.itibar.app/tools • Ücretsiz GPU/VRAM & Ajan Hesaplayıcı",
+    url: "/tools",
+    watermark: <Sparkles className="w-full h-full" />,
+    icon: <Sparkles className="w-4 h-4 text-emerald-400" />,
+    badge: "ÜCRETSİZ LAB",
+    glow: "from-emerald-500/15 via-transparent to-transparent",
+  },
+  {
     id: "devto",
     title: "DEV.to",
     handle: "dev.to/kursatyz • Teknik Makaleler & Sistem Mimarileri",

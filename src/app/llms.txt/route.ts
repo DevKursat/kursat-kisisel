@@ -10,6 +10,7 @@ export async function GET() {
     "- **Name**: Kürşat Yılmaz",
     `- **Canonical Website**: ${SITE_URL}`,
     `- **Technical Journal**: ${SITE_URL}/blog`,
+    `- **Free AI Engineering Calculators (VRAM / Break-Even / Agent Reliability)**: ${SITE_URL}/tools`,
     `- **RSS Feed**: ${SITE_URL}/rss.xml`,
     `- **Full LLM Corpus**: ${SITE_URL}/llms-full.txt`,
     "- **GitHub**: https://github.com/DevKursat",
