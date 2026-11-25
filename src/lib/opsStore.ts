@@ -19,10 +19,22 @@ export type JobStatus =
   | "pending_approval"
   | "approved"
   | "sent"
+  | "replied"
   | "interview"
   | "offer_received"
   | "won"
+  | "rejected"
   | "archived";
+
+export interface JobThreadEvent {
+  id?: string;
+  ts: string;
+  direction: "outbound" | "followup" | "auto_ack" | "inbound" | "outbound_reply";
+  from?: string;
+  to?: string;
+  subject?: string;
+  snippet: string;
+}
 
 export interface OpsJobItem {
   id: string;
@@ -36,6 +48,15 @@ export interface OpsJobItem {
   proposalDraft: string;
   status: JobStatus;
   notes?: string;
+  contactEmail?: string;
+  channel?: "zoho_email" | "form" | "marketplace" | "reddit_post";
+  sentAt?: string;
+  followUpSentAt?: string;
+  lastInboundAt?: string;
+  lastInboundFrom?: string;
+  lastInboundSubject?: string;
+  lastInboundPreview?: string;
+  threadEvents?: JobThreadEvent[];
   createdAt: string;
   updatedAt: string;
 }
@@ -370,6 +391,18 @@ async function writeLocalStore(data: Omit<OpsStorePayload, "storageMode">): Prom
   await fs.writeFile(LOCAL_STORE_PATH, JSON.stringify(data, null, 2), "utf8");
 }
 
+function parseBudgetUsdEstimate(budget: string, currency: "USD" | "EUR" | "TRY"): number {
+  if (!budget) return 0;
+  const kMatch = budget.match(/[$€£]?\s*(\d{2,3})\s*[kK]\b/);
+  if (kMatch) return Number(kMatch[1]) * 1000;
+  const firstNum = budget.match(/(\d[\d,]*)/);
+  if (!firstNum) return 0;
+  const val = Number(firstNum[1].replace(/,/g, ""));
+  if (!Number.isFinite(val) || val <= 0) return 0;
+  if (currency === "TRY" || /\b(TL|TRY|₺)\b/i.test(budget)) return Math.round(val / 35);
+  return Math.round(val);
+}
+
 function recomputeSummaryStats(
   summary: OpsSummaryDoc,
   jobs: OpsJobItem[],
@@ -377,20 +410,31 @@ function recomputeSummaryStats(
   emails: OpsEmailItem[],
   radarActions: OpsRadarAction[]
 ): OpsSummaryDoc {
-  const sentStatuses = new Set<JobStatus>(["sent", "interview", "offer_received", "won"]);
+  const sentStatuses = new Set<JobStatus>([
+    "sent",
+    "replied",
+    "interview",
+    "offer_received",
+    "won",
+    "rejected",
+  ]);
+  const activePipelineStatuses = new Set<JobStatus>([
+    "sent",
+    "replied",
+    "interview",
+    "offer_received",
+    "won",
+  ]);
   const totalApplied = jobs.filter((j) => sentStatuses.has(j.status)).length;
-  const activeInterviews = jobs.filter((j) => j.status === "interview").length;
+  const activeInterviews = jobs.filter(
+    (j) => j.status === "interview" || j.status === "replied"
+  ).length;
   const incomingOffers = jobs.filter((j) => j.status === "offer_received").length;
   const wonCount = jobs.filter((j) => j.status === "won").length;
 
   const pipelineUsd = jobs
-    .filter((j) => j.status !== "archived")
-    .reduce((acc, j) => {
-      const numeric = Number(j.budget.replace(/[^0-9.]/g, ""));
-      if (!Number.isFinite(numeric)) return acc;
-      if (j.currency === "TRY") return acc + Math.round(numeric / 35);
-      return acc + Math.round(numeric);
-    }, 0);
+    .filter((j) => activePipelineStatuses.has(j.status))
+    .reduce((acc, j) => acc + parseBudgetUsdEstimate(j.budget, j.currency), 0);
 
   const pendingReplies = comments.filter((c) => c.status === "pending").length;
   const today = new Date().toISOString().slice(0, 10);
@@ -443,7 +487,7 @@ export async function loadOpsStore(): Promise<OpsStorePayload> {
   const [summarySnap, jobsSnap, commentsSnap, emailsSnap, suggestionsSnap, radarSnap] =
     await Promise.all([
       db.collection("ops_state").doc("summary").get(),
-      db.collection("ops_jobs").orderBy("updatedAt", "desc").limit(50).get(),
+      db.collection("ops_jobs").orderBy("updatedAt", "desc").limit(120).get(),
       db.collection("ops_comments").orderBy("createdAt", "desc").limit(60).get(),
       db.collection("ops_emails").orderBy("receivedAt", "desc").limit(40).get(),
       db.collection("ops_suggestions").orderBy("createdAt", "desc").limit(30).get(),
@@ -486,19 +530,64 @@ export async function loadOpsStore(): Promise<OpsStorePayload> {
   };
 }
 
-export async function upsertJob(job: OpsJobItem): Promise<void> {
+function stripUndefinedDeep<T>(val: T): T {
+  if (Array.isArray(val)) {
+    return val.map((item) => stripUndefinedDeep(item)) as unknown as T;
+  }
+  if (val && typeof val === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(val as Record<string, unknown>)) {
+      if (v !== undefined) {
+        out[k] = stripUndefinedDeep(v);
+      }
+    }
+    return out as T;
+  }
+  return val;
+}
+
+export async function deleteJobsByIds(ids: string[]): Promise<void> {
+  if (!ids.length) return;
+  const idSet = new Set(ids.filter(Boolean));
+  if (!idSet.size) return;
+
   const db = getFirestoreDb();
   if (!db) {
     const store = await readLocalStore();
-    const idx = store.jobs.findIndex((j) => j.id === job.id);
-    if (idx >= 0) store.jobs[idx] = job;
-    else store.jobs.unshift(job);
+    store.jobs = store.jobs.filter((j) => !idSet.has(j.id));
+    store.summary = recomputeSummaryStats(
+      store.summary,
+      store.jobs,
+      store.comments,
+      store.emails,
+      store.radarActions
+    );
+    await writeLocalStore(store);
+    return;
+  }
+
+  const chunks = Array.from(idSet);
+  const batch = db.batch();
+  for (const id of chunks.slice(0, 400)) {
+    batch.delete(db.collection("ops_jobs").doc(id));
+  }
+  await batch.commit();
+}
+
+export async function upsertJob(job: OpsJobItem): Promise<void> {
+  const cleanJob = stripUndefinedDeep(job);
+  const db = getFirestoreDb();
+  if (!db) {
+    const store = await readLocalStore();
+    const idx = store.jobs.findIndex((j) => j.id === cleanJob.id);
+    if (idx >= 0) store.jobs[idx] = cleanJob;
+    else store.jobs.unshift(cleanJob);
     store.summary = recomputeSummaryStats(store.summary, store.jobs, store.comments, store.emails, store.radarActions);
     await writeLocalStore(store);
     return;
   }
 
-  await db.collection("ops_jobs").doc(job.id).set(job, { merge: true });
+  await db.collection("ops_jobs").doc(cleanJob.id).set(cleanJob, { merge: true });
 }
 
 export async function updateJobFields(
@@ -730,13 +819,14 @@ export async function syncWorkerPayload(payload: {
   const batch = db.batch();
 
   for (const job of payload.jobs || []) {
-    batch.set(db.collection("ops_jobs").doc(job.id), { ...job, updatedAt: now }, { merge: true });
+    const cleanJob = stripUndefinedDeep({ ...job, updatedAt: job.updatedAt || now });
+    batch.set(db.collection("ops_jobs").doc(job.id), cleanJob, { merge: true });
   }
 
   for (const comment of payload.comments || []) {
     batch.set(
       db.collection("ops_comments").doc(comment.id),
-      { ...comment, updatedAt: now },
+      stripUndefinedDeep({ ...comment, updatedAt: now }),
       { merge: true }
     );
   }
@@ -744,7 +834,7 @@ export async function syncWorkerPayload(payload: {
   for (const email of payload.emails || []) {
     batch.set(
       db.collection("ops_emails").doc(email.id),
-      { ...email, updatedAt: now },
+      stripUndefinedDeep({ ...email, updatedAt: now }),
       { merge: true }
     );
   }

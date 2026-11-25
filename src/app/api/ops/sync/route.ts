@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isOpsAuthenticated } from "@/lib/opsAuth";
 import {
   clearOpsTriggers,
+  deleteJobsByIds,
   loadOpsStore,
   syncWorkerPayload,
   updateCommentFields,
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
       contentStats?: Partial<OpsSummaryDoc["contentStats"]>;
       platforms?: OpsPlatformCard[];
       scanTimestamp?: string;
+      deleteJobIds?: string[];
       markSentJobIds?: string[];
       markSentCommentIds?: string[];
       markSentEmailIds?: string[];
@@ -59,6 +61,10 @@ export async function POST(request: Request) {
 
     if (body.clearTriggerIds?.length) {
       await clearOpsTriggers(body.clearTriggerIds);
+    }
+
+    if (body.deleteJobIds?.length) {
+      await deleteJobsByIds(body.deleteJobIds);
     }
 
     for (const jobId of body.markSentJobIds || []) {

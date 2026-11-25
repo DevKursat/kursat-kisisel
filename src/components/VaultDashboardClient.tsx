@@ -4,13 +4,16 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Briefcase,
   CheckCircle2,
+  Clock,
   ExternalLink,
+  Inbox,
   Lock,
   LogOut,
   Mail,
   MessageSquare,
   Plus,
   RefreshCw,
+  Reply,
   Send,
   ShieldCheck,
   Sparkles,
@@ -20,6 +23,7 @@ import type {
   CommentPlatform,
   JobPlatform,
   JobStatus,
+  JobThreadEvent,
   OpsCommentItem,
   OpsEmailItem,
   OpsJobItem,
@@ -64,15 +68,18 @@ interface UnifiedPayload {
 }
 
 type TabId = "freelance" | "comments" | "mail";
+type JobFilterId = "applied" | "replied" | "followup" | "opportunities" | "closed";
 
 const JOB_STATUS_LABELS: Record<JobStatus, string> = {
-  discovered: "Keşfedildi",
-  pending_approval: "Onay Bekliyor",
-  approved: "Onaylandı (Gönderilecek)",
-  sent: "Gönderildi",
+  sent: "Başvuruldu (Yanıt Bekleniyor)",
+  replied: "Yanıt Geldi",
   interview: "Görüşmede",
   offer_received: "Teklif Geldi",
   won: "Kazanıldı",
+  rejected: "Olumsuz / Kapandı",
+  discovered: "Açık Fırsat (Form/Link)",
+  pending_approval: "Açık Fırsat",
+  approved: "Süreçte",
   archived: "Arşiv",
 };
 
@@ -88,6 +95,135 @@ const PLATFORM_LABELS: Record<JobPlatform, string> = {
   direct: "Doğrudan / B2B",
 };
 
+const CHANNEL_LABELS: Record<NonNullable<OpsJobItem["channel"]>, string> = {
+  zoho_email: "Zoho Mail + CV",
+  form: "Başvuru Formu",
+  marketplace: "Pazar Yeri",
+  reddit_post: "Reddit İlanı",
+};
+
+function extractFallbackEmail(notes?: string): string {
+  if (!notes) return "";
+  const m = notes.match(/Direkt E-posta:\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i);
+  return m ? m[1].trim() : "";
+}
+
+function buildDisplayEvents(job: OpsJobItem): JobThreadEvent[] {
+  if (Array.isArray(job.threadEvents) && job.threadEvents.length > 0) {
+    return [...job.threadEvents].sort((a, b) => String(a.ts).localeCompare(String(b.ts)));
+  }
+
+  const events: JobThreadEvent[] = [];
+  const email = job.contactEmail || extractFallbackEmail(job.notes);
+  const sentTime = job.sentAt || job.createdAt;
+  const isSentLike = ["sent", "replied", "interview", "offer_received", "won", "rejected"].includes(
+    job.status
+  );
+
+  if (isSentLike) {
+    events.push({
+      id: "synth_out",
+      ts: sentTime,
+      direction: "outbound",
+      to: email || undefined,
+      snippet: email
+        ? `${email} adresine CV ekli başvuru gönderildi.`
+        : "Başvuru / form gönderimi tamamlandı.",
+    });
+  }
+
+  if (job.followUpSentAt) {
+    events.push({
+      id: "synth_fu",
+      ts: job.followUpSentAt,
+      direction: "followup",
+      to: email || undefined,
+      snippet: "3. gün otomatik takip (follow-up) e-postası gönderildi.",
+    });
+  }
+
+  if (job.lastInboundPreview) {
+    const isAck = job.lastInboundPreview.startsWith("[Otomatik");
+    events.push({
+      id: "synth_in",
+      ts: job.lastInboundAt || job.updatedAt,
+      direction: isAck ? "auto_ack" : "inbound",
+      from: job.lastInboundFrom,
+      subject: job.lastInboundSubject,
+      snippet: job.lastInboundPreview,
+    });
+  }
+
+  return events;
+}
+
+function formatShortDate(iso?: string | null): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleString("tr-TR", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function getStatusBadgeStyle(job: OpsJobItem): { label: string; cls: string } {
+  if (job.status === "won") {
+    return {
+      label: "🏆 Kazanıldı",
+      cls: "bg-emerald-500/20 border-emerald-400/50 text-emerald-200",
+    };
+  }
+  if (job.status === "offer_received") {
+    return {
+      label: "💰 Teklif Geldi",
+      cls: "bg-emerald-500/15 border-emerald-400/40 text-emerald-300",
+    };
+  }
+  if (job.status === "interview") {
+    return {
+      label: "🔥 Görüşme / Mülakat",
+      cls: "bg-amber-500/20 border-amber-400/50 text-amber-200",
+    };
+  }
+  if (job.status === "replied") {
+    return {
+      label: "📩 İşveren Yanıtladı",
+      cls: "bg-sky-500/20 border-sky-400/50 text-sky-200",
+    };
+  }
+  if (job.status === "rejected") {
+    return {
+      label: "Olumsuz / Kapandı",
+      cls: "bg-rose-500/10 border-rose-500/30 text-rose-300",
+    };
+  }
+  if (job.status === "sent") {
+    if (job.followUpSentAt) {
+      return {
+        label: "🔁 Follow-Up Gönderildi",
+        cls: "bg-violet-500/15 border-violet-400/35 text-violet-200",
+      };
+    }
+    if (job.lastInboundPreview?.startsWith("[Otomatik")) {
+      return {
+        label: "✓ Gönderildi · Alındı Teyitli",
+        cls: "bg-emerald-500/10 border-emerald-500/30 text-emerald-300",
+      };
+    }
+    return {
+      label: "📤 Gönderildi · Yanıt Bekleniyor",
+      cls: "bg-zinc-900 border-zinc-700 text-zinc-200",
+    };
+  }
+  return {
+    label: JOB_STATUS_LABELS[job.status] || job.status,
+    cls: "bg-zinc-900 border-zinc-800 text-zinc-400",
+  };
+}
+
 export default function VaultDashboardClient() {
   const [authChecked, setAuthChecked] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
@@ -96,6 +232,7 @@ export default function VaultDashboardClient() {
   const [authLoading, setAuthLoading] = useState(false);
 
   const [activeTab, setActiveTab] = useState<TabId>("freelance");
+  const [jobFilter, setJobFilter] = useState<JobFilterId>("applied");
   const [data, setData] = useState<UnifiedPayload | null>(null);
   const [loading, setLoading] = useState(false);
   const [actionBusyId, setActionBusyId] = useState<string | null>(null);
@@ -116,6 +253,7 @@ export default function VaultDashboardClient() {
     currency: "USD" as "USD" | "EUR" | "TRY",
     url: "",
     proposalDraft: "",
+    status: "sent" as JobStatus,
   });
 
   const showToast = useCallback((msg: string) => {
@@ -218,7 +356,7 @@ export default function VaultDashboardClient() {
     await runAction(
       "add-job",
       { action: "add_job", ...newJob },
-      "Yeni iş fırsatı eklendi."
+      "Başvuru / iş kaydı eklendi."
     );
     setNewJob({
       platform: "direct",
@@ -228,9 +366,69 @@ export default function VaultDashboardClient() {
       currency: "USD",
       url: "",
       proposalDraft: "",
+      status: "sent",
     });
     setShowAddJob(false);
   };
+
+  const jobBuckets = useMemo(() => {
+    const all = data?.store.jobs || [];
+    const statusPriority: Record<string, number> = {
+      offer_received: 1,
+      interview: 2,
+      replied: 3,
+      won: 4,
+      sent: 5,
+      rejected: 6,
+      discovered: 7,
+      pending_approval: 8,
+      approved: 9,
+      archived: 10,
+    };
+
+    const sortFn = (a: OpsJobItem, b: OpsJobItem) => {
+      const pa = statusPriority[a.status] ?? 99;
+      const pb = statusPriority[b.status] ?? 99;
+      if (pa !== pb) return pa - pb;
+      const ta = a.lastInboundAt || a.sentAt || a.updatedAt || a.createdAt;
+      const tb = b.lastInboundAt || b.sentAt || b.updatedAt || b.createdAt;
+      return String(tb).localeCompare(String(ta));
+    };
+
+    const applied = all
+      .filter((j) =>
+        ["sent", "replied", "interview", "offer_received", "won"].includes(j.status)
+      )
+      .sort(sortFn);
+
+    const replied = all
+      .filter(
+        (j) =>
+          ["replied", "interview", "offer_received", "won"].includes(j.status) ||
+          (Boolean(j.lastInboundPreview) && !j.lastInboundPreview?.startsWith("[Otomatik"))
+      )
+      .sort(sortFn);
+
+    const followup = all.filter((j) => Boolean(j.followUpSentAt)).sort(sortFn);
+
+    const opportunities = all
+      .filter((j) => ["discovered", "pending_approval", "approved"].includes(j.status))
+      .sort((a, b) => Number(b.matchScore) - Number(a.matchScore));
+
+    const closed = all
+      .filter((j) => j.status === "rejected" || j.status === "archived")
+      .sort(sortFn);
+
+    return { applied, replied, followup, opportunities, closed };
+  }, [data]);
+
+  const visibleJobs = useMemo(() => {
+    if (jobFilter === "replied") return jobBuckets.replied;
+    if (jobFilter === "followup") return jobBuckets.followup;
+    if (jobFilter === "opportunities") return jobBuckets.opportunities;
+    if (jobFilter === "closed") return jobBuckets.closed;
+    return jobBuckets.applied;
+  }, [jobFilter, jobBuckets]);
 
   const platformBreakdown = useMemo(() => {
     const defs: Array<{
@@ -372,7 +570,7 @@ export default function VaultDashboardClient() {
                 </span>
               </div>
               <p className="text-[11px] text-zinc-400">
-                Freelance Otonomi + Blog & Böcek Etkileşim Merkezi
+                Otonom Başvuru & Zoho Mail Yanıt Takibi · Sıfır Onay Bürokrasisi
               </p>
             </div>
           </div>
@@ -399,16 +597,20 @@ export default function VaultDashboardClient() {
         {/* Navigation Tabs */}
         <div className="mx-auto max-w-6xl px-4 flex gap-1 overflow-x-auto">
           {[
-            { id: "freelance" as TabId, label: "1. Freelance & İş Arama", icon: Briefcase },
             {
-              id: "comments" as TabId,
-              label: `2. Blog & Böcek Analizleri (${summary?.contentStats.pendingReplies || 0})`,
-              icon: MessageSquare,
+              id: "freelance" as TabId,
+              label: `1. Başvurular & Yanıt Takibi (${jobBuckets.applied.length})`,
+              icon: Briefcase,
             },
             {
               id: "mail" as TabId,
-              label: `3. Mail Özeti (${summary?.mailStats?.unreadCount || 0})`,
+              label: `2. kursat@itibar.app Mail Akışı (${data?.store.emails.length || 0})`,
               icon: Mail,
+            },
+            {
+              id: "comments" as TabId,
+              label: `3. Blog & Böcek Etkileşim (${summary?.contentStats.pendingReplies || 0})`,
+              icon: MessageSquare,
             },
           ].map((tab) => {
             const Icon = tab.icon;
@@ -432,23 +634,40 @@ export default function VaultDashboardClient() {
       </header>
 
       <div className="mx-auto max-w-6xl px-4 pt-6 space-y-6">
-        {/* TAB 1: FREELANCE */}
+        {/* TAB 1: AUTONOMOUS APPLICATIONS & REPLY TRACKER */}
         {activeTab === "freelance" && (
           <div className="space-y-6">
             {/* KPIs */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {[
-                { label: "Yapılan Başvuru", value: summary?.freelanceStats.totalApplied ?? 0 },
-                { label: "Aktif Görüşme", value: summary?.freelanceStats.activeInterviews ?? 0 },
                 {
-                  label: "Gelen İş Teklifi",
-                  value: summary?.freelanceStats.incomingOffers ?? 0,
-                  accent: "text-emerald-400",
+                  label: "Gönderilen Başvuru",
+                  value: summary?.freelanceStats.totalApplied ?? jobBuckets.applied.length,
+                  sub: "Otonom Zoho Mail + Form",
                 },
-                { label: "Kazanılan İş", value: summary?.freelanceStats.wonCount ?? 0 },
                 {
-                  label: "Pipeline Değeri",
-                  value: `$${(summary?.freelanceStats.pipelineUsd ?? 0).toLocaleString()}`,
+                  label: "Follow-Up Giden",
+                  value: jobBuckets.followup.length,
+                  sub: "3. gün otomatik takip",
+                },
+                {
+                  label: "Yanıt Gelen / Görüşme",
+                  value: jobBuckets.replied.length,
+                  accent: jobBuckets.replied.length > 0 ? "text-emerald-400" : "text-zinc-100",
+                  sub: "Gerçek işveren dönüşü",
+                },
+                {
+                  label: "Teklif / Kazanılan",
+                  value:
+                    (summary?.freelanceStats.incomingOffers ?? 0) +
+                    (summary?.freelanceStats.wonCount ?? 0),
+                  accent: "text-emerald-400",
+                  sub: "Kazanılınca tarama durur",
+                },
+                {
+                  label: "Son Tarama & Mail Sync",
+                  value: formatShortDate(summary?.freelanceStats.lastScanAt),
+                  sub: `Zoho: ${formatShortDate(summary?.mailStats?.lastCheckAt)}`,
                 },
               ].map((kpi) => (
                 <div
@@ -456,79 +675,70 @@ export default function VaultDashboardClient() {
                   className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4"
                 >
                   <p className="text-[11px] text-zinc-400">{kpi.label}</p>
-                  <p className={`mt-1 text-xl font-semibold ${kpi.accent || "text-zinc-100"}`}>
+                  <p className={`mt-1 text-lg font-semibold ${kpi.accent || "text-zinc-100"}`}>
                     {kpi.value}
                   </p>
+                  <p className="mt-0.5 text-[10px] text-zinc-500">{kpi.sub}</p>
                 </div>
               ))}
             </div>
 
-            {/* Quick-Launch Account Cards */}
-            <section className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                  Hesaplara Hızlı Geçiş & Durumlar
-                </h2>
-                <button
-                  onClick={() => setShowAddJob((v) => !v)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs px-3 py-1.5 transition"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  Yeni İş / Gerçek Hayat Fırsatı Ekle
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {freelancePlatforms.map((p) => (
-                  <div
-                    key={p.id}
-                    className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4 flex flex-col justify-between gap-3"
+            {/* Filter Bar + Manual Add */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  {
+                    id: "applied" as JobFilterId,
+                    label: `Gönderilen & Süreçtekiler (${jobBuckets.applied.length})`,
+                  },
+                  {
+                    id: "replied" as JobFilterId,
+                    label: `Yanıt Gelenler (${jobBuckets.replied.length})`,
+                  },
+                  {
+                    id: "followup" as JobFilterId,
+                    label: `Follow-Up Gidenler (${jobBuckets.followup.length})`,
+                  },
+                  {
+                    id: "opportunities" as JobFilterId,
+                    label: `Form / Pazar Yeri Linkleri (${jobBuckets.opportunities.length})`,
+                  },
+                  {
+                    id: "closed" as JobFilterId,
+                    label: `Olumsuz / Arşiv (${jobBuckets.closed.length})`,
+                  },
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    onClick={() => setJobFilter(f.id)}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-medium border transition ${
+                      jobFilter === f.id
+                        ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                        : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-zinc-200"
+                    }`}
                   >
-                    <div>
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-sm font-semibold text-zinc-100">{p.name}</span>
-                        <span className="text-[11px] text-zinc-400">{p.handle}</span>
-                      </div>
-                      <p className="mt-1 text-xs text-zinc-400">{p.statusNote}</p>
-                      {p.alertBadge && (
-                        <p className="mt-2 inline-block rounded-md bg-amber-500/10 border border-amber-500/25 px-2 py-0.5 text-[11px] text-amber-300">
-                          {p.alertBadge}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 pt-1">
-                      <a
-                        href={p.dashboardUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 px-2.5 py-1.5 text-[11px] font-medium text-zinc-200 transition"
-                      >
-                        Panele Git <ExternalLink className="w-3 h-3" />
-                      </a>
-                      {p.profileUrl !== p.dashboardUrl && (
-                        <a
-                          href={p.profileUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 rounded-lg bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 px-2.5 py-1.5 text-[11px] text-zinc-400 transition"
-                        >
-                          Profil <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
+                    {f.label}
+                  </button>
                 ))}
               </div>
-            </section>
 
-            {/* Add Job Form */}
+              <button
+                onClick={() => setShowAddJob((v) => !v)}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 font-medium text-xs px-3 py-1.5 transition"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Manuel Başvuru Kaydet
+              </button>
+            </div>
+
+            {/* Manual Add Job Form */}
             {showAddJob && (
               <form
                 onSubmit={handleAddJob}
                 className="rounded-xl border border-emerald-500/30 bg-zinc-950 p-4 space-y-3"
               >
                 <h3 className="text-xs font-semibold text-emerald-300">
-                  Manuel İş / Gerçek Hayat Fırsatı Kaydet
+                  Dışarıdan Yaptığın Başvuruyu Takibe Ekle
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                   <select
@@ -547,14 +757,14 @@ export default function VaultDashboardClient() {
                   <input
                     type="text"
                     required
-                    placeholder="İş / Proje Başlığı"
+                    placeholder="Pozisyon / Proje Başlığı"
                     value={newJob.title}
                     onChange={(e) => setNewJob((s) => ({ ...s, title: e.target.value }))}
                     className="sm:col-span-2 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs"
                   />
                   <input
                     type="text"
-                    placeholder="Bütçe (örn. $2,500)"
+                    placeholder="Bütçe / Maaş (örn. $4,000/mo)"
                     value={newJob.budget}
                     onChange={(e) => setNewJob((s) => ({ ...s, budget: e.target.value }))}
                     className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs"
@@ -563,22 +773,22 @@ export default function VaultDashboardClient() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="text"
-                    placeholder="Müşteri / Şirket"
+                    placeholder="Şirket / Müşteri Adı"
                     value={newJob.clientName}
                     onChange={(e) => setNewJob((s) => ({ ...s, clientName: e.target.value }))}
                     className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs"
                   />
                   <input
                     type="url"
-                    placeholder="İlan / Konuşma URL"
+                    placeholder="İlan / Başvuru URL"
                     value={newJob.url}
                     onChange={(e) => setNewJob((s) => ({ ...s, url: e.target.value }))}
                     className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs"
                   />
                 </div>
                 <textarea
-                  rows={3}
-                  placeholder="Teklif taslağı / notlar..."
+                  rows={2}
+                  placeholder="Gönderilen mesaj / not..."
                   value={newJob.proposalDraft}
                   onChange={(e) => setNewJob((s) => ({ ...s, proposalDraft: e.target.value }))}
                   className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs"
@@ -601,43 +811,79 @@ export default function VaultDashboardClient() {
               </form>
             )}
 
-            {/* Jobs & Proposals Pipeline */}
+            {/* Application & Thread Cards */}
             <section className="space-y-3">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                Otonom Taranan İşler & Başvuru Kuyruğu ({data?.store.jobs.length ?? 0})
-              </h2>
-
-              {!data?.store.jobs.length ? (
+              {!visibleJobs.length ? (
                 <div className="rounded-xl border border-dashed border-zinc-800 p-8 text-center text-xs text-zinc-400">
-                  Henüz iş kaydı yok. Antigravity + EgoBrowser taraması çalıştığında veya manuel
-                  fırsat eklediğinde tüm başvurular ve gelen iş teklifleri burada görünecek.
+                  Bu filtrede kayıt yok. Arka plan servisi yeni başvurular gönderdiğinde veya Zoho
+                  Mail üzerinden işveren yanıtı geldiğinde otomatik olarak burada güncellenir.
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {data.store.jobs.map((job: OpsJobItem) => {
-                    const draft = draftEdits[job.id] ?? job.proposalDraft;
+                  {visibleJobs.map((job: OpsJobItem) => {
+                    const badge = getStatusBadgeStyle(job);
+                    const events = buildDisplayEvents(job);
+                    const recipientEmail = job.contactEmail || extractFallbackEmail(job.notes);
+                    const sentIso = job.sentAt || job.createdAt;
+                    const plannedFollowUpIso =
+                      job.status === "sent" && !job.followUpSentAt && recipientIsoValid(sentIso)
+                        ? new Date(Date.parse(sentIso) + 3 * 24 * 60 * 60 * 1000).toISOString()
+                        : null;
+
                     return (
                       <div
                         key={job.id}
-                        className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4 space-y-3"
+                        className={`rounded-xl border bg-zinc-950 p-4 space-y-3 ${
+                          job.status === "interview" ||
+                          job.status === "replied" ||
+                          job.status === "offer_received"
+                            ? "border-emerald-500/40 ring-1 ring-emerald-500/20"
+                            : "border-zinc-800/80"
+                        }`}
                       >
+                        {/* Header */}
                         <div className="flex flex-wrap items-start justify-between gap-3">
-                          <div>
+                          <div className="space-y-1">
                             <div className="flex items-center gap-2 flex-wrap">
+                              <span
+                                className={`rounded-md border px-2 py-0.5 text-[11px] font-semibold ${badge.cls}`}
+                              >
+                                {badge.label}
+                              </span>
                               <span className="rounded-md bg-zinc-900 border border-zinc-700 px-2 py-0.5 text-[10px] font-semibold uppercase text-zinc-300">
                                 {PLATFORM_LABELS[job.platform] || job.platform}
                               </span>
-                              <span className="rounded-md bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                                Skor: {job.matchScore}/100
-                              </span>
-                              <span className="text-xs font-semibold text-zinc-200">
-                                {job.budget}
-                              </span>
+                              {job.channel && (
+                                <span className="rounded-md bg-zinc-900/90 border border-zinc-800 px-2 py-0.5 text-[10px] text-zinc-300">
+                                  {CHANNEL_LABELS[job.channel] || job.channel}
+                                </span>
+                              )}
+                              {job.budget && (
+                                <span className="text-xs font-semibold text-emerald-300">
+                                  {job.budget}
+                                </span>
+                              )}
                             </div>
-                            <h3 className="mt-1.5 text-sm font-semibold text-zinc-100">
-                              {job.title}
+
+                            <h3 className="text-sm font-semibold text-zinc-100">
+                              {job.clientName} — <span className="font-normal text-zinc-200">{job.title}</span>
                             </h3>
-                            <p className="text-xs text-zinc-400">{job.clientName}</p>
+
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-zinc-400">
+                              {recipientEmail && (
+                                <span className="inline-flex items-center gap-1 text-zinc-300">
+                                  <Mail className="w-3 h-3 text-emerald-400" />
+                                  {recipientEmail}
+                                </span>
+                              )}
+                              <span>Gönderim: {formatShortDate(sentIso)}</span>
+                              {plannedFollowUpIso && recipientEmail && (
+                                <span className="inline-flex items-center gap-1 text-zinc-500">
+                                  <Clock className="w-3 h-3" />
+                                  Oto Follow-Up: {formatShortDate(plannedFollowUpIso)}
+                                </span>
+                              )}
+                            </div>
                           </div>
 
                           <div className="flex items-center gap-2">
@@ -648,7 +894,7 @@ export default function VaultDashboardClient() {
                                 runAction(
                                   job.id,
                                   { action: "update_job_status", id: job.id, status: e.target.value },
-                                  "İş durumu güncellendi."
+                                  "Durum güncellendi."
                                 )
                               }
                               className="rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-200"
@@ -672,36 +918,81 @@ export default function VaultDashboardClient() {
                           </div>
                         </div>
 
-                        {draft !== undefined && (
-                          <div className="space-y-2">
-                            <textarea
-                              rows={3}
-                              value={draft}
-                              onChange={(e) =>
-                                setDraftEdits((prev) => ({ ...prev, [job.id]: e.target.value }))
-                              }
-                              placeholder="Teklif metni..."
-                              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/70 px-3 py-2 text-xs text-zinc-200 focus:border-emerald-500/50 focus:outline-none"
-                            />
-                            {(job.status === "discovered" || job.status === "pending_approval") && (
-                              <div className="flex justify-end">
-                                <button
-                                  disabled={actionBusyId === job.id}
-                                  onClick={() =>
-                                    runAction(
-                                      job.id,
-                                      { action: "approve_job", id: job.id, proposalDraft: draft },
-                                      "Teklif onaylandı ve EgoBrowser gönderim kuyruğuna alındı."
-                                    )
-                                  }
-                                  className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs px-3 py-1.5 transition"
-                                >
-                                  <Send className="w-3.5 h-3.5" />
-                                  Onayla & Gönder Kuyruğuna Al
-                                </button>
-                              </div>
-                            )}
+                        {/* Thread / Process Timeline */}
+                        {events.length > 0 && (
+                          <div className="rounded-lg border border-zinc-800/90 bg-zinc-900/50 p-3 space-y-2">
+                            <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                              Süreç & Mail Geçmişi ({events.length})
+                            </p>
+                            <div className="space-y-2">
+                              {events.map((ev, idx) => {
+                                const isInbound = ev.direction === "inbound";
+                                const isAck = ev.direction === "auto_ack";
+                                const isFollowUp = ev.direction === "followup";
+                                return (
+                                  <div
+                                    key={ev.id || `${job.id}_ev_${idx}`}
+                                    className={`rounded-md border px-3 py-2 text-xs ${
+                                      isInbound
+                                        ? "border-emerald-500/40 bg-emerald-500/10 text-zinc-100"
+                                        : isAck
+                                          ? "border-zinc-700/80 bg-zinc-900/90 text-zinc-300"
+                                          : isFollowUp
+                                            ? "border-violet-500/30 bg-violet-500/10 text-zinc-200"
+                                            : "border-zinc-800 bg-zinc-950/70 text-zinc-300"
+                                    }`}
+                                  >
+                                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                                      <span className="font-semibold flex items-center gap-1.5">
+                                        {isInbound ? (
+                                          <>
+                                            <Inbox className="w-3.5 h-3.5 text-emerald-400" />
+                                            İşveren Yanıtı {ev.from ? `(${ev.from})` : ""}
+                                          </>
+                                        ) : isAck ? (
+                                          <>
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                                            Otomatik Başvuru Alındı Teyidi
+                                          </>
+                                        ) : isFollowUp ? (
+                                          <>
+                                            <Reply className="w-3.5 h-3.5 text-violet-300" />
+                                            3. Gün Takip Maili Gönderildi
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Send className="w-3.5 h-3.5 text-sky-400" />
+                                            İlk Başvuru Gönderildi
+                                          </>
+                                        )}
+                                      </span>
+                                      <span className="text-zinc-500">{formatShortDate(ev.ts)}</span>
+                                    </div>
+                                    {ev.subject && (
+                                      <p className="mt-1 text-[11px] text-zinc-400">
+                                        Konu: {ev.subject}
+                                      </p>
+                                    )}
+                                    <p className="mt-1 leading-relaxed text-xs whitespace-pre-line">
+                                      {ev.snippet}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
+                        )}
+
+                        {/* Collapsible Proposal / Sent Email Body */}
+                        {job.proposalDraft && (
+                          <details className="group rounded-lg border border-zinc-800/70 bg-zinc-900/30 px-3 py-2">
+                            <summary className="cursor-pointer text-[11px] font-medium text-zinc-400 group-hover:text-zinc-200 select-none">
+                              Gönderilen Başvuru / Pitch Metnini Göster
+                            </summary>
+                            <pre className="mt-2 whitespace-pre-wrap font-sans text-xs text-zinc-300 leading-relaxed border-t border-zinc-800/70 pt-2">
+                              {job.proposalDraft}
+                            </pre>
+                          </details>
                         )}
                       </div>
                     );
@@ -709,13 +1000,122 @@ export default function VaultDashboardClient() {
                 </div>
               )}
             </section>
+
+            {/* Quick-Launch Account Cards (Moved cleanly below active pipeline) */}
+            <details className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4">
+              <summary className="cursor-pointer text-xs font-semibold uppercase tracking-wider text-zinc-400 select-none">
+                Platform Hesapları & Hızlı Bağlantılar ({freelancePlatforms.length})
+              </summary>
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {freelancePlatforms.map((p) => (
+                  <div
+                    key={p.id}
+                    className="rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-3.5 flex flex-col justify-between gap-2.5"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-semibold text-zinc-100">{p.name}</span>
+                        <span className="text-[11px] text-zinc-400">{p.handle}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-zinc-400">{p.statusNote}</p>
+                    </div>
+                    <div className="flex items-center gap-2 pt-1">
+                      <a
+                        href={p.dashboardUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-[11px] font-medium text-zinc-200 transition"
+                      >
+                        Panele Git <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </details>
           </div>
         )}
 
-        {/* TAB 2: COMMENTS & ENGAGEMENT */}
+        {/* TAB 2: MAIL SUMMARY */}
+        {activeTab === "mail" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4">
+                <p className="text-[11px] text-zinc-400">İş & B2B Mail Kaydı</p>
+                <p className="mt-1 text-xl font-semibold text-zinc-100">
+                  {data?.store.emails.length ?? 0}
+                </p>
+              </div>
+              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4">
+                <p className="text-[11px] text-zinc-400">Yüksek Öncelikli</p>
+                <p className="mt-1 text-xl font-semibold text-amber-400">
+                  {summary?.mailStats?.highPriorityCount ?? 0}
+                </p>
+              </div>
+              <div className="col-span-2 rounded-xl border border-zinc-800/80 bg-zinc-950 p-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold text-zinc-200">
+                    kursat@itibar.app (Otonom Zoho EU Sync)
+                  </p>
+                  <p className="text-[11px] text-zinc-400">
+                    Bülten ve spam elenir; yalnızca başvuru yanıtları ve iş teklifleri düşer.
+                  </p>
+                </div>
+                <a
+                  href="https://mail.zoho.eu/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 rounded-lg border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 px-3 py-1.5 text-xs text-zinc-200"
+                >
+                  Zoho Mail Aç <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </div>
+
+            {!(data?.store.emails || []).length ? (
+              <div className="rounded-xl border border-dashed border-zinc-800 p-8 text-center text-xs text-zinc-400">
+                Henüz işveren yanıtı veya B2B teklif maili yok. Zoho Mail arka plan taraması
+                çalıştıkça ilgili kayıtlar burada görünür.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {(data?.store.emails || []).map((m: OpsEmailItem) => (
+                  <div
+                    key={m.id}
+                    className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4 space-y-2.5"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span
+                          className={`rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase border ${
+                            m.priority === "high"
+                              ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-300"
+                              : "bg-zinc-900 border-zinc-700 text-zinc-300"
+                          }`}
+                        >
+                          {m.priority === "high" ? "İşveren Yanıtı" : m.category}
+                        </span>
+                        <span className="text-xs font-semibold text-zinc-200">{m.from}</span>
+                      </div>
+                      <span className="text-[11px] text-zinc-500">
+                        {formatShortDate(m.receivedAt)}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-semibold text-zinc-100">{m.subject}</h3>
+                      <p className="mt-1 text-xs text-zinc-300 leading-relaxed">{m.summary}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: COMMENTS & ENGAGEMENT */}
         {activeTab === "comments" && (
           <div className="space-y-6">
-            {/* Content KPIs */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {[
                 { label: "Blog Toplam Okunma", value: summary?.contentStats.blogViews ?? 0 },
@@ -740,7 +1140,6 @@ export default function VaultDashboardClient() {
               ))}
             </div>
 
-            {/* Bocek Quick Links */}
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[11px] text-zinc-400 mr-1">Böcek Hesapları:</span>
               {bocekPlatforms.map((p) => (
@@ -756,7 +1155,6 @@ export default function VaultDashboardClient() {
               ))}
             </div>
 
-            {/* Blog & Bocek Topic/Scenario Suggestions */}
             {(data?.store.suggestions || []).filter((s) => s.status === "pending").length > 0 && (
               <section className="space-y-3">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
@@ -831,7 +1229,7 @@ export default function VaultDashboardClient() {
 
                           <input
                             type="text"
-                            placeholder="Opsiyonel notun (ör. 2'yi yapalım, sonuna şu detayı ekle)..."
+                            placeholder="Opsiyonel notun..."
                             value={noteVal}
                             onChange={(e) =>
                               setDraftEdits((prev) => ({
@@ -882,11 +1280,9 @@ export default function VaultDashboardClient() {
               </section>
             )}
 
-            {/* Sync freshness bar + instant trigger */}
             <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-400">
               <span>
-                Otonom Tarama: <strong className="text-zinc-200">2 saatte bir</strong> · Onayların
-                anlık kuyruğa düşer
+                Otonom Yorum & Metrik Hasadı: <strong className="text-zinc-200">3 saatte bir</strong>
               </span>
               <div className="flex items-center gap-3">
                 <span>
@@ -912,21 +1308,7 @@ export default function VaultDashboardClient() {
               </div>
             </div>
 
-            {/* Clickable Platform Breakdown Grid */}
             <section className="space-y-2.5">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                  Platform Bazlı Durum (Detay İçin Tıkla)
-                </h2>
-                {platformFilter !== "all" && (
-                  <button
-                    onClick={() => setPlatformFilter("all")}
-                    className="text-[11px] text-emerald-400 hover:underline"
-                  >
-                    Tüm Platformları Göster
-                  </button>
-                )}
-              </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
                 {platformBreakdown
                   .filter((p) => brandFilter === "all" || p.brandGroup === brandFilter)
@@ -974,38 +1356,6 @@ export default function VaultDashboardClient() {
               </div>
             </section>
 
-            {/* Selected Platform Detail Drawer */}
-            {platformFilter !== "all" && (() => {
-              const activePlat = platformBreakdown.find((p) => p.platform === platformFilter);
-              if (!activePlat) return null;
-              return (
-                <div className="rounded-xl border border-emerald-500/30 bg-zinc-950 p-4 flex flex-wrap items-center justify-between gap-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-semibold text-emerald-300">
-                        {activePlat.label} Detayı ({activePlat.handle})
-                      </h3>
-                    </div>
-                    <p className="text-xs text-zinc-300">
-                      İzlenme/Okunma: <strong>{activePlat.views.toLocaleString()}</strong> · Toplam Yorum:{" "}
-                      <strong>{activePlat.totalComments}</strong> · Onay Bekleyen:{" "}
-                      <strong className="text-amber-300">{activePlat.pending}</strong> · Gönderilen:{" "}
-                      <strong className="text-emerald-300">{activePlat.sent}</strong>
-                    </p>
-                  </div>
-                  <a
-                    href={activePlat.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 px-3 py-1.5 text-xs text-zinc-100"
-                  >
-                    {activePlat.label} Aç <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              );
-            })()}
-
-            {/* Multi-Axis Filters (Brand + Status) */}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap gap-1.5">
                 {[
@@ -1052,11 +1402,9 @@ export default function VaultDashboardClient() {
               </div>
             </div>
 
-            {/* Comment Cards */}
             {!filteredComments.length ? (
               <div className="rounded-xl border border-dashed border-zinc-800 p-8 text-center text-xs text-zinc-400">
-                Bu filtrede bekleyen yorum yok. EgoBrowser blog ve böcek sayfalarından yorum
-                çektiğinde tarzına uygun taslaklar burada onayını bekleyecek.
+                Bu filtrede bekleyen yorum yok.
               </div>
             ) : (
               <div className="space-y-3">
@@ -1101,10 +1449,6 @@ export default function VaultDashboardClient() {
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex items-center gap-1.5 text-[11px] text-emerald-400">
-                          <Sparkles className="w-3.5 h-3.5" />
-                          Tarzına Uygun Hazırlanan Cevap Taslağı
-                        </div>
                         <textarea
                           rows={2}
                           value={replyText}
@@ -1135,7 +1479,7 @@ export default function VaultDashboardClient() {
                                 runAction(
                                   c.id,
                                   { action: "approve_comment", id: c.id, replyDraft: replyText },
-                                  "Cevap onaylandı ve gönderim kuyruğuna alındı."
+                                  "Cevap onaylandı."
                                 )
                               }
                               className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs px-3.5 py-1.5 transition"
@@ -1153,134 +1497,12 @@ export default function VaultDashboardClient() {
             )}
           </div>
         )}
-
-        {/* TAB 3: MAIL SUMMARY */}
-        {activeTab === "mail" && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4">
-                <p className="text-[11px] text-zinc-400">Okunmamış / Özetlenen</p>
-                <p className="mt-1 text-xl font-semibold text-zinc-100">
-                  {summary?.mailStats?.unreadCount ?? 0}
-                </p>
-              </div>
-              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4">
-                <p className="text-[11px] text-zinc-400">Yüksek Öncelikli</p>
-                <p className="mt-1 text-xl font-semibold text-amber-400">
-                  {summary?.mailStats?.highPriorityCount ?? 0}
-                </p>
-              </div>
-              <div className="col-span-2 rounded-xl border border-zinc-800/80 bg-zinc-950 p-4 flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold text-zinc-200">Gelen Kutuları</p>
-                  <p className="text-[11px] text-zinc-400">
-                    kursat@itibar.app (Zoho EU) · tckursat@icloud.com
-                  </p>
-                </div>
-                <a
-                  href="https://mail.zoho.eu/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1 rounded-lg border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 px-3 py-1.5 text-xs text-zinc-200"
-                >
-                  Zoho Mail Aç <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
-            </div>
-
-            {!(data?.store.emails || []).length ? (
-              <div className="rounded-xl border border-dashed border-zinc-800 p-8 text-center text-xs text-zinc-400">
-                Henüz özetlenen mail yok. Otonom mail özetleyici çalıştığında gelen mailler
-                kategorize edilip cevap taslağıyla burada listelenecek.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {(data?.store.emails || []).map((m: OpsEmailItem) => {
-                  const replyText = draftEdits[m.id] ?? m.replyDraft;
-                  return (
-                    <div
-                      key={m.id}
-                      className="rounded-xl border border-zinc-800/80 bg-zinc-950 p-4 space-y-3"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span
-                            className={`rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase border ${
-                              m.priority === "high"
-                                ? "bg-rose-500/10 border-rose-500/30 text-rose-300"
-                                : "bg-zinc-900 border-zinc-700 text-zinc-300"
-                            }`}
-                          >
-                            {m.priority === "high" ? "Acil / Önemli" : m.category}
-                          </span>
-                          <span className="text-xs font-semibold text-zinc-200">{m.from}</span>
-                          <span className="text-[11px] text-zinc-500">→ {m.account}</span>
-                        </div>
-                        <span className="text-[11px] text-zinc-500">
-                          {new Date(m.receivedAt).toLocaleString("tr-TR")} · {m.status}
-                        </span>
-                      </div>
-
-                      <div>
-                        <h3 className="text-sm font-semibold text-zinc-100">{m.subject}</h3>
-                        <p className="mt-1 text-xs text-zinc-300 leading-relaxed">{m.summary}</p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <textarea
-                          rows={2}
-                          value={replyText}
-                          onChange={(e) =>
-                            setDraftEdits((prev) => ({ ...prev, [m.id]: e.target.value }))
-                          }
-                          placeholder="Yanıt taslağı..."
-                          className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs text-zinc-100 focus:border-emerald-500/50 focus:outline-none"
-                        />
-                        {m.status === "unread" && (
-                          <div className="flex justify-end gap-2">
-                            <button
-                              disabled={actionBusyId === m.id}
-                              onClick={() =>
-                                runAction(
-                                  m.id,
-                                  { action: "archive_email", id: m.id },
-                                  "Mail arşivlendi."
-                                )
-                              }
-                              className="rounded-lg border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 px-3 py-1.5 text-xs text-zinc-400"
-                            >
-                              Arşivle
-                            </button>
-                            <button
-                              disabled={actionBusyId === m.id}
-                              onClick={() =>
-                                runAction(
-                                  m.id,
-                                  {
-                                    action: "approve_email_reply",
-                                    id: m.id,
-                                    replyDraft: replyText,
-                                  },
-                                  "Mail yanıtı onaylandı ve gönderim kuyruğuna alındı."
-                                )
-                              }
-                              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs px-3.5 py-1.5 transition"
-                            >
-                              <Send className="w-3.5 h-3.5" />
-                              Yanıtı Onayla & Gönder
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-
       </div>
     </main>
   );
+}
+
+function recipientIsoValid(iso?: string): boolean {
+  if (!iso) return false;
+  return Number.isFinite(Date.parse(iso));
 }
