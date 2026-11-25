@@ -10,6 +10,8 @@
     "verify:blog": "node scripts/verify-blog.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.1.0",
     "clsx": "^2.1.1",
     "firebase-admin": "^14.5.1",
     "framer-motion": "^14.12.0",

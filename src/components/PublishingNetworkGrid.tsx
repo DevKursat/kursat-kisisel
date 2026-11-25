@@ -1,12 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
   Check,
-  ChevronLeft,
-  ChevronRight,
   Copy,
   Flame,
   Handshake,
@@ -60,16 +58,11 @@ export default function PublishingNetworkGrid({
   rssHref?: string;
 }) {
   const isTr = lang === "tr";
-  const stripRef = useRef<HTMLDivElement>(null);
   const [copiedRss, setCopiedRss] = useState(false);
 
   const orderedPlatforms = PUBLISHING_CHANNELS.filter((c) => c.id !== "rss");
   const rss = PUBLISHING_CHANNELS.find((c) => c.id === "rss");
   const resolvedRssHref = rssHref || rss?.href || "/rss.xml";
-
-  const scrollStrip = (direction: -1 | 1) => {
-    stripRef.current?.scrollBy({ left: direction * 320, behavior: "smooth" });
-  };
 
   const handleCopyRss = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -124,11 +117,8 @@ export default function PublishingNetworkGrid({
       </Link>
 
       {/* Horizontal Scroll Row of Platform Cards Ordered Highest Engagement First */}
-      <div className="relative flex items-center gap-2 w-full">
-        <div
-          ref={stripRef}
-          className="flex-1 min-w-0 flex items-stretch gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-0.5 pr-6"
-        >
+      <div className="relative flex items-center w-full">
+        <div className="flex-1 min-w-0 flex items-stretch gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-0.5">
           {orderedPlatforms.map((channel) => {
             const focus = isTr ? channel.focusTr : channel.focusEn;
 
@@ -218,26 +208,6 @@ export default function PublishingNetworkGrid({
               </p>
             </a>
           )}
-        </div>
-
-        {/* Left / Right Horizontal Scroll Controls */}
-        <div className="hidden sm:flex flex-col gap-1.5 shrink-0">
-          <button
-            type="button"
-            onClick={() => scrollStrip(-1)}
-            aria-label={isTr ? "Sola kaydır" : "Scroll left"}
-            className="w-8 h-8 rounded-lg border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.08] hover:border-white/[0.18] flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollStrip(1)}
-            aria-label={isTr ? "Sağa kaydır" : "Scroll right"}
-            className="w-8 h-8 rounded-lg border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.08] hover:border-white/[0.18] flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
         </div>
       </div>
     </div>

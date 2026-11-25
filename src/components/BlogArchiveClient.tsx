@@ -9,7 +9,6 @@ import {
   ArrowUpRight,
   Flame,
   Search,
-  BookOpen,
   Rss,
   Sparkles,
   Terminal,
@@ -320,87 +319,58 @@ function BlogArchiveContent({
         {/* 2-Column Grid of All Articles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredPosts.map((post) => (
-            <article
-              key={post.slug}
-              className="flex flex-col h-full rounded-3xl border border-white/10 bg-[#0c0c0e] p-4 sm:p-5 transition-all duration-300 hover:border-white/25 group relative overflow-hidden"
-            >
-              <Spotlight size={360} />
-
-              {/* Clickable Card Visual -> Direct Page Navigation */}
+            <article key={post.slug} className="h-full">
               <Link
                 href={getPostHref(post.slug)}
                 hrefLang={langMeta.hreflang}
-                className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden isolate [transform:translateZ(0)] [clip-path:inset(0_round_1rem)] bg-zinc-950 block select-none mb-3"
+                className="flex flex-col h-full rounded-3xl border border-white/10 bg-[#0c0c0e] p-4 sm:p-5 transition-all duration-300 hover:border-white/25 hover:bg-[#101014] group relative overflow-hidden select-none"
               >
-                <img
-                  src={post.imageUrl}
-                  alt={post.title}
-                  className="absolute inset-0 w-full h-full object-cover rounded-2xl scale-[1.03] transition-transform duration-700 ease-out group-hover:scale-[1.08]"
-                />
+                <Spotlight size={360} />
 
-                {/* Progressive Blur Layer over the lower 58% */}
-                <ProgressiveBlur
-                  className="pointer-events-none absolute bottom-0 left-0 h-[58%] w-full rounded-b-2xl overflow-hidden"
-                  blurIntensity={7}
-                />
+                {/* Card Visual */}
+                <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden isolate [transform:translateZ(0)] [clip-path:inset(0_round_1rem)] bg-zinc-950 block mb-3.5">
+                  <img
+                    src={post.imageUrl}
+                    alt={post.title}
+                    className="absolute inset-0 w-full h-full object-cover rounded-2xl scale-[1.03] transition-transform duration-700 ease-out group-hover:scale-[1.08]"
+                  />
 
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
+                  {/* Progressive Blur Layer over the lower 58% */}
+                  <ProgressiveBlur
+                    className="pointer-events-none absolute bottom-0 left-0 h-[58%] w-full rounded-b-2xl overflow-hidden"
+                    blurIntensity={7}
+                  />
 
-                {/* Open Article Arrow Pill */}
-                <div className="absolute top-3.5 right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 group-hover:text-white group-hover:border-white/30 transition-all">
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
 
-                {/* Overlaid Title & Metadata */}
-                <div className="absolute bottom-0 left-0 p-4 sm:p-5 w-full z-10 flex flex-col justify-end">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-1 flex items-center gap-2">
-                    <span>{post.tag}</span>
-                    <span>•</span>
-                    <span>{post.date}</span>
+                  {/* Open Article Arrow Pill */}
+                  <div className="absolute top-3.5 right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300">
+                    <ArrowUpRight className="w-3.5 h-3.5" />
                   </div>
-                  <h2 className="font-archivo font-[800] text-lg sm:text-xl text-white tracking-tight line-clamp-2 leading-snug">
-                    {post.title}
-                  </h2>
+
+                  {/* Overlaid Title & Metadata */}
+                  <div className="absolute bottom-0 left-0 p-4 sm:p-5 w-full z-10 flex flex-col justify-end">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-1.5 flex items-center gap-2">
+                      <span className="truncate">{post.tag}</span>
+                      <span>•</span>
+                      <span className="shrink-0">{post.date}</span>
+                      <span>•</span>
+                      <span className="shrink-0">{post.readTime}</span>
+                    </div>
+                    <h2
+                      title={post.title}
+                      className="font-archivo font-[800] text-lg sm:text-xl text-white tracking-tight line-clamp-2 leading-snug"
+                    >
+                      {post.title}
+                    </h2>
+                  </div>
                 </div>
+
+                {/* Clean 2-Line Excerpt Preview */}
+                <p className="relative z-10 text-xs sm:text-[13.5px] text-zinc-400 group-hover:text-zinc-300 transition-colors leading-relaxed line-clamp-2 px-1">
+                  {post.excerpt}
+                </p>
               </Link>
-
-              {/* Excerpt Preview for Scannability & SEO */}
-              <p className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed line-clamp-2 px-1 mb-3">
-                {post.excerpt}
-              </p>
-
-              {/* Bottom Bar: Telemetry Metrics + Read Pill */}
-              <div className="relative z-10 pt-3 px-1 mt-auto flex items-center justify-between gap-4 border-t border-white/5">
-                <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
-                  <div>
-                    <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
-                      {post.metrics[0].label}
-                    </span>
-                    <span className="text-white font-semibold">
-                      {post.metrics[0].val}
-                    </span>
-                  </div>
-                  <div className="h-4 w-[1px] bg-white/10" />
-                  <div>
-                    <span className="text-zinc-600 block text-[9px] uppercase tracking-wider">
-                      {post.metrics[1].label}
-                    </span>
-                    <span className="text-white font-semibold">
-                      {post.metrics[1].val}
-                    </span>
-                  </div>
-                </div>
-
-                <Link
-                  href={getPostHref(post.slug)}
-                  hrefLang={langMeta.hreflang}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white hover:text-black text-xs font-medium text-white transition-all shrink-0"
-                >
-                  <BookOpen className="w-3.5 h-3.5" />
-                  <span>{ui.readArticle}</span>
-                  <ArrowUpRight className="w-3 h-3" />
-                </Link>
-              </div>
             </article>
           ))}
         </div>
