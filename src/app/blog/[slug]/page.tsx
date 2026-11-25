@@ -7,6 +7,7 @@ import {
   generatePostFaqs,
   getBlogLangMeta,
   getBlogPostBySlug,
+  getBlogUiCopy,
   getLocalizedPost,
   getRelatedPostSummaries,
   resolveBlogLang,
@@ -51,21 +52,23 @@ export async function generateMetadata({
   const localized = getLocalizedPost(post, activeLang);
   const langMeta = getBlogLangMeta(activeLang);
 
-  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+  const canonicalBaseUrl = `${SITE_URL}/blog/${post.slug}`;
   const localizedUrl =
-    activeLang === "tr" ? canonicalUrl : `${canonicalUrl}?lang=${activeLang}`;
+    activeLang === "tr"
+      ? canonicalBaseUrl
+      : `${canonicalBaseUrl}?lang=${activeLang}`;
   const imageUrl = `${SITE_URL}${post.imageUrl}`;
   const ogImageUrl = `${SITE_URL}/api/og?slug=${encodeURIComponent(post.slug)}&lang=${activeLang}`;
 
   const trMeta = BLOG_LANGUAGES.find((lang) => lang.code === "tr");
   const languageAlternates: Record<string, string> = {
-    "x-default": canonicalUrl,
-    [trMeta?.hreflang ?? "tr"]: canonicalUrl,
+    "x-default": canonicalBaseUrl,
+    [trMeta?.hreflang ?? "tr"]: canonicalBaseUrl,
   };
   if (post.translations) {
     for (const meta of BLOG_LANGUAGES) {
       if (meta.code !== "tr" && post.translations[meta.code]) {
-        languageAlternates[meta.hreflang] = `${canonicalUrl}?lang=${meta.code}`;
+        languageAlternates[meta.hreflang] = `${canonicalBaseUrl}?lang=${meta.code}`;
       }
     }
   }
@@ -75,7 +78,8 @@ export async function generateMetadata({
     description: localized.excerpt,
     authors: [{ name: "Kürşat Yılmaz", url: SITE_URL }],
     alternates: {
-      canonical: canonicalUrl,
+      // Self-referencing canonical per language so Google & Bing index TR, EN, DE, and ES independently
+      canonical: localizedUrl,
       languages: languageAlternates,
     },
     openGraph: {
@@ -113,17 +117,20 @@ export async function generateMetadata({
   };
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
+export default function BlogPostPage({
+  params,
+  searchParams,
+}: BlogPostPageProps) {
   return (
     <main className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black">
       <Suspense fallback={<div className="min-h-screen bg-[#000000]" />}>
-        <BlogPostResolved params={params} />
+        <BlogPostResolved params={params} searchParams={searchParams} />
       </Suspense>
     </main>
   );
 }
 
-async function BlogPostResolved({ params }: BlogPostPageProps) {
+async function BlogPostResolved({ params, searchParams }: BlogPostPageProps) {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
 
@@ -131,45 +138,74 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const relatedSummaries = getRelatedPostSummaries(post.slug, 3);
-  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
-  const imageUrl = `${SITE_URL}${post.imageUrl}`;
+  let rawLang: string | undefined;
+  try {
+    const sp = searchParams ? await searchParams : undefined;
+    rawLang = sp?.lang;
+  } catch {
+    rawLang = undefined;
+  }
 
-  const wordCount = [post.title, post.excerpt, ...post.content]
+  const activeLang = resolveBlogLang(rawLang);
+  const localized = getLocalizedPost(post, activeLang);
+  const langMeta = getBlogLangMeta(activeLang);
+  const ui = getBlogUiCopy(activeLang);
+
+  const relatedSummaries = getRelatedPostSummaries(post.slug, 3);
+  const canonicalBaseUrl = `${SITE_URL}/blog/${post.slug}`;
+  const localizedUrl =
+    activeLang === "tr"
+      ? canonicalBaseUrl
+      : `${canonicalBaseUrl}?lang=${activeLang}`;
+  const localizedBlogIndexUrl =
+    activeLang === "tr" ? `${SITE_URL}/blog` : `${SITE_URL}/blog?lang=${activeLang}`;
+  const imageUrl = `${SITE_URL}${post.imageUrl}`;
+  const inLanguageBcp47 = langMeta.locale.replace("_", "-");
+
+  const wordCount = [localized.title, localized.excerpt, ...localized.content]
     .join(" ")
     .trim()
     .split(/\s+/).length;
 
-  const faqs = generatePostFaqs(post, "tr");
+  const faqs = generatePostFaqs(post, activeLang);
 
-  const workTranslations = post.translations
-    ? BLOG_LANGUAGES.filter((l) => l.code !== "tr" && post.translations?.[l.code]).map((l) => {
-        const translated = post.translations![l.code as Exclude<BlogLang, "tr">]!;
-        return {
-          "@type": ["NewsArticle", "TechArticle"],
-          "@id": `${canonicalUrl}?lang=${l.code}#article`,
-          url: `${canonicalUrl}?lang=${l.code}`,
-          inLanguage: l.locale.replace("_", "-"),
-          headline: translated.title,
-          name: translated.title,
-        };
-      })
-    : [];
+  const workTranslations = BLOG_LANGUAGES.filter((l) => {
+    if (l.code === activeLang) return false;
+    if (l.code === "tr") return true;
+    return Boolean(post.translations?.[l.code]);
+  }).map((l) => {
+    const translated = getLocalizedPost(post, l.code);
+    const transUrl =
+      l.code === "tr" ? canonicalBaseUrl : `${canonicalBaseUrl}?lang=${l.code}`;
+    return {
+      "@type": ["NewsArticle", "TechArticle"],
+      "@id": `${transUrl}#article`,
+      url: transUrl,
+      inLanguage: l.locale.replace("_", "-"),
+      headline: translated.title,
+      name: translated.title,
+    };
+  });
 
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": ["NewsArticle", "TechArticle"],
-        "@id": `${canonicalUrl}#article`,
-        headline: post.title,
-        description: post.excerpt,
+        "@id": `${localizedUrl}#article`,
+        headline: localized.title,
+        description: localized.excerpt,
         image: [imageUrl],
         datePublished: `${post.isoDate}T09:00:00+03:00`,
         dateModified: `${post.isoDate}T09:00:00+03:00`,
-        inLanguage: "tr-TR",
-        articleSection: post.tag,
-        keywords: [post.tag, post.category, "Yapay Zeka", "Yazılım Mühendisliği"],
+        inLanguage: inLanguageBcp47,
+        articleSection: localized.tag,
+        keywords: [
+          localized.tag,
+          post.category,
+          activeLang === "tr" ? "Yapay Zeka" : "Artificial Intelligence",
+          activeLang === "tr" ? "Yazılım Mühendisliği" : "Software Engineering",
+        ],
         wordCount,
         speakable: {
           "@type": "SpeakableSpecification",
@@ -177,7 +213,7 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
         },
         mainEntityOfPage: {
           "@type": "WebPage",
-          "@id": canonicalUrl,
+          "@id": localizedUrl,
         },
         author: {
           "@type": "Person",
@@ -188,7 +224,9 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
             "https://x.com/DevKursat",
             "https://github.com/DevKursat",
             "https://dev.to/kursatyz",
+            "https://hashnode.com/@kursatyz",
             "https://medium.com/@ykursat054",
+            "https://bsky.app/profile/kursatyz.bsky.social",
             "https://www.reddit.com/user/Delicious_Character6/",
           ],
         },
@@ -201,32 +239,32 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
       },
       {
         "@type": "BreadcrumbList",
-        "@id": `${canonicalUrl}#breadcrumb`,
+        "@id": `${localizedUrl}#breadcrumb`,
         itemListElement: [
           {
             "@type": "ListItem",
             position: 1,
-            name: "Ana Sayfa",
+            name: ui.home,
             item: SITE_URL,
           },
           {
             "@type": "ListItem",
             position: 2,
-            name: "Günlük",
-            item: `${SITE_URL}/blog`,
+            name: activeLang === "tr" ? "Blog" : "Dispatches",
+            item: localizedBlogIndexUrl,
           },
           {
             "@type": "ListItem",
             position: 3,
-            name: post.title,
-            item: canonicalUrl,
+            name: localized.title,
+            item: localizedUrl,
           },
         ],
       },
       {
         "@type": "FAQPage",
-        "@id": `${canonicalUrl}#faq`,
-        inLanguage: "tr-TR",
+        "@id": `${localizedUrl}#faq`,
+        inLanguage: inLanguageBcp47,
         mainEntity: faqs.map((faq) => ({
           "@type": "Question",
           name: faq.question,
@@ -251,7 +289,7 @@ async function BlogPostResolved({ params }: BlogPostPageProps) {
           <ArticleMarkup
             rawPost={post}
             relatedSummaries={relatedSummaries}
-            activeLang="tr"
+            activeLang={activeLang}
           />
         }
       >

@@ -48,7 +48,7 @@ export async function generateMetadata({
     title: fullTitle,
     description: ui.archiveDesc,
     alternates: {
-      canonical: canonicalUrl,
+      canonical: localizedUrl,
       languages: languageAlternates,
     },
     openGraph: {

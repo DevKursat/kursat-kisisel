@@ -11,9 +11,20 @@ function escapeXml(value: string): string {
 
 export async function GET() {
   const entries: string[] = [];
+  const nowMs = Date.now();
+  // Google News Sitemap specification strictly requires articles published within the last 48 hours
+  // (using 56h buffer across timezones; falls back to latest post so feed is never empty).
+  const MAX_AGE_MS = 56 * 60 * 60 * 1000;
 
-  for (const post of BLOG_POSTS) {
-    const pubDate = `${post.isoDate}T09:00:00+03:00`;
+  const recentPosts = BLOG_POSTS.filter((post) => {
+    const postMs = new Date(`${post.isoDate}T12:00:00+03:00`).getTime();
+    return Number.isFinite(postMs) && nowMs - postMs <= MAX_AGE_MS;
+  });
+
+  const targetPosts = recentPosts.length > 0 ? recentPosts : BLOG_POSTS.slice(0, 1);
+
+  for (const post of targetPosts) {
+    const pubDate = `${post.isoDate}T12:30:00+03:00`;
     const imageUrl = `${SITE_URL}${post.imageUrl}`;
 
     const langs: BlogLang[] = ["tr"];
@@ -56,7 +67,7 @@ ${entries.join("\n")}
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+      "Cache-Control": "public, s-maxage=900, stale-while-revalidate=3600",
     },
   });
 }

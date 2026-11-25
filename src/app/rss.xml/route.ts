@@ -68,6 +68,7 @@ export async function GET(request: Request) {
     <description>${escapeXml(channelDesc)}</description>
     <language>${rssLangCode}</language>
     <atom:link href="${escapeXml(selfUrl)}" rel="self" type="application/rss+xml" />
+    <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub" />
 ${items}
   </channel>
 </rss>`;

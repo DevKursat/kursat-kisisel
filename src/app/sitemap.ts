@@ -21,15 +21,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
-    {
-      url: blogIndexUrl,
+    ...BLOG_LANGUAGES.map((lang) => ({
+      url: lang.code === "tr" ? blogIndexUrl : `${blogIndexUrl}?lang=${lang.code}`,
       lastModified: new Date(),
-      changeFrequency: "daily",
+      changeFrequency: "daily" as const,
       priority: 0.9,
       alternates: {
         languages: blogIndexLanguages,
       },
-    },
+    })),
     {
       url: `${SITE_URL}/links`,
       lastModified: new Date(),
@@ -45,40 +45,46 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${SITE_URL}/llms.txt`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
+      changeFrequency: "daily",
       priority: 0.7,
     },
     {
       url: `${SITE_URL}/llms-full.txt`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
+      changeFrequency: "daily",
       priority: 0.7,
     },
   ];
 
-  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => {
+  // Emit a dedicated <url><loc> entry for EVERY available language (tr, en, de, es)
+  // with full reciprocal hreflang alternates so Google & Bing index all 4 languages independently.
+  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.flatMap((post) => {
     const baseUrl = `${SITE_URL}/blog/${post.slug}`;
     const languages: Record<string, string> = {
       "x-default": baseUrl,
       [trMeta?.hreflang ?? "tr"]: baseUrl,
     };
+    const availableLangCodes: string[] = ["tr"];
+
     if (post.translations) {
       for (const meta of BLOG_LANGUAGES) {
         if (meta.code !== "tr" && post.translations[meta.code]) {
           languages[meta.hreflang] = `${baseUrl}?lang=${meta.code}`;
+          availableLangCodes.push(meta.code);
         }
       }
     }
 
-    return {
-      url: baseUrl,
-      lastModified: new Date(`${post.isoDate}T09:00:00+03:00`),
-      changeFrequency: "weekly",
-      priority: 0.8,
+    const lastMod = new Date(`${post.isoDate}T09:00:00+03:00`);
+    return availableLangCodes.map((code) => ({
+      url: code === "tr" ? baseUrl : `${baseUrl}?lang=${code}`,
+      lastModified: lastMod,
+      changeFrequency: "weekly" as const,
+      priority: code === "tr" || code === "en" ? 0.85 : 0.75,
       alternates: {
         languages,
       },
-    };
+    }));
   });
 
   return [...staticPages, ...blogPages];
