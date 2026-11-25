@@ -1,9 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { getLocalizedSummary, type BlogPostSummary } from "@/data/blogIndex";
+import {
+  getLocalizedSummary,
+  type BlogLang,
+  type BlogPostSummary,
+} from "@/data/blogIndex";
+import { resolveClientBlogLang } from "./BlogLanguageSwitcher";
 import { CoverflowGallery, CoverflowEssay } from "./core/coverflow";
 import PublishingNetworkGrid from "./PublishingNetworkGrid";
 
@@ -13,7 +18,17 @@ export default function BlogSection({
   summaries?: BlogPostSummary[];
 }) {
   const { lang, t } = useLanguage();
+  const [blogLang, setBlogLang] = useState<BlogLang>(lang);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const savedPortfolio = localStorage.getItem("ky_portfolio_lang");
+    if (savedPortfolio === "tr") {
+      setBlogLang("tr");
+      return;
+    }
+    setBlogLang(resolveClientBlogLang(null));
+  }, [lang]);
 
   // 100+ Repodan sonra Blog sayfasının yukarı doğru yükselmesi
   const { scrollYProgress } = useScroll({
@@ -26,9 +41,10 @@ export default function BlogSection({
   const opacity = useTransform(scrollYProgress, [0, 0.4, 0.9], [0.5, 0.85, 1]);
 
   const essays: CoverflowEssay[] = summaries.map((rawSummary) => {
-    const post = getLocalizedSummary(rawSummary, lang);
+    const post = getLocalizedSummary(rawSummary, blogLang);
     return {
       id: post.slug,
+      blogLang,
       tag: post.tag,
       title: post.title,
       excerpt: post.excerpt,
@@ -77,7 +93,7 @@ export default function BlogSection({
 
         {/* 3D Motion.dev Coverflow Gallery (Interactive Drag, 3D Angles & Direct Page Navigation) */}
         <div className="mb-10 sm:mb-12">
-          <CoverflowGallery items={essays} />
+          <CoverflowGallery items={essays} blogLang={blogLang} />
         </div>
 
         {/* Social & Publishing Channels Portal */}
@@ -99,7 +115,7 @@ export default function BlogSection({
 
           <PublishingNetworkGrid
             lang={lang}
-            rssHref={lang === "tr" ? "/rss.xml" : `/rss.xml?lang=${lang}`}
+            rssHref={blogLang === "tr" ? "/rss.xml" : `/rss.xml?lang=${blogLang}`}
           />
         </motion.div>
       </motion.div>

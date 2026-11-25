@@ -9,8 +9,11 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ProgressiveBlur } from "./progressive-blur";
 import { Spotlight } from "./spotlight";
 
+import { type BlogLang } from "@/data/blogIndex";
+
 export interface CoverflowEssay {
   id: string;
+  blogLang?: BlogLang;
   tag: string;
   title: string;
   excerpt: string;
@@ -28,12 +31,15 @@ export interface CoverflowEssay {
 
 interface CoverflowProps {
   items: CoverflowEssay[];
+  blogLang?: BlogLang;
 }
 
-export function CoverflowGallery({ items }: CoverflowProps) {
+export function CoverflowGallery({ items, blogLang }: CoverflowProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
+  const resolvedLang: BlogLang = blogLang || lang;
+  const archiveHref = resolvedLang === "tr" ? "/blog" : `/blog?lang=${resolvedLang}`;
   const total = items.length;
 
   useEffect(() => {
@@ -73,7 +79,7 @@ export function CoverflowGallery({ items }: CoverflowProps) {
       <div className="w-full flex items-center justify-between gap-4 mb-4 pt-1 pb-3 border-b border-white/10">
         {/* SOL: Sayısız ve Sade "Tüm Arşivi İncele" bağlantısı */}
         <Link
-          href="/blog"
+          href={archiveHref}
           className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.02] hover:bg-white hover:text-black text-xs font-mono text-zinc-300 hover:border-white transition-all group shrink-0"
         >
           <span>{lang === "tr" ? "Tüm Arşivi İncele" : "View All"}</span>
@@ -265,7 +271,9 @@ interface CardItemProps {
 
 function CardItem({ item, isActive, onClick }: CardItemProps) {
   const { lang } = useLanguage();
-  const articleHref = lang === "en" ? `/blog/${item.id}?lang=en` : `/blog/${item.id}`;
+  const targetLang: BlogLang = item.blogLang || lang;
+  const articleHref =
+    targetLang === "tr" ? `/blog/${item.id}` : `/blog/${item.id}?lang=${targetLang}`;
 
   const visualInner = (
     <>
