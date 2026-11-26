@@ -6,6 +6,7 @@ import {
   type BlogPostSummaryTranslation,
 } from "./blogIndex";
 
+import post00_openworks from "./posts/openai-openworks-kobi-danismanlari";
 import post00_ms_teams_11k from "./posts/microsoft-kesinti-11-bin-teams-mesaji";
 import post00_nvidia_return from "./posts/nvidia-jensen-huang-1-trilyon-geri-donus";
 import post00_microsoft_60k from "./posts/microsoft-60-bin-cikis-11-yazilimci-ai-fabrikasi";
@@ -33,6 +34,7 @@ import post13 from "./posts/10-kasim-teknolojik-egemenlik-ve-ataturk";
 export * from "./blogIndex";
 
 export const BLOG_POSTS: BlogPostItem[] = [
+  post00_openworks,
   post00_ms_teams_11k,
   post00_nvidia_return,
   post00_microsoft_60k,
